@@ -71,7 +71,9 @@ def build_scene(scene: dict, workdir: Path, *, engine: str = "auto") -> Clip:
         "-map", "0:v", "-map", "[a]",
         "-c:v", "libx264", "-preset", "medium", "-crf", "20",
         "-pix_fmt", "yuv420p", "-r", str(FPS),
-        "-c:a", "aac", "-b:a", "192k",
+        # Piper entrega 22 kHz mono. YouTube reencodea mejor desde 48 kHz
+        # estereo, y un mono de 22 kHz suena delgado en reproduccion normal.
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
         "-t", f"{duration:.3f}",
         str(clip),
     ])
@@ -81,8 +83,10 @@ def build_scene(scene: dict, workdir: Path, *, engine: str = "auto") -> Clip:
 
 def concat(clips: list[Clip], out_path: Path, workdir: Path) -> Path:
     listing = workdir / "concat.txt"
+    # Rutas absolutas: ffmpeg resuelve las relativas contra el directorio del
+    # propio listado, no contra el cwd, y acaba duplicando el prefijo.
     listing.write_text(
-        "\n".join(f"file '{c.video_path.as_posix()}'" for c in clips),
+        "\n".join(f"file '{c.video_path.resolve().as_posix()}'" for c in clips),
         encoding="utf-8",
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
