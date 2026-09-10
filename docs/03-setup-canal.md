@@ -72,35 +72,45 @@ content strategy, ai automation, data analysis, faceless youtube
 - **Monetización**: no está disponible hasta 1.000 subs y 4.000 horas. No pierdas
   tiempo mirándolo hasta que el tracker diga que se ha pasado el corte.
 
-## 6. OAuth: el paso que hay que hacer bien una vez
+## 6. OAuth: el paso que hay que hacer una vez
 
-Ya está configurado (`credentials.json` en la raíz, ignorado por git). Queda una
-cosa en la consola de Google, y conviene entender por qué:
+Ya está configurado (`credentials.json` en la raíz, ignorado por git). Falta
+autorizar, y Google bloquea con `403 access_denied` hasta que tu cuenta esté en
+la lista de usuarios de prueba:
 
-**Google Auth Platform → Audience → Publishing status → Publish app.**
+**Google Auth Platform → Audience → Test users → Add users** → el correo dueño
+del canal → Save.
 
-Hay dos formas de desbloquear el `403 access_denied`, y solo una sirve aquí:
-
-| | Añadirte como test user | Pasar a producción |
-|---|---|---|
-| Desbloquea el 403 | sí | sí |
-| Aviso de "app no verificada" | sí | sí |
-| **Caducidad del refresh token** | **7 días** | no caduca |
-
-En modo Testing, Google caduca los refresh tokens a los siete días. Con un test
-de 90 días por delante, eso significa reautorizar cada semana — y el día que se
-te olvide, el tracker deja de recoger datos sin avisar de nada.
-
-Pasar a producción sin verificar es correcto aquí: la verificación de Google
-solo se exige para autorizar a terceros, y el único usuario eres tú. Hay un tope
-de 100 usuarios que con uno solo es irrelevante.
-
-Al autorizar verás el aviso de app no verificada: Avanzado → Ir a Outlier
-Engineering. Eso es esperado, no un fallo.
+Después:
 
 ```bash
 python -m facelessyt auth
 ```
+
+Verás un aviso de "app no verificada": Avanzado → Ir a Outlier Engineering. Es
+esperado. La verificación de Google solo se exige para autorizar a terceros, y
+aquí el único usuario eres tú.
+
+### Sobre la caducidad de 7 días
+
+En modo Testing, Google caduca los refresh tokens a la semana. Merece la pena
+saber a qué afecta y a qué no:
+
+| Comando | Autenticación | Le afecta la caducidad |
+|---|---|---|
+| `mine` | clave de API | no |
+| `check` | clave de API | no |
+| `track` | clave de API | **no** |
+| `upload` | OAuth | sí |
+| `diagnose` | OAuth | sí |
+
+La métrica de corte de los 90 días va con la clave de API, así que sigue
+recogiendo datos aunque el token OAuth haya caducado. Lo único que pasa es que
+antes de un `upload` o un `diagnose` puede tocar repetir `auth`. Molesto, no
+grave.
+
+Pasar a producción evitaría la caducidad, pero exige URL de homepage y de
+política de privacidad. Para un solo usuario no compensa.
 
 ## 7. Cuando ya está autorizado
 

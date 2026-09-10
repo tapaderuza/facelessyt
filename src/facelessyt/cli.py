@@ -235,11 +235,14 @@ def cmd_auth(args: argparse.Namespace) -> int:
                 "La app esta en modo Testing y tu cuenta no esta en la lista de "
                 "usuarios de prueba.\n\n"
                 "[bold]Arreglo:[/bold] Google Auth Platform -> Audience -> "
-                "Publishing status -> Publish app.\n\n"
-                "[dim]Se pasa a produccion, no a testing con tu cuenta anadida, "
-                "porque en modo Testing los refresh tokens de Google caducan a "
-                "los 7 dias. Eso obligaria a reautorizar cada semana durante los "
-                "90 dias del test, y el tracker se rompe sin avisar.[/dim]"
+                "Test users -> Add users -> el correo dueno del canal.\n\n"
+                "[dim]En modo Testing el refresh token caduca a los 7 dias, asi "
+                "que habra que repetir esto de vez en cuando. Solo afecta a "
+                "'upload' y 'diagnose': 'track', 'mine' y 'check' van con la "
+                "clave de API y no se enteran.\n"
+                "Pasar a produccion evitaria la caducidad, pero exige URL de "
+                "homepage y de politica de privacidad, que para un unico usuario "
+                "no compensa.[/dim]"
             )
             return 3
         raise
