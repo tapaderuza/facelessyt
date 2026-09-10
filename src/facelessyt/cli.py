@@ -321,7 +321,17 @@ def cmd_upload(args: argparse.Namespace) -> int:
     )
     console.print(f"\n[green]Subido[/green] como {result.privacy}")
     console.print(f"  {result.url}")
+    if result.thumbnail_error:
+        console.print(f"\n[yellow]La miniatura no se puso:[/yellow] {result.thumbnail_error}")
     console.print("[dim]Revisalo entero antes de hacerlo publico.[/dim]")
+    return 0
+
+
+def cmd_thumbnail(args: argparse.Namespace) -> int:
+    from . import upload as up
+
+    up.set_thumbnail(args.video_id, Path(args.thumbnail))
+    console.print("[green]Miniatura puesta[/green]")
     return 0
 
 
@@ -360,6 +370,11 @@ def main(argv: list[str] | None = None) -> int:
     p_up.add_argument("--thumbnail")
     p_up.add_argument("--tags", help="separadas por comas")
     p_up.set_defaults(func=cmd_upload)
+
+    p_thumb = sub.add_parser("thumbnail", help="pone la miniatura de un video ya subido")
+    p_thumb.add_argument("--video-id", required=True)
+    p_thumb.add_argument("--thumbnail", required=True)
+    p_thumb.set_defaults(func=cmd_thumbnail)
 
     args = parser.parse_args(argv)
     try:

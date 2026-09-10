@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 from . import auth
@@ -22,6 +23,7 @@ class Uploaded:
     video_id: str
     url: str
     privacy: str
+    thumbnail_error: str | None = None
 
 
 def upload(
@@ -68,13 +70,41 @@ def upload(
 
     video_id = response["id"]
 
+    # A partir de aqui el video YA existe en el canal. Nada de lo que siga puede
+    # tumbar la funcion sin devolver el id: perderlo obliga a buscarlo a mano y,
+    # peor, invita a reintentar la subida y acabar con un duplicado.
+    thumbnail_error: str | None = None
     if thumbnail and thumbnail.exists():
-        yt.thumbnails().set(
-            videoId=video_id, media_body=MediaFileUpload(str(thumbnail))
-        ).execute()
+        try:
+            yt.thumbnails().set(
+                videoId=video_id, media_body=MediaFileUpload(str(thumbnail))
+            ).execute()
+        except HttpError as exc:
+            if exc.resp.status == 403:
+                thumbnail_error = (
+                    "YouTube rechaza miniaturas personalizadas en canales sin "
+                    "verificar. Verifica el canal en youtube.com/verify (pide un "
+                    "telefono) y vuelve a intentarlo con 'facelessyt thumbnail'."
+                )
+            else:
+                thumbnail_error = str(exc)
 
     return Uploaded(
         video_id=video_id,
         url=f"https://www.youtube.com/watch?v={video_id}",
         privacy=privacy,
+        thumbnail_error=thumbnail_error,
     )
+
+
+def set_thumbnail(video_id: str, thumbnail: Path) -> None:
+    """Pone la miniatura de un video ya subido.
+
+    Existe aparte porque la verificacion del canal suele llegar despues de la
+    primera subida, y no hay que resubir el video para arreglar eso.
+    """
+    if not thumbnail.exists():
+        raise FileNotFoundError(thumbnail)
+    auth.youtube().thumbnails().set(
+        videoId=video_id, media_body=MediaFileUpload(str(thumbnail))
+    ).execute()
