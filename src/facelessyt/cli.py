@@ -339,6 +339,15 @@ def cmd_thumbnail(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_publish(args: argparse.Namespace) -> int:
+    from . import upload as up
+
+    url = up.publish(args.video_id, privacy=args.privacy)
+    console.print(f"[green]Visibilidad cambiada a {args.privacy}[/green]")
+    console.print(f"  {url}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="facelessyt", description="Operativa de canal faceless")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -379,6 +388,12 @@ def main(argv: list[str] | None = None) -> int:
     p_thumb.add_argument("--video-id", required=True)
     p_thumb.add_argument("--thumbnail", required=True)
     p_thumb.set_defaults(func=cmd_thumbnail)
+
+    p_pub = sub.add_parser("publish", help="cambia la visibilidad de un video subido")
+    p_pub.add_argument("--video-id", required=True)
+    p_pub.add_argument("--privacy", default="public",
+                       choices=["public", "unlisted", "private"])
+    p_pub.set_defaults(func=cmd_publish)
 
     args = parser.parse_args(argv)
     try:

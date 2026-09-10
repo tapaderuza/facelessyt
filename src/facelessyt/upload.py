@@ -158,3 +158,21 @@ def set_thumbnail(video_id: str, thumbnail: Path) -> None:
     auth.youtube().thumbnails().set(
         videoId=video_id, media_body=MediaFileUpload(str(thumbnail))
     ).execute()
+
+
+def publish(video_id: str, *, privacy: str = "public") -> str:
+    """Cambia la visibilidad de un video ya subido.
+
+    Separado de upload() a proposito: subir es rutina, publicar es una decision.
+    Un script que pudiera hacer ambas cosas de una vez acabaria haciendo publico
+    algo por accidente algun dia.
+    """
+    if privacy not in {"private", "unlisted", "public"}:
+        raise ValueError(f"privacy invalido: {privacy}")
+
+    yt = auth.youtube()
+    yt.videos().update(
+        part="status",
+        body={"id": video_id, "status": {"privacyStatus": privacy}},
+    ).execute()
+    return f"https://www.youtube.com/watch?v={video_id}"
