@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
@@ -212,6 +213,99 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 1 if bad else 0
 
 
+def cmd_auth(args: argparse.Namespace) -> int:
+    """Da consentimiento OAuth una vez y guarda el token."""
+    from . import auth
+
+    console.print("Se va a abrir el navegador para autorizar el acceso al canal.")
+    console.print(
+        "[dim]Google mostrara un aviso de 'app no verificada': es lo normal en "
+        "modo prueba. Avanzado -> Ir a la app.[/dim]\n"
+    )
+    try:
+        auth.credentials(interactive=True)
+    except auth.AuthError as exc:
+        console.print(f"[red]{exc}[/red]")
+        return 2
+
+    yt = auth.youtube(interactive=False)
+    me = yt.channels().list(part="snippet,statistics", mine=True).execute()
+    item = (me.get("items") or [{}])[0]
+    console.print(
+        f"[green]Autorizado[/green] como [bold]{item.get('snippet', {}).get('title', '?')}[/bold]"
+    )
+    console.print(f"[dim]Token guardado en {auth.TOKEN}[/dim]")
+    return 0
+
+
+def cmd_diagnose(args: argparse.Namespace) -> int:
+    """CTR y retencion: por que un video funciona o no."""
+    from . import analytics
+
+    results = analytics.diagnose(days=args.days)
+    if not results:
+        console.print(
+            "[yellow]Sin datos todavia.[/yellow] Analytics tarda 24-48h en reportar "
+            "un video recien publicado."
+        )
+        return 0
+
+    for r in results:
+        console.print(f"\n[bold]{r.title[:70]}[/bold]")
+        table = Table(show_header=False, box=None)
+        table.add_column(style="dim", width=24)
+        table.add_column()
+
+        def mark(value, threshold, unit="%"):
+            if value is None:
+                return "[dim]sin datos[/dim]"
+            ok = value >= threshold
+            colour = "green" if ok else "red"
+            return f"[{colour}]{value}{unit}[/{colour}] [dim](minimo {threshold}{unit})[/dim]"
+
+        table.add_row("Views", str(r.views))
+        table.add_row("Impresiones", str(r.impressions) if r.impressions else "[dim]-[/dim]")
+        table.add_row("CTR", mark(r.ctr, analytics.CTR_MIN))
+        table.add_row("Retencion 30s", mark(r.retention_30s, analytics.RETENTION_30S_MIN))
+        table.add_row("Retencion media", mark(r.avg_view_percentage, analytics.RETENTION_AVG_MIN))
+        table.add_row("Subs ganados", str(r.subscribers_gained or 0))
+        console.print(table)
+        console.print(f"  -> [bold]{r.verdict}[/bold]")
+    return 0
+
+
+def cmd_upload(args: argparse.Namespace) -> int:
+    """Sube el video al canal, SIEMPRE como privado."""
+    from . import upload as up
+
+    video = Path(args.video)
+    thumb = Path(args.thumbnail) if args.thumbnail else None
+    description = Path(args.description).read_text(encoding="utf-8") if args.description else ""
+
+    console.print(f"Subiendo [cyan]{video.name}[/cyan] ({video.stat().st_size / 1e6:.0f} MB)")
+    console.print("[dim]Se subira como PRIVADO. Publicar es decision tuya.[/dim]\n")
+
+    last = {"pct": -1}
+
+    def progress(pct: int) -> None:
+        if pct >= last["pct"] + 10:
+            last["pct"] = pct
+            console.print(f"  {pct}%")
+
+    result = up.upload(
+        video,
+        title=args.title,
+        description=description,
+        tags=[t.strip() for t in (args.tags or "").split(",") if t.strip()],
+        thumbnail=thumb,
+        on_progress=progress,
+    )
+    console.print(f"\n[green]Subido[/green] como {result.privacy}")
+    console.print(f"  {result.url}")
+    console.print("[dim]Revisalo entero antes de hacerlo publico.[/dim]")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="facelessyt", description="Operativa de canal faceless")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -232,6 +326,21 @@ def main(argv: list[str] | None = None) -> int:
     p_check = sub.add_parser("check", help="verifica clave de API y canales semilla")
     p_check.add_argument("--niche", default="ai-automation")
     p_check.set_defaults(func=cmd_check)
+
+    p_auth = sub.add_parser("auth", help="autoriza el acceso al canal (una sola vez)")
+    p_auth.set_defaults(func=cmd_auth)
+
+    p_diag = sub.add_parser("diagnose", help="CTR y retencion de tus videos")
+    p_diag.add_argument("--days", type=int, default=28)
+    p_diag.set_defaults(func=cmd_diagnose)
+
+    p_up = sub.add_parser("upload", help="sube un video al canal, como privado")
+    p_up.add_argument("--video", required=True)
+    p_up.add_argument("--title", required=True)
+    p_up.add_argument("--description", help="fichero con la descripcion")
+    p_up.add_argument("--thumbnail")
+    p_up.add_argument("--tags", help="separadas por comas")
+    p_up.set_defaults(func=cmd_upload)
 
     args = parser.parse_args(argv)
     try:
