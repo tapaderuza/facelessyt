@@ -311,14 +311,18 @@ def cmd_upload(args: argparse.Namespace) -> int:
             last["pct"] = pct
             console.print(f"  {pct}%")
 
-    result = up.upload(
-        video,
-        title=args.title,
-        description=description,
-        tags=[t.strip() for t in (args.tags or "").split(",") if t.strip()],
-        thumbnail=thumb,
-        on_progress=progress,
-    )
+    try:
+        result = up.upload(
+            video,
+            title=args.title,
+            description=description,
+            tags=[t.strip() for t in (args.tags or "").split(",") if t.strip()],
+            thumbnail=thumb,
+            on_progress=progress,
+        )
+    except up.PreflightError as exc:
+        console.print(f"[red]No se sube:[/red] {exc}")
+        return 4
     console.print(f"\n[green]Subido[/green] como {result.privacy}")
     console.print(f"  {result.url}")
     if result.thumbnail_error:

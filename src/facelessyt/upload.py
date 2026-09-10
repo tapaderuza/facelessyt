@@ -6,6 +6,8 @@ video listo en el canal y tu le das al boton cuando lo has visto entero.
 
 from __future__ import annotations
 
+import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,6 +28,53 @@ class Uploaded:
     thumbnail_error: str | None = None
 
 
+class PreflightError(RuntimeError):
+    """El canal no puede aceptar este video. Mejor saberlo antes de subirlo."""
+
+
+UNVERIFIED_LIMIT_S = 15 * 60
+
+
+def _duration_seconds(video_path: Path) -> float | None:
+    """Duracion via ffprobe. None si ffprobe no esta disponible."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format",
+             str(video_path)],
+            capture_output=True, timeout=60,
+        )
+        return float(json.loads(out.stdout)["format"]["duration"])
+    except (FileNotFoundError, KeyError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def preflight(yt, video_path: Path) -> None:
+    """Comprueba antes de subir lo que YouTube solo te dira despues.
+
+    Un canal sin verificar tiene el limite en 15 minutos. Si te pasas, YouTube
+    acepta la subida entera, la procesa a medias, y luego la descarta con un
+    "Processing abandoned" que solo se ve en Studio: por la API el video
+    simplemente desaparece. Cuarenta megas y diez minutos tirados.
+    """
+    duration = _duration_seconds(video_path)
+    if duration is None or duration <= UNVERIFIED_LIMIT_S:
+        return
+
+    status = yt.channels().list(part="status", mine=True).execute()
+    long_uploads = (status.get("items") or [{}])[0].get("status", {}).get(
+        "longUploadsStatus"
+    )
+    if long_uploads == "allowed":
+        return
+
+    raise PreflightError(
+        f"El video dura {duration / 60:.1f} min y este canal tiene el limite en 15.\n"
+        f"longUploadsStatus = {long_uploads!r}\n\n"
+        "Verifica el canal en https://www.youtube.com/verify (pide un telefono).\n"
+        "Esa misma verificacion desbloquea las miniaturas personalizadas."
+    )
+
+
 def upload(
     video_path: Path,
     *,
@@ -43,6 +92,7 @@ def upload(
         raise ValueError(f"privacy invalido: {privacy}")
 
     yt = auth.youtube()
+    preflight(yt, video_path)
 
     body = {
         "snippet": {
