@@ -123,6 +123,93 @@ def _terminal(rows: list[Line], title: str = "facelessyt") -> Image.Image:
 
 CONTENT = {
     # -- gancho
+    # ---- video 2: el agente que vigila
+    "watch_everything_dying": lambda: _terminal(
+        [
+            Line("  Cluster                        Score  Temp   Verdict", DIM, 26),
+            Line("  " + "-" * 62, DIM, 26),
+            Line("  building agents                 7.0x  new    dying", RED, 28),
+            Line("  just dropped / new release      6.4x  new    dying", RED, 28),
+            Line("  courses / full guides           5.7x  new    dying", RED, 28),
+            Line("  agentic engineering / harness   5.3x  new    dying", RED, 28),
+            Line("  comparisons                     4.9x  new    dying", RED, 28),
+            Line("  claude code workflows           4.5x  new    dying", RED, 28),
+            Line(""),
+            Line("  Everything. Every single one.", YELLOW, 34, True),
+        ],
+        title="first run",
+    ),
+    "stale_bug": lambda: _terminal(
+        [
+            Line("  STALE_DAYS = 90", RED, 40, True),
+            Line("  --days 180", FG, 36),
+            Line(""),
+            Line("  Median age in a 180-day window: ~90 days", DIM, 32),
+            Line(""),
+            Line("  I was asking: older than 90 days?", FG, 32),
+            Line("  Of half the data, the answer is yes.", RED, 34, True),
+        ],
+        title="the bug",
+    ),
+    "stale_fix": lambda: _terminal(
+        [
+            Line("  STALE_FRACTION = 0.65", GREEN, 40, True),
+            Line(""),
+            Line("  stale = median_age > window * 0.65", GREEN, 34),
+            Line(""),
+            Line("  95 days in a 180-day window   ->  normal", FG, 30),
+            Line("  95 days in a 120-day window   ->  stale", YELLOW, 30),
+        ],
+        title="the fix",
+    ),
+    "watch_results": lambda: _terminal(
+        [
+            Line("  Cluster                     Score  Chans  Verdict", DIM, 26),
+            Line("  " + "-" * 64, DIM, 26),
+            Line("  building agents              7.0x    4!   late to the party", YELLOW, 28, True),
+            Line("  just dropped / new release   6.4x    3    watch", FG, 28),
+            Line("  courses / full guides        5.7x    2    watch", FG, 28),
+            Line("  agentic engineering          5.3x    3    watch", FG, 28),
+            Line("  claude code workflows        4.5x    2    watch", FG, 28),
+        ],
+        title="facelessyt watch",
+    ),
+    "saturation_trap": lambda: _terminal(
+        [
+            Line("  building agents", FG, 40, True),
+            Line(""),
+            Line("  median score      7.0x   <- highest in the niche", GREEN, 32),
+            Line("  distinct channels    4   <- already covered", RED, 32, True),
+            Line(""),
+            Line("  Real demand. And you'd be the fifth.", YELLOW, 34, True),
+        ],
+        title="the trap",
+    ),
+    "three_signals": lambda: _terminal(
+        [
+            Line("  A snapshot can't tell you:", DIM, 32),
+            Line(""),
+            Line("  temperature   is the score rising or falling?", FG, 32),
+            Line("  saturation    how many channels got there first?", FG, 32),
+            Line("  freshness     how old are the outliers holding it up?", FG, 32),
+            Line(""),
+            Line("  All three need memory.", GREEN, 36, True),
+        ],
+        title="what memory buys",
+    ),
+    "cluster_regex": lambda: _terminal(
+        [
+            Line("  DEFAULT_CLUSTERS = {", FG, 30),
+            Line("    'agentic / harnesses': r'agentic|harness',", GREEN, 30),
+            Line("    'building agents':     r'build.*agent|ai agent',", GREEN, 30),
+            Line("    'just dropped':        r'just dropped|is here',", GREEN, 30),
+            Line("  }", FG, 30),
+            Line(""),
+            Line("  Not embeddings. Regex.", YELLOW, 34, True),
+            Line("  When it surprises me I can see exactly why.", DIM, 30),
+        ],
+        title="clusters.py",
+    ),
     "empty_studio": lambda: _terminal(
         [
             Line("Channel analytics", DIM, 32),

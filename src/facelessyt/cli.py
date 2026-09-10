@@ -348,6 +348,72 @@ def cmd_publish(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_watch(args: argparse.Namespace) -> int:
+    """Mina, guarda el estado y compara contra la ejecucion anterior."""
+    from . import clusters, miner
+
+    niche = config.load_niche(args.niche)
+    client = Client(key=config.api_key())
+
+    console.print(f"[bold]Vigilando '{niche['name']}'[/bold]\n")
+    outliers, warnings = miner.mine(
+        client, niche, min_score=args.min_score, max_age_days=args.days,
+        per_channel=args.per_channel,
+    )
+    for w in warnings:
+        console.print(f"[yellow]aviso[/yellow] {w}")
+
+    from dataclasses import asdict
+    states = clusters.summarise([asdict(o) for o in outliers], window_days=args.days)
+    clusters.record(states, niche["name"])
+    trends = clusters.compare(states, niche["name"])
+
+    if not trends:
+        console.print("[yellow]Ningun cluster reconocido en esta tanda.[/yellow]")
+        return 0
+
+    table = Table(title=f"{len(trends)} clusters - {len(outliers)} outliers")
+    table.add_column("Cluster", max_width=32, overflow="ellipsis")
+    table.add_column("Score", justify="right")
+    table.add_column("Delta", justify="right")
+    table.add_column("N", justify="right")
+    table.add_column("Canales", justify="right")
+    table.add_column("Temperatura")
+    table.add_column("Veredicto", max_width=34, overflow="ellipsis")
+
+    colores = {"calentando": "green", "enfriando": "red", "estable": "white", "nuevo": "cyan"}
+    for tr in trends:
+        d = tr.score_delta
+        delta = "[dim]-[/dim]" if d is None else (
+            f"[green]+{d}[/green]" if d > 0 else (f"[red]{d}[/red]" if d < 0 else "0")
+        )
+        col = colores.get(tr.temperature, "white")
+        verdict_col = "green" if tr.verdict.startswith("entrar") else (
+            "red" if tr.verdict.startswith("evitar") else "yellow"
+        )
+        table.add_row(
+            tr.name, f"{tr.now.median_score:.1f}x", delta, str(tr.now.outliers),
+            f"{len(tr.now.channels)}{'!' if tr.now.saturated else ''}",
+            f"[{col}]{tr.temperature}[/{col}]",
+            f"[{verdict_col}]{tr.verdict}[/{verdict_col}]",
+        )
+    console.print(table)
+
+    nuevos = [t for t in trends if t.before is None]
+    if nuevos and clusters.previous(niche["name"], skip_last=True):
+        console.print(
+            "\n[cyan]Clusters nuevos desde la ultima vez:[/cyan] "
+            + ", ".join(t.name for t in nuevos)
+        )
+    if not clusters.previous(niche["name"], skip_last=True):
+        console.print(
+            "\n[dim]Primera ejecucion: sin historico con el que comparar. "
+            "Vuelve a lanzarlo en una o dos semanas.[/dim]"
+        )
+    console.print(f"[dim]Cuota consumida: {client.quota_used} / 10000[/dim]")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="facelessyt", description="Operativa de canal faceless")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -394,6 +460,13 @@ def main(argv: list[str] | None = None) -> int:
     p_pub.add_argument("--privacy", default="public",
                        choices=["public", "unlisted", "private"])
     p_pub.set_defaults(func=cmd_publish)
+
+    p_watch = sub.add_parser("watch", help="mina y compara clusters contra ejecuciones previas")
+    p_watch.add_argument("--niche", default="ai-automation")
+    p_watch.add_argument("--min-score", type=float, default=3.0)
+    p_watch.add_argument("--days", type=float, default=180)
+    p_watch.add_argument("--per-channel", type=int, default=60)
+    p_watch.set_defaults(func=cmd_watch)
 
     args = parser.parse_args(argv)
     try:

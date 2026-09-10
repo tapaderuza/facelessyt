@@ -77,3 +77,73 @@ def legibility_check(path: Path, width: int = 120) -> Path:
     out = path.with_name(f"{path.stem}-{width}px{path.suffix}")
     small.save(out)
     return out
+
+
+def render_trend(out_path: Path, *, headline: str = "IT'S DYING",
+                 sub: str = "and I found out before I filmed") -> Path:
+    """Miniatura de curva: sube, gira y cae.
+
+    La del video 1 era un numero grande. Correcto pero pasivo: informa y no
+    genera pregunta. Una curva que se desploma la genera sola, porque el ojo
+    sigue la linea hasta el final antes de leer nada.
+    """
+    img = Image.new("RGB", (TW, TH), BG)
+    draw = ImageDraw.Draw(img)
+
+    # Rejilla tenue: da sensacion de grafico sin competir por atencion.
+    for gy in range(140, TH - 90, 90):
+        draw.line([(60, gy), (770, gy)], fill=(30, 36, 44), width=2)
+
+    # La curva. Sube fuerte y se desploma al final.
+    puntos_sube = [(80, 570), (200, 490), (320, 400), (430, 265), (520, 180)]
+    puntos_cae = [(520, 180), (600, 260), (660, 410), (710, 560), (750, 650)]
+
+    draw.line(puntos_sube, fill=GREEN, width=16, joint="curve")
+    draw.line(puntos_cae, fill=(248, 81, 73), width=16, joint="curve")
+
+    # Punto de inflexion, marcado. Es donde el ojo se para.
+    px, py = 520, 180
+    draw.ellipse([px - 20, py - 20, px + 20, py + 20], fill=BG, outline=FG, width=6)
+
+    # Bloque de texto a la derecha. El ancho disponible se mide, no se supone:
+    # la primera version puso una coordenada a ojo y "IT'S DYING" se salia del
+    # lienzo, dejando visible solo "IT'S".
+    TEXT_X = 790
+    ANCHO = TW - TEXT_X - 50
+
+    def envolver(texto: str, font) -> list[str]:
+        lineas, cur = [], ""
+        for palabra in texto.split():
+            probe = f"{cur} {palabra}".strip()
+            if draw.textlength(probe, font=font) > ANCHO and cur:
+                lineas.append(cur)
+                cur = palabra
+            else:
+                cur = probe
+        lineas.append(cur)
+        return lineas
+
+    # Titular: el tamano mas grande que quepa, probando hacia abajo.
+    for tam in (108, 96, 84, 72, 62):
+        font_h = _font(tam, bold=True)
+        lineas_h = envolver(headline, font_h)
+        if len(lineas_h) <= 2 and all(
+            draw.textlength(ln, font=font_h) <= ANCHO for ln in lineas_h
+        ):
+            break
+
+    alto_h = len(lineas_h) * (tam + 10)
+    y = (TH - alto_h) / 2 - 40
+    for ln in lineas_h:
+        draw.text((TEXT_X, y), ln, font=font_h, fill=FG)
+        y += tam + 10
+
+    font_s = _font(32)
+    y += 18
+    for ln in envolver(sub, font_s):
+        draw.text((TEXT_X, y), ln, font=font_s, fill=DIM)
+        y += 42
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path, quality=95)
+    return out_path

@@ -142,6 +142,67 @@ def test_raiz_detecta_layout_de_repo():
     assert (config.ROOT / "niches").is_dir(), "en el repo, niches/ cuelga de la raiz"
 
 
+# -- clusters -------------------------------------------------------------
+
+def _outlier(title, score=5.0, channel="C1", age=30.0):
+    return {"title": title, "score": score, "channel_title": channel, "age_days": age}
+
+
+def test_cluster_asigna_por_patron():
+    from facelessyt.clusters import assign
+
+    assert "agentic engineering / harnesses" in assign("Build an agentic harness")
+    assert assign("How I cook pasta") == []
+
+
+def test_cluster_saturado_cuando_muchos_canales():
+    from facelessyt.clusters import summarise
+
+    items = [_outlier("build ai agent", channel=f"C{i}") for i in range(5)]
+    estado = summarise(items)[0]
+    assert len(estado.channels) == 5
+    assert estado.saturated
+
+
+def test_frescura_es_relativa_a_la_ventana():
+    """Regresion: con umbral absoluto de 90 dias, minar 180 dias marcaba como
+    agotado casi todo, porque la edad mediana esperada ES 90."""
+    from facelessyt.clusters import summarise
+
+    items = [_outlier("agentic harness", age=95.0) for _ in range(3)]
+
+    en_180 = summarise(items, window_days=180)[0]
+    assert not en_180.stale, "95 dias dentro de una ventana de 180 es normal"
+
+    en_120 = summarise(items, window_days=120)[0]
+    assert en_120.stale, "95 dias dentro de una ventana de 120 si es viejo"
+
+
+def test_temperatura_sin_historico_es_nuevo():
+    from facelessyt.clusters import ClusterState, ClusterTrend
+
+    ahora = ClusterState("x", 3, 5.0, 7.0, ["A"], 20.0, 180.0)
+    assert ClusterTrend("x", ahora, None).temperature == "nuevo"
+
+
+def test_temperatura_detecta_enfriamiento():
+    from facelessyt.clusters import ClusterState, ClusterTrend
+
+    antes = ClusterState("x", 8, 6.0, 9.0, ["A", "B"], 40.0, 180.0)
+    ahora = ClusterState("x", 5, 4.0, 6.0, ["A"], 60.0, 180.0)
+    tr = ClusterTrend("x", ahora, antes)
+    assert tr.temperature == "enfriando"
+    assert tr.score_delta == -2.0
+
+
+def test_saturado_y_enfriando_se_evita():
+    from facelessyt.clusters import ClusterState, ClusterTrend
+
+    antes = ClusterState("x", 9, 7.0, 9.0, ["A", "B", "C", "D"], 30.0, 180.0)
+    ahora = ClusterState("x", 6, 5.0, 7.0, ["A", "B", "C", "D"], 40.0, 180.0)
+    assert ClusterTrend("x", ahora, antes).verdict.startswith("evitar")
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     failed = 0
