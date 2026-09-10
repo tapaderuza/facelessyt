@@ -36,8 +36,11 @@ def cmd_check(args: argparse.Namespace) -> int:
         if not scene.get("narration", "").strip():
             problems.append(f"  {scene['id']}: sin narracion")
 
-    # ~150 palabras por minuto es el ritmo de locucion tecnica comoda.
-    estimate = words / 150
+    # 190 palabras/minuto: medido sobre un render real de Piper, no estimado.
+    # Cambia si se cambia de voz o de motor.
+    WPM = 190
+    holds = sum(float(s.get("hold", 0.5)) for s in scene_list)
+    estimate = words / WPM + holds / 60
     print(f"Escenas      : {len(scene_list)}")
     print(f"Palabras     : {words}")
     print(f"Duracion est.: {estimate:.1f} min (objetivo {spec['video'].get('target_minutes')})")

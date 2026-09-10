@@ -258,6 +258,32 @@ CONTENT = {
         ],
         title="miner.py",
     ),
+    "worked_example": lambda: _terminal(
+        [
+            Line("  The AI Automators - last 60 uploads", DIM, 30),
+            Line(""),
+            Line("  long-form, older than 7 days:  41 videos", FG, 32),
+            Line("  median views:                  14,300", GREEN, 34, True),
+            Line(""),
+            Line("  that one video:               182,300", FG, 34),
+            Line("  182,300 / 14,300           =    12.7x", GREEN, 40, True),
+        ],
+        title="doing it by hand",
+    ),
+    "what_id_change": lambda: _terminal(
+        [
+            Line("  What I'd change next:", YELLOW, 38, True),
+            Line(""),
+            Line("  - weight recent outliers higher", FG, 32),
+            Line("  - track clusters across runs", FG, 32),
+            Line("  - flag topics already saturated", FG, 32),
+            Line("  - pull CTR once I own the channel", FG, 32),
+        ],
+        title="not done yet",
+    ),
+    "Nothing under 3x gets made": lambda: _centered_text(
+        "Nothing under 3x gets made", size=72
+    ),
     # -- fallo en verde
     "check_green_marclou": lambda: _terminal(
         [

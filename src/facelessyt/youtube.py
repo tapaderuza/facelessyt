@@ -50,7 +50,9 @@ def age_days(published: datetime) -> float:
 
 
 class YouTubeError(RuntimeError):
-    pass
+    def __init__(self, message: str, status: int | None = None):
+        super().__init__(message)
+        self.status = status
 
 
 @dataclass
@@ -107,9 +109,12 @@ class Client:
                     "Cuota diaria de la API agotada (10.000 unidades). "
                     "Se reinicia a medianoche hora del Pacifico."
                 )
-            raise YouTubeError(f"403 de la API ({reason}): {body.get('message', '')}")
+            raise YouTubeError(f"403 de la API ({reason}): {body.get('message', '')}", 403)
         if not response.ok:
-            raise YouTubeError(f"{response.status_code} en {resource}: {response.text[:300]}")
+            raise YouTubeError(
+                f"{response.status_code} en {resource}: {response.text[:300]}",
+                response.status_code,
+            )
         return response.json()
 
     # -- canales ---------------------------------------------------------
@@ -151,13 +156,20 @@ class Client:
         ids: list[str] = []
         page_token = None
         while len(ids) < limit:
-            data = self._get(
-                "playlistItems",
-                part="contentDetails",
-                playlistId=uploads_playlist,
-                maxResults=min(50, limit - len(ids)),
-                **({"pageToken": page_token} if page_token else {}),
-            )
+            try:
+                data = self._get(
+                    "playlistItems",
+                    part="contentDetails",
+                    playlistId=uploads_playlist,
+                    maxResults=min(50, limit - len(ids)),
+                    **({"pageToken": page_token} if page_token else {}),
+                )
+            except YouTubeError as exc:
+                # Un canal recien creado no tiene playlist de subidas todavia.
+                # Eso no es un fallo: es el estado normal el dia cero.
+                if exc.status == 404:
+                    return []
+                raise
             ids.extend(i["contentDetails"]["videoId"] for i in data.get("items", []))
             page_token = data.get("nextPageToken")
             if not page_token:
