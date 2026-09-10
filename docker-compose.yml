@@ -1,0 +1,9 @@
+services:
+  facelessyt:
+    build: .
+    env_file: .env
+    volumes:
+      # Los resultados quedan en el disco, no dentro del contenedor.
+      - ./data:/app/data
+      # Editar un nicho no debe obligar a reconstruir la imagen.
+      - ./niches:/app/niches:ro

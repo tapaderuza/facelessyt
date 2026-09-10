@@ -1,0 +1,14 @@
+*.egg-info/
+*.log
+*.pyc
+.env
+.venv/
+__pycache__/
+credentials.json
+data/
+token.json
+venv/
+
+# Los guiones de videos aun no publicados no van al repo publico.
+# Quitar esta linea cuando quieras hacer build-in-public del calendario.
+scripts/

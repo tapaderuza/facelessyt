@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "facelessyt"
+version = "0.1.0"
+description = "Operativa con datos para un canal de YouTube faceless"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.31", "PyYAML>=6.0", "python-dotenv>=1.0", "rich>=13.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,58 @@
+# Nicho: AI automation / indie software business (ingles, publico US)
+#
+# Verificado el 2026-09-10 con `python -m facelessyt check`.
+# Los handles de YouTube cambian y los abandonados los ocupa otra cuenta:
+# vuelve a pasar el check cada pocas semanas.
+
+name: ai-automation
+language: en
+rpm_estimate_usd: [8, 18]
+
+# Criterio de seleccion: canales que CONSTRUYEN cosas en pantalla, no que dan
+# noticias. Un tema que funciona en un canal de noticias no lo podemos producir
+# como build, asi que ensuciaria la senal.
+#
+# Los canales pequenos (60-150k) son los MAS valiosos para minar: un video de
+# 500k views en un canal de 64k es una senal enorme de que el tema tira solo.
+seed_channels:
+  # Automatizacion y agencia
+  - "@nicksaraev"        # 516k - automation agency
+  - "@LiamOttley"        # 848k - AI agency
+  - "@TheAIAutomators"   #  64k - pequeno, buena senal
+  # Construccion de agentes / coding
+  - "@DavidOndrej"       # 415k - OJO: no es @DavidOndrej1, ese no existe
+  - "@IndyDevDan"        # 147k - agentic coding
+  - "@ColeMedin"         # 225k - AI agents
+  - "@AIJasonZ"          # 231k - builds
+  - "@aiwithbrandon"     #  90k - CrewAI, pequeno
+  - "@AICodeKing"        # 132k - herramientas de coding
+  # Negocio / ideas (dan el angulo comercial)
+  - "@GregIsenberg"      # 707k
+  - "@starterstory"      # 874k
+  - "@aiadvantage"       # 480k - tutoriales de herramientas
+
+# Excluidos a proposito (canales de NOTICIAS de IA). Rinden mucho, pero sus
+# temas son "ha salido el modelo X", que no podemos convertir en un build:
+#   @mreflow          Matt Wolfe      1.0M
+#   @matthew_berman   Matthew Berman  634k
+# Si algun dia se hace un canal de noticias, van en su propio yaml.
+
+# Handles que NO resuelven (no volver a intentarlos):
+#   @DavidOndrej1, @marclouvion, @MarcLouvion, @marc_lou, @jamesjasonw
+#   @MarcLou            -> resuelve a "miilinks", 6 subs, 0 videos (handle ocupado)
+#   @AIAutomationAgency -> resuelve a canal de 2 subs, 0 videos (handle ocupado)
+
+# Solo para descubrir canales nuevos: search.list cuesta 100 unidades por llamada.
+keywords:
+  - "ai automation business"
+  - "build ai agent"
+  - "n8n automation tutorial"
+  - "indie hacker saas revenue"
+
+# Programas de afiliacion con comision recurrente del nicho.
+affiliates:
+  - n8n
+  - Make
+  - ElevenLabs
+  - Vercel
+  - Framer
