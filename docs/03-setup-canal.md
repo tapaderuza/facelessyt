@@ -72,7 +72,39 @@ content strategy, ai automation, data analysis, faceless youtube
 - **Monetización**: no está disponible hasta 1.000 subs y 4.000 horas. No pierdas
   tiempo mirándolo hasta que el tracker diga que se ha pasado el corte.
 
-## 6. Si quieres que lo suba yo automáticamente
+## 6. OAuth: el paso que hay que hacer bien una vez
+
+Ya está configurado (`credentials.json` en la raíz, ignorado por git). Queda una
+cosa en la consola de Google, y conviene entender por qué:
+
+**Google Auth Platform → Audience → Publishing status → Publish app.**
+
+Hay dos formas de desbloquear el `403 access_denied`, y solo una sirve aquí:
+
+| | Añadirte como test user | Pasar a producción |
+|---|---|---|
+| Desbloquea el 403 | sí | sí |
+| Aviso de "app no verificada" | sí | sí |
+| **Caducidad del refresh token** | **7 días** | no caduca |
+
+En modo Testing, Google caduca los refresh tokens a los siete días. Con un test
+de 90 días por delante, eso significa reautorizar cada semana — y el día que se
+te olvide, el tracker deja de recoger datos sin avisar de nada.
+
+Pasar a producción sin verificar es correcto aquí: la verificación de Google
+solo se exige para autorizar a terceros, y el único usuario eres tú. Hay un tope
+de 100 usuarios que con uno solo es irrelevante.
+
+Al autorizar verás el aviso de app no verificada: Avanzado → Ir a Outlier
+Engineering. Eso es esperado, no un fallo.
+
+```bash
+python -m facelessyt auth
+```
+
+## 7. Cuando ya está autorizado
+
+
 
 Necesito credenciales OAuth. En el **mismo** proyecto de Google Cloud donde
 sacaste la clave de API:

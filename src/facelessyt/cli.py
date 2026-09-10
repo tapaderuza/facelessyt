@@ -219,14 +219,30 @@ def cmd_auth(args: argparse.Namespace) -> int:
 
     console.print("Se va a abrir el navegador para autorizar el acceso al canal.")
     console.print(
-        "[dim]Google mostrara un aviso de 'app no verificada': es lo normal en "
-        "modo prueba. Avanzado -> Ir a la app.[/dim]\n"
+        "[dim]Veras un aviso de 'app no verificada'. Es lo esperado: la "
+        "verificacion de Google solo hace falta para autorizar a terceros.\n"
+        "Avanzado -> Ir a Outlier Engineering.[/dim]\n"
     )
     try:
         auth.credentials(interactive=True)
     except auth.AuthError as exc:
         console.print(f"[red]{exc}[/red]")
         return 2
+    except Exception as exc:  # el flujo envuelve el error de Google
+        if "access_denied" in str(exc) or "403" in str(exc):
+            console.print(
+                "[red]Google ha bloqueado el acceso (403 access_denied).[/red]\n\n"
+                "La app esta en modo Testing y tu cuenta no esta en la lista de "
+                "usuarios de prueba.\n\n"
+                "[bold]Arreglo:[/bold] Google Auth Platform -> Audience -> "
+                "Publishing status -> Publish app.\n\n"
+                "[dim]Se pasa a produccion, no a testing con tu cuenta anadida, "
+                "porque en modo Testing los refresh tokens de Google caducan a "
+                "los 7 dias. Eso obligaria a reautorizar cada semana durante los "
+                "90 dias del test, y el tracker se rompe sin avisar.[/dim]"
+            )
+            return 3
+        raise
 
     yt = auth.youtube(interactive=False)
     me = yt.channels().list(part="snippet,statistics", mine=True).execute()
