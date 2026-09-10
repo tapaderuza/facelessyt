@@ -104,16 +104,23 @@ python -m facelessyt auth
 
 ## 7. Cuando ya está autorizado
 
+Comprueba también que esté habilitada la **YouTube Analytics API** en el mismo
+proyecto (la Data API ya lo está). Sin ella, `auth` y `upload` funcionan pero
+`diagnose` devuelve un 403 al pedir el informe.
 
+```bash
+python -m facelessyt upload --video data/video/01-outlier-agent-final.mp4 --title "I Built an AI Agent That Picks My YouTube Videos For Me" --thumbnail data/video/thumbnail-01.png --tags "youtube algorithm,youtube api,python tutorial,content strategy,ai automation"
+```
 
-Necesito credenciales OAuth. En el **mismo** proyecto de Google Cloud donde
-sacaste la clave de API:
+Sube **siempre como privado**, a propósito: publicar en el canal es una decisión
+tuya después de ver el vídeo entero, no algo que un script deba poder disparar.
 
-1. Habilita **YouTube Analytics API** (la Data API ya está)
-2. Pantalla de consentimiento OAuth → **Externo** → añádete como usuario de prueba
-3. Credenciales → Crear → **ID de cliente de OAuth** → **Aplicación de escritorio**
-4. Descarga el JSON como `D:\FacelessYT\credentials.json` (ya está en `.gitignore`)
+Y a las 48 horas de publicar, lo que de verdad importa:
 
-Con eso construyo la subida automática (vídeo, miniatura, capítulos y descripción
-en una sola orden) y además el módulo de CTR y retención, que usa el mismo OAuth
-y es lo que hoy nos falta para diagnosticar por qué un vídeo funciona o no.
+```bash
+python -m facelessyt diagnose
+```
+
+Eso responde a la pregunta que las views no contestan: si el vídeo no funciona,
+¿es el packaging, es el gancho, o es el nicho? Los umbrales salen de
+`docs/00-estrategia.md` y el veredicto los aplica en ese orden.
