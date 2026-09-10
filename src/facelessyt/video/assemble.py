@@ -101,16 +101,26 @@ def concat(clips: list[Clip], out_path: Path, workdir: Path) -> Path:
 def write_chapters(clips: list[Clip], scenes_spec: list[dict], out_path: Path) -> Path:
     """Capitulos con los tiempos REALES del montaje, para pegar en la descripcion.
 
-    Solo se marca capitulo en las escenas que abren seccion (id sin sufijo
-    numerico o acabado en -1), que es donde tiene sentido saltar.
+    Una escena abre capitulo si declara `chapter`. Deducirlo del sufijo del id
+    era fragil: dejaba fuera secciones cuyo id no acababa en -1, y colaba ids
+    internos ("bug-investigation", "cost") como titulo de capitulo.
+
+    Si el guion no declara ninguno, se cae al heuristico anterior para no dejar
+    la descripcion sin capitulos.
     """
+    declara_capitulos = any(s.get("chapter") for s in scenes_spec)
+
     lines, elapsed = [], 0.0
     for clip, spec in zip(clips, scenes_spec):
-        base = spec["id"].rsplit("-", 1)
-        is_section_start = len(base) == 1 or base[1] in {"1", "quota"}
-        if is_section_start:
+        if declara_capitulos:
+            titulo = spec.get("chapter")
+        else:
+            base = spec["id"].rsplit("-", 1)
+            titulo = base[0] if (len(base) == 1 or base[1] in {"1", "quota"}) else None
+
+        if titulo:
             mins, secs = divmod(int(elapsed), 60)
-            lines.append(f"{mins:02d}:{secs:02d} {spec.get('chapter', base[0])}")
+            lines.append(f"{mins:02d}:{secs:02d} {titulo}")
         elapsed += clip.duration
 
     out_path.write_text("\n".join(lines), encoding="utf-8")
