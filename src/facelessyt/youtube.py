@@ -66,6 +66,7 @@ class Video:
     likes: int
     comments: int
     duration_s: int
+    thumbnail_url: str | None = None
 
     @property
     def url(self) -> str:
@@ -197,6 +198,11 @@ class Client:
                         likes=int(stats.get("likeCount", 0)),
                         comments=int(stats.get("commentCount", 0)),
                         duration_s=parse_duration(item["contentDetails"].get("duration", "")),
+                        thumbnail_url=max(
+                            item["snippet"].get("thumbnails", {}).values(),
+                            key=lambda t: t.get("width", 0) * t.get("height", 0),
+                            default={},
+                        ).get("url"),
                     )
                 )
         return out

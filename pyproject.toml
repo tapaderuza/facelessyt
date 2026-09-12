@@ -9,5 +9,8 @@ description = "Operativa con datos para un canal de YouTube faceless"
 requires-python = ">=3.10"
 dependencies = ["requests>=2.31", "PyYAML>=6.0", "python-dotenv>=1.0", "rich>=13.7"]
 
+[project.optional-dependencies]
+vision = ["opencv-python-headless>=4.10,<5", "pytesseract>=0.3.13,<0.4", "Pillow>=10,<13"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

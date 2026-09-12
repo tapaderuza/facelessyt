@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "label": "ILLUSTRATIVE BUDGET - NOT A HARDWARE BENCHMARK",
+  "short": {
+    "kind": "synthetic_budget_calculation_not_runtime_measurement",
+    "inputs": {
+      "capacity_bytes": 8589934592,
+      "weight_bytes": 4294967296,
+      "reserve_bytes": 1073741824,
+      "layers": 32,
+      "kv_heads": 8,
+      "head_dim": 128,
+      "cache_bytes_per_element": 2,
+      "tokens": 8192,
+      "sequences": 1
+    },
+    "kv_bytes_per_token_per_sequence": 131072,
+    "cache_bytes": 1073741824,
+    "total_budget_bytes": 6442450944,
+    "headroom_bytes": 2147483648,
+    "status": "under_budget_not_verified",
+    "runtime_peak_bytes": null,
+    "tokens_per_second": null,
+    "assumptions": [
+      "One shared memory pool; do not add separate RAM and VRAM",
+      "Dense full-context KV; no sliding window, compression, offload or prefix sharing",
+      "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured",
+      "Under budget does not prove the runtime will load or meet latency/quality needs"
+    ]
+  },
+  "long": {
+    "kind": "synthetic_budget_calculation_not_runtime_measurement",
+    "inputs": {
+      "capacity_bytes": 8589934592,
+      "weight_bytes": 4294967296,
+      "reserve_bytes": 1073741824,
+      "layers": 32,
+      "kv_heads": 8,
+      "head_dim": 128,
+      "cache_bytes_per_element": 2,
+      "tokens": 32768,
+      "sequences": 1
+    },
+    "kv_bytes_per_token_per_sequence": 131072,
+    "cache_bytes": 4294967296,
+    "total_budget_bytes": 9663676416,
+    "headroom_bytes": -1073741824,
+    "status": "over_budget",
+    "runtime_peak_bytes": null,
+    "tokens_per_second": null,
+    "assumptions": [
+      "One shared memory pool; do not add separate RAM and VRAM",
+      "Dense full-context KV; no sliding window, compression, offload or prefix sharing",
+      "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured",
+      "Under budget does not prove the runtime will load or meet latency/quality needs"
+    ]
+  },
+  "reduced_context": {
+    "kind": "synthetic_budget_calculation_not_runtime_measurement",
+    "inputs": {
+      "capacity_bytes": 8589934592,
+      "weight_bytes": 4294967296,
+      "reserve_bytes": 1073741824,
+      "layers": 32,
+      "kv_heads": 8,
+      "head_dim": 128,
+      "cache_bytes_per_element": 2,
+      "tokens": 16384,
+      "sequences": 1
+    },
+    "kv_bytes_per_token_per_sequence": 131072,
+    "cache_bytes": 2147483648,
+    "total_budget_bytes": 7516192768,
+    "headroom_bytes": 1073741824,
+    "status": "under_budget_not_verified",
+    "runtime_peak_bytes": null,
+    "tokens_per_second": null,
+    "assumptions": [
+      "One shared memory pool; do not add separate RAM and VRAM",
+      "Dense full-context KV; no sliding window, compression, offload or prefix sharing",
+      "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured",
+      "Under budget does not prove the runtime will load or meet latency/quality needs"
+    ]
+  },
+  "two_sequences": {
+    "kind": "synthetic_budget_calculation_not_runtime_measurement",
+    "inputs": {
+      "capacity_bytes": 8589934592,
+      "weight_bytes": 4294967296,
+      "reserve_bytes": 1073741824,
+      "layers": 32,
+      "kv_heads": 8,
+      "head_dim": 128,
+      "cache_bytes_per_element": 2,
+      "tokens": 16384,
+      "sequences": 2
+    },
+    "kv_bytes_per_token_per_sequence": 131072,
+    "cache_bytes": 4294967296,
+    "total_budget_bytes": 9663676416,
+    "headroom_bytes": -1073741824,
+    "status": "over_budget",
+    "runtime_peak_bytes": null,
+    "tokens_per_second": null,
+    "assumptions": [
+      "One shared memory pool; do not add separate RAM and VRAM",
+      "Dense full-context KV; no sliding window, compression, offload or prefix sharing",
+      "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured",
+      "Under budget does not prove the runtime will load or meet latency/quality needs"
+    ]
+  }
+}

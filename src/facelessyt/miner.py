@@ -1,12 +1,8 @@
-"""Outlier miner: encuentra que temas tienen demanda real en un nicho.
+"""Rendimiento relativo, no estimacion causal de demanda.
 
-Idea: un video que rinde muy por encima de la mediana de SU PROPIO canal es
-prueba de que el tema tiene demanda, con independencia del tamano del canal.
-Normalizar contra el propio canal elimina el sesgo de "este canal es grande".
-
-  outlier_score = views del video / mediana de views del canal
-
-Score 1 = rendimiento normal. Score 3+ = el tema tiro del algoritmo.
+views / mediana del canal no elimina autoridad, ejecucion, empaque ni sesgo de
+seleccion. La cobertura guarda tambien no-outliers para comparar la muestra;
+no representa todo YouTube. El analisis visual es un paso separado y auditable.
 """
 
 from __future__ import annotations
@@ -35,6 +31,8 @@ class Outlier:
     duration_min: float
     url: str
     engagement: float  # (likes + comentarios) / views, en %
+    channel_id: str | None = None
+    thumbnail_url: str | None = None
 
 
 def _baseline(videos: list[Video]) -> int | None:
@@ -80,6 +78,8 @@ def analyse_channel(
                 duration_min=round(video.duration_s / 60, 1),
                 url=video.url,
                 engagement=round(engagement, 2),
+                channel_id=channel.channel_id,
+                thumbnail_url=video.thumbnail_url,
             )
         )
     return found, base
@@ -93,10 +93,15 @@ def mine(
     max_age_days: float = 180,
     per_channel: int = 60,
     include_shorts: bool = False,
+    coverage: dict | None = None,
 ) -> tuple[list[Outlier], list[str]]:
     """Devuelve (outliers ordenados por score, avisos)."""
     outliers: list[Outlier] = []
     warnings: list[str] = []
+    if coverage is not None:
+        coverage.update(scope="seed_channel_sample", requested_channels=len(niche["seed_channels"]),
+                        per_channel=per_channel, channels=[], videos=[], min_score=min_score,
+                        max_age_days=max_age_days, include_shorts=include_shorts)
 
     for ref in niche["seed_channels"]:
         try:
@@ -123,6 +128,16 @@ def mine(
             max_age_days=max_age_days,
             include_shorts=include_shorts,
         )
+        if coverage is not None:
+            coverage["channels"].append({"channel_id": channel.channel_id,
+                "channel_title": channel.title, "channel_subs": channel.subscribers,
+                "retrieved_videos": len(videos), "baseline": base})
+            for video in videos:
+                if (include_shorts or not video.is_short) and MATURITY_DAYS <= video.age_days <= max_age_days:
+                    coverage["videos"].append({"url": video.url, "title": video.title,
+                        "channel_id": channel.channel_id, "channel_title": channel.title,
+                        "channel_subs": channel.subscribers, "age_days": round(video.age_days, 1),
+                        "score": round(video.views / base, 2) if base else None})
         if base is None:
             warnings.append(
                 f"{channel.title}: menos de {BASELINE_MIN_VIDEOS} videos long-form maduros, "
@@ -135,7 +150,7 @@ def mine(
     return outliers, warnings
 
 
-def save(outliers: list[Outlier], niche_name: str) -> str:
+def save(outliers: list[Outlier], niche_name: str, *, coverage: dict | None = None) -> str:
     DATA_DIR.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     path = DATA_DIR / f"outliers-{niche_name}-{stamp}.json"
@@ -144,6 +159,7 @@ def save(outliers: list[Outlier], niche_name: str) -> str:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "count": len(outliers),
         "outliers": [asdict(o) for o in outliers],
+        "coverage": coverage,
     }
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     return str(path)

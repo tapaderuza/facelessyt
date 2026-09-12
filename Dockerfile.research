@@ -1,0 +1,8 @@
+FROM python:3.12-slim
+RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends tesseract-ocr tesseract-ocr-eng fonts-dejavu-core ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /work
+COPY pyproject.toml ./
+COPY src ./src
+RUN pip install --no-cache-dir '.[vision]'
+ENV FACELESSYT_ROOT=/work PYTHONPATH=/work/src
+ENTRYPOINT ["python", "-m", "facelessyt"]

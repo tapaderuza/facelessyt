@@ -1,0 +1,8 @@
+{
+  "source": "Published history confirmed by user, 2026-09-12; not inferred from render files",
+  "episodes": [
+    {"episode": 1, "title": "I Built an AI Agent That Picks My YouTube Videos For Me", "topic_key": "outlier-miner", "aliases": ["youtube-topic-finder", "topic-selection-agent"]},
+    {"episode": 2, "title": "My YouTube Tool Said This Topic Was Hot. It Was a Trap.", "topic_key": "topic-temperature", "aliases": ["outlier-trend-watch", "topic-saturation"]},
+    {"episode": 3, "title": "I Built an AI Agent That Has to Prove It's Right", "topic_key": "proof-gate", "aliases": ["agent-evidence-validator", "agent-verification-harness"]}
+  ]
+}

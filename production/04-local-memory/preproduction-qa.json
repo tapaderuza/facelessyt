@@ -1,0 +1,16 @@
+{
+  "checks_passed": true,
+  "errors": [],
+  "narration_words": 917,
+  "target_seconds": 390,
+  "estimated_wpm": 141.1,
+  "scope": "Structural preproduction checks only, not finished-video QA",
+  "render_complete": false,
+  "audio_timing_locked": false,
+  "publication_ready": false,
+  "sha256": {
+    "episode.yaml": "d161e6870c3ca6ab358a5e0f0f0766290c02a3379245a04330f59fc7f22b162a",
+    "memory-evidence.json": "c5badb28686a0b63965b7727c5c90179a2ffbfabd9270996d529416bdd066aad",
+    "render-spec.json": "9d78d2c2b35ec010a693128da11a45d14315d1acc12b4ccbec74f88fdfcf00ba"
+  }
+}

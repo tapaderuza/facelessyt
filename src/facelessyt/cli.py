@@ -56,6 +56,7 @@ def cmd_mine(args: argparse.Namespace) -> int:
         f"score minimo {args.min_score}, ultimos {args.days:.0f} dias\n"
     )
 
+    coverage = {}
     outliers, warnings = miner.mine(
         client,
         niche,
@@ -63,6 +64,7 @@ def cmd_mine(args: argparse.Namespace) -> int:
         max_age_days=args.days,
         per_channel=args.per_channel,
         include_shorts=args.shorts,
+        coverage=coverage,
     )
 
     for warning in warnings:
@@ -76,7 +78,7 @@ def cmd_mine(args: argparse.Namespace) -> int:
             "no son representativos. Prueba --min-score 2 o revisa el yaml del nicho."
         )
     else:
-        table = Table(title=f"{len(outliers)} temas con demanda probada")
+        table = Table(title=f"{len(outliers)} videos con rendimiento relativo alto (no causal)")
         table.add_column("Score", justify="right", style="bold green")
         table.add_column("Views", justify="right")
         table.add_column("Titulo", max_width=58, overflow="ellipsis")
@@ -101,8 +103,16 @@ def cmd_mine(args: argparse.Namespace) -> int:
         for o in outliers[:10]:
             console.print(f"  [dim]{o.score:5.1f}x[/dim]  {o.url}")
 
-    path = miner.save(outliers, niche["name"])
+    path = miner.save(outliers, niche["name"], coverage=coverage)
     console.print(f"\nGuardado en [cyan]{path}[/cyan]")
+    if args.thumbnails:
+        from dataclasses import asdict
+        from .visual_research import research
+        visual = research([asdict(o) for o in outliers], Path(path).with_suffix(".thumbnails"))
+        failures = sum(r["status"] != "ok" for r in visual["results"])
+        console.print(f"Miniaturas analizadas: {len(visual['results'])}; incompletas: {failures}. CTR ajeno desconocido.")
+        if failures:
+            return 1
     console.print(f"[dim]Cuota consumida: {client.quota_used} / 10000 unidades[/dim]")
     return 0
 
@@ -414,17 +424,46 @@ def cmd_watch(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_research(args: argparse.Namespace) -> int:
+    import json
+    from .opportunities import latest_snapshot, rank
+    from .visual_research import research
+
+    source = Path(args.snapshot) if args.snapshot else latest_snapshot(config.DATA_DIR, args.niche)
+    snapshot = json.loads(source.read_text(encoding="utf-8"))
+    catalog = json.loads(Path(args.catalog).read_text(encoding="utf-8"))
+    report = rank(snapshot, catalog)
+    report["source_file"] = source.name
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "opportunities.json").write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    console.print(f"Seleccion editorial: {report['selected'] or 'ninguna'}; cobertura: {report['scope']}")
+    if not report["selected"]:
+        return 1
+    chosen = next(c for c in report["candidates"] if c["topic_key"] == report["selected"])
+    if not args.skip_visuals:
+        rows = snapshot["outliers"] if args.all_thumbnails else chosen["sources"]
+        visual = research(rows, out / "thumbnails", refresh=args.refresh)
+        failures = sum(r["status"] != "ok" for r in visual["results"])
+        console.print(f"Miniaturas: {len(visual['results'])}; incompletas: {failures}; CTR no disponible.")
+        if failures:
+            return 1
+    console.print(f"Informe: {out / 'opportunities.json'}. Pendiente criterio editorial; no publica nada.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="facelessyt", description="Operativa de canal faceless")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_mine = sub.add_parser("mine", help="busca temas con demanda probada en un nicho")
+    p_mine = sub.add_parser("mine", help="busca senales de rendimiento relativo en un nicho")
     p_mine.add_argument("--niche", default="ai-automation")
     p_mine.add_argument("--min-score", type=float, default=3.0)
     p_mine.add_argument("--days", type=float, default=180, help="antiguedad maxima del video")
     p_mine.add_argument("--per-channel", type=int, default=60)
     p_mine.add_argument("--limit", type=int, default=40, help="filas a mostrar")
     p_mine.add_argument("--shorts", action="store_true", help="incluir shorts")
+    p_mine.add_argument("--thumbnails", action="store_true", help="descargar y analizar automaticamente cada outlier (extra vision + Tesseract)")
     p_mine.set_defaults(func=cmd_mine)
 
     p_track = sub.add_parser("track", help="evalua la metrica de corte de los 90 dias")
@@ -467,6 +506,16 @@ def main(argv: list[str] | None = None) -> int:
     p_watch.add_argument("--days", type=float, default=180)
     p_watch.add_argument("--per-channel", type=int, default=60)
     p_watch.set_defaults(func=cmd_watch)
+
+    p_research = sub.add_parser("research", help="seleccion sin duplicados + miniaturas OpenCV/OCR")
+    p_research.add_argument("--niche", default="ai-automation")
+    p_research.add_argument("--snapshot", help="por defecto, ultimo generated_at del nicho")
+    p_research.add_argument("--catalog", default=str(config.ROOT / "production/published-topics.json"))
+    p_research.add_argument("--out", default=str(config.DATA_DIR / "research/04-local-memory"))
+    p_research.add_argument("--skip-visuals", action="store_true", help="solo ranking, sin red ni OCR")
+    p_research.add_argument("--all-thumbnails", action="store_true", help="analizar los outliers de todos los temas, no solo el elegido")
+    p_research.add_argument("--refresh", action="store_true", help="actualizar capturas actuales de miniaturas")
+    p_research.set_defaults(func=cmd_research)
 
     args = parser.parse_args(argv)
     try:

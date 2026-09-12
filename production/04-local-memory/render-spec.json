@@ -1,0 +1,609 @@
+{
+  "schema_version": 1,
+  "episode": 4,
+  "topic_key": "local-memory-budget",
+  "status": "preproduction",
+  "title": "Your AI Model Fits. Your Conversation Doesn't.",
+  "alternatives": [
+    "Local AI Has a Memory Bill You're Not Counting",
+    "Before You Run AI Locally, Check This Budget",
+    "Why Model Size Isn't Your AI Memory Budget"
+  ],
+  "language": "en-US",
+  "audience": "Developers and technical creators considering local AI on constrained hardware; no requirement to know this channel or previous episodes.",
+  "promise": "Build and run a small, explicit memory budget; see how context and concurrency can exceed it without changing the weights. No hardware benchmark or model recommendation.",
+  "duration_target_seconds": 390,
+  "timing_status": "Editorial targets, not locked audio timings. Re-time to measured narration; never stretch still images to hit the target.",
+  "evidence_file": "memory-evidence.json",
+  "evidence_generator": "python -m facelessyt.memory_budget --out production/04-local-memory/memory-evidence.json",
+  "publication": "No upload in this task. Public release requires full render/audio review and a working source-code link.",
+  "render": {
+    "resolution": [
+      1920,
+      1080
+    ],
+    "fps": 30,
+    "frame_count_target": 11700,
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "audio": {
+      "sample_rate": 48000,
+      "channels": 2,
+      "integrated_lufs_target": -16,
+      "true_peak_max_dbtp": -1.0
+    },
+    "palette": {
+      "background": "#0B1017",
+      "surface": "#14202D",
+      "text": "#F3F6FA",
+      "green": "#47D18C",
+      "amber": "#FFC857",
+      "red": "#FF5964",
+      "cache": "#6DB5FF"
+    },
+    "typography": {
+      "headline_px": 78,
+      "body_px": 46,
+      "code_px": 38,
+      "evidence_label_px": 30,
+      "subtitle_px": 46
+    },
+    "safe_area_px": {
+      "left": 100,
+      "right": 100,
+      "top": 70,
+      "bottom": 160
+    },
+    "motion_engine": "Pure frame-indexed SVG/canvas properties; transitions use smoothstep(t). Regenerate shapes every frame; do not animate a static screenshot with zoom.",
+    "motion_semantics": "Terminal lines must be sourced from code/evidence. Token chips enter cache; bars change with calculated bytes; arrows trace data dependencies. Cursor blink alone does not count as motion.",
+    "maximum_unchanged_content_seconds": 4,
+    "attention_beat_seconds": [
+      3,
+      6
+    ],
+    "transition_frames": 8,
+    "property_motion_frames": 75,
+    "beat_execution": "Each attention beat starts a meaningful 2.5-second property/diagram transformation. With beat gaps <=6 seconds, unchanged holds stay <=3.5 seconds. Do not use a progress bar or cursor blink to satisfy this rule.",
+    "subtitle_rule": "Align to generated or recorded audio. Max two lines, no collision with budget labels; never fabricate word-level alignment.",
+    "persistent_demo_label": "ILLUSTRATIVE BUDGET / NOT A HARDWARE BENCHMARK",
+    "bans": [
+      "generic_greeting",
+      "logo_intro",
+      "static_slide_sequence",
+      "fake_oom_trace",
+      "fake_loading_benchmark",
+      "fabricated_ctr",
+      "predicted_views",
+      "unlicensed_competitor_artwork_in_thumbnail"
+    ]
+  },
+  "thumbnail": {
+    "status": "Source images measured and manually reviewed; see visual-review.md. No CTR prediction.",
+    "visual_sources": [
+      "00Y-p62sk0s",
+      "CpMCYO2oWBI"
+    ],
+    "source_measurements": {
+      "IndyDevDan": {
+        "contrast_std_0_1": 0.3172,
+        "mean_saturation_0_1": 0.1643,
+        "ocr_word_count": 2,
+        "manual_headline_tokens": 3
+      },
+      "AICodeKing": {
+        "contrast_std_0_1": 0.2953,
+        "mean_saturation_0_1": 0.3324,
+        "ocr_word_count": 48,
+        "manual_headline_tokens": 4
+      }
+    },
+    "translation": "Carry over headline scale, a single technical focal object and light/dark separation. Use an original memory diagram instead of hardware branding, a person's likeness or a copied interface. Raw OCR counts include background UI and must not set copy length.",
+    "concept": "One memory container with a fixed ceiling. Green weights occupy half; blue conversation blocks spill into red above the ceiling. Large text: IT FITS? No face, product logos, creator likeness or copied artwork.",
+    "variant_b": "Same overflow diagram; headline TOO MUCH CONTEXT. Keep composition fixed so the test has a clear variable.",
+    "title_relation": "Thumbnail poses the visual contradiction; title names the conversation, not a second unexplained technical slogan.",
+    "resolution": [
+      1280,
+      720
+    ],
+    "mobile_check": [
+      320,
+      180
+    ],
+    "ctr": null
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "start": 0,
+      "end": 30,
+      "chapter": "The budget goes red",
+      "evidence": [
+        "long",
+        "short"
+      ],
+      "layout": "conflict_terminal_to_budget",
+      "beats": [
+        [
+          0,
+          "Open on OVER BUDGET, not a greeting. Show 9 GiB requested / 8 GiB budget; persistent illustrative label visible immediately."
+        ],
+        [
+          3,
+          "Separate four green weight blocks from the total; show the ceiling at eight."
+        ],
+        [
+          6,
+          "Change context input 8192 -> 32768; blue cache grows from one to four blocks by second 12."
+        ],
+        [
+          12,
+          "Red overflow segment crosses ceiling. No fake CUDA exception or loading spinner."
+        ],
+        [
+          16,
+          "Pin weights at 4 GiB; trace a blue arrow from context to cache."
+        ],
+        [
+          20,
+          "Outline three inputs: weights, conversation, reserve."
+        ],
+        [
+          25,
+          "Transform question mark into the editable budget; cut on the first input."
+        ]
+      ],
+      "narration": "Four gibibytes of model weights. Eight available. This budget still goes red. The weights did not change. The conversation did. Watch the blue section: a longer context pushes this example from six to nine. This is a calculated budget, not a crash recording. I'm going to build the calculation, change one input at a time, and show you why a model that fits is not the same thing as a workload that fits."
+    },
+    {
+      "id": "S02",
+      "start": 30,
+      "end": 55,
+      "chapter": "The three-part bill",
+      "evidence": [
+        "short"
+      ],
+      "layout": "three_layer_stack",
+      "beats": [
+        [
+          0,
+          "Assemble weights / cache / reserve as separate objects."
+        ],
+        [
+          4,
+          "Lock weights; keep token chips flowing only into cache."
+        ],
+        [
+          9,
+          "Add grey reserve, marked ASSUMED rather than measured."
+        ],
+        [
+          14,
+          "Split system RAM and GPU VRAM into separate lanes, then cross out their addition."
+        ],
+        [
+          19,
+          "Return to one explicitly chosen memory pool; outline its eight-GiB ceiling."
+        ]
+      ],
+      "narration": "Our bill has three lines: resident weights, conversation cache, and a reserve for everything this simplified calculation does not model. We're budgeting one memory pool. If you have separate system RAM and GPU memory, don't add them together and pretend the result is one device. Four for weights and one for reserve are assumptions in this example. They are not measurements of your machine."
+    },
+    {
+      "id": "S03",
+      "start": 55,
+      "end": 95,
+      "chapter": "The conversation leaves a footprint",
+      "evidence": [
+        "short"
+      ],
+      "layout": "token_cache_flow",
+      "beats": [
+        [
+          0,
+          "A token enters a layer; K and V cells appear as two labelled objects."
+        ],
+        [
+          5,
+          "Next token extends both rows; draw reuse arrow to previous cells."
+        ],
+        [
+          10,
+          "Replicate row across layers; highlight cached values, not stored text."
+        ],
+        [
+          15,
+          "Increase token count while weight block stays unchanged."
+        ],
+        [
+          20,
+          "Show full-context boundary around the diagram."
+        ],
+        [
+          25,
+          "Separate sliding-window/compressed architectures into NOT THIS CALCULATOR lane."
+        ],
+        [
+          30,
+          "Return to dense cache; reveal multiplication slots one at a time."
+        ],
+        [
+          35,
+          "Collapse diagram into function arguments without a static code screenshot."
+        ]
+      ],
+      "narration": "The blue section is the key-value cache. During generation, an attention model can keep intermediate keys and values from earlier tokens and reuse them. In the full-context setup we're illustrating, a longer sequence means more cached values. The weights can stay fixed while this separate allocation grows. That's the mechanism, not a claim about every model on the market. Sliding windows, different architectures and cache compression change the accounting. Our calculator has a narrow job: make one common layout explicit enough that we can inspect every multiplication."
+    },
+    {
+      "id": "S04",
+      "start": 95,
+      "end": 130,
+      "chapter": "Build the calculation",
+      "evidence": [
+        "short"
+      ],
+      "layout": "formula_to_terminal",
+      "beats": [
+        [
+          0,
+          "Type actual per_token expression from memory_budget.py; reveal one factor per highlight."
+        ],
+        [
+          4,
+          "Highlight 2 for K and V."
+        ],
+        [
+          8,
+          "Highlight 32 layers and 8 KV heads; do not label attention heads."
+        ],
+        [
+          12,
+          "Highlight 128 values and 2 bytes per value."
+        ],
+        [
+          16,
+          "Reduce factors to 131072 bytes/token; draw a 128-KiB unit tile."
+        ],
+        [
+          21,
+          "Multiply unit tile by tokens and sequences."
+        ],
+        [
+          26,
+          "Add weights and reserve from fixture inputs."
+        ],
+        [
+          31,
+          "Execute the real calculator output, labelled replay of deterministic calculation."
+        ]
+      ],
+      "narration": "Here's the entire cache calculation. Two, for keys and values. Times layers. Times key-value heads, not necessarily the number of attention heads. Times head dimension. Times bytes per cached value. Our chosen inputs give one hundred and twenty-eight kibibytes per token, per sequence. Multiply by the token count and the number of sequences. Then add weights and reserve. That's it. These exact inputs and outputs come from the Python file, so the animation doesn't get to improvise the answer."
+    },
+    {
+      "id": "S05",
+      "start": 130,
+      "end": 170,
+      "chapter": "The first case fits the budget",
+      "evidence": [
+        "short"
+      ],
+      "layout": "budget_case",
+      "beats": [
+        [
+          0,
+          "Set tokens=8192; grow cache from zero to 1 GiB over four seconds."
+        ],
+        [
+          5,
+          "Stack 4 + 1 + 1; numeric total counts to 6 GiB."
+        ],
+        [
+          10,
+          "Trace the remaining 2-GiB headroom with a bracket."
+        ],
+        [
+          15,
+          "Type exact under_budget_not_verified status in amber, not green PASSED."
+        ],
+        [
+          20,
+          "Unfold three unknown fields: runtime peak, speed, output quality."
+        ],
+        [
+          25,
+          "Cross out guarantee; keep the measured fields visibly null."
+        ],
+        [
+          30,
+          "Lock all inputs except tokens."
+        ],
+        [
+          35,
+          "Move focus to context slider; next value enters from the right."
+        ]
+      ],
+      "narration": "Start at eight thousand one hundred and ninety-two tokens. The cache is one gibibyte. Four of weights, one of cache, one of reserve: six against an eight-gibibyte budget. Two remain. Notice the verdict. It says under budget, not verified. It does not say the model has loaded. It does not tell us the generation speed, and it does not tell us whether the output is useful. A budget can rule out an assumption. It cannot replace a runtime test. Now leave everything else alone."
+    },
+    {
+      "id": "S06",
+      "start": 170,
+      "end": 210,
+      "chapter": "Change one input",
+      "evidence": [
+        "short",
+        "long"
+      ],
+      "layout": "context_sweep",
+      "beats": [
+        [
+          0,
+          "Context slider travels 8192 -> 32768 over twelve seconds; derive intermediate cache bytes from formula."
+        ],
+        [
+          5,
+          "Keep weights and reserve pinned; grow only blue geometry."
+        ],
+        [
+          10,
+          "At 24576 tokens total reaches 8 GiB; annotate boundary, not actual OOM."
+        ],
+        [
+          14,
+          "Final state: 4 + 4 + 1 = 9 GiB."
+        ],
+        [
+          19,
+          "Animate one-GiB overflow beyond eight ceiling; reveal over_budget."
+        ],
+        [
+          24,
+          "Contrast same weights / different workload as a connected pair."
+        ],
+        [
+          29,
+          "Show runtime measurement field as NOT RUN, never a fabricated exception."
+        ],
+        [
+          34,
+          "Cursor moves to reduction input; prepare the repair."
+        ]
+      ],
+      "narration": "Raise the context to thirty-two thousand seven hundred and sixty-eight tokens. In this calculation, that's four times the tokens and four times the cache. The blue block reaches four gibibytes. The total is now nine. We are one over budget, even though the weights are still four. Nothing here proves that a particular computer crashed. It proves that these inputs don't fit this budget under these assumptions. That's enough to reject the plan before treating it as a working configuration. And we can change the plan without changing the model weights."
+    },
+    {
+      "id": "S07",
+      "start": 210,
+      "end": 240,
+      "chapter": "The first lever",
+      "evidence": [
+        "reduced_context"
+      ],
+      "layout": "context_repair",
+      "beats": [
+        [
+          0,
+          "Reduce context to 16384; cache shrinks continuously to 2 GiB."
+        ],
+        [
+          5,
+          "Recompute total 7; remove overflow and draw 1-GiB headroom."
+        ],
+        [
+          10,
+          "Underline under_budget_not_verified; no performance claim."
+        ],
+        [
+          15,
+          "Draw shorter conversation window, visibly showing the tradeoff."
+        ],
+        [
+          20,
+          "Put weight quantization and cache quantization in separate boxes."
+        ],
+        [
+          25,
+          "Introduce second conversation as a new input, not a scene reset."
+        ]
+      ],
+      "narration": "Cut the context to sixteen thousand three hundred and eighty-four tokens. The cache becomes two gibibytes. Total: seven. One left in the budget. The tradeoff is visible: a smaller context allowance, not a free improvement. And changing how weights are stored is not the same switch as changing cache precision. Check what your runtime actually supports. This example is back under budget. But one more input can send it straight back over."
+    },
+    {
+      "id": "S08",
+      "start": 240,
+      "end": 275,
+      "chapter": "The second conversation",
+      "evidence": [
+        "reduced_context",
+        "two_sequences"
+      ],
+      "layout": "concurrency_fork",
+      "beats": [
+        [
+          0,
+          "Fork one conversation into two distinct sequences."
+        ],
+        [
+          5,
+          "Keep one shared weight block; duplicate only cache allocations."
+        ],
+        [
+          10,
+          "Each cache shows 2 GiB; combined cache reaches 4."
+        ],
+        [
+          15,
+          "Total returns to 9 GiB; overflow reappears."
+        ],
+        [
+          20,
+          "Label NO PREFIX SHARING assumed; grey out optimization claims."
+        ],
+        [
+          25,
+          "Collapse scenarios into four rows, one at a time."
+        ],
+        [
+          30,
+          "Trace the only changed inputs in each row."
+        ]
+      ],
+      "narration": "Keep that reduced context, but budget two sequences at once. We're assuming separate full caches, without shared prefixes. Two gibibytes for the first sequence. Two for the second. The weights are shared once in this example, not loaded twice. Yet the total is back to nine. So asking whether a model fits misses two questions: how much context, and how many simultaneous sequences? Four cases. Same weights. Different budgets. Those are the inputs I would write down before calling a local setup ready."
+    },
+    {
+      "id": "S09",
+      "start": 275,
+      "end": 310,
+      "chapter": "Where the calculator stops",
+      "evidence": [
+        "two_sequences"
+      ],
+      "layout": "assumptions_to_unknowns",
+      "beats": [
+        [
+          0,
+          "Extract reserve=1 GiB input and stamp ASSUMED."
+        ],
+        [
+          5,
+          "Separate resident weight size from downloaded file size."
+        ],
+        [
+          10,
+          "Unfold backend buffers and allocation behavior as unmeasured terms."
+        ],
+        [
+          15,
+          "Draw an offload arrow between separate memory pools, not pooled addition."
+        ],
+        [
+          20,
+          "Introduce runtime peak measurement card with no numeric value."
+        ],
+        [
+          25,
+          "Replace broad model compatibility claim with explicit dense-cache scope."
+        ],
+        [
+          30,
+          "Move cards into the practical checklist."
+        ]
+      ],
+      "narration": "Here's where this calculator stops. Our reserve is a chosen allowance, not a universal overhead figure. A downloaded file is not automatically the same size as its resident representation. Backend behavior, buffers and allocation choices still need inspection. Offloading can move work between memory pools; our single-pool sum does not model that arrangement. Don't paste these example inputs into a different architecture and call the result a compatibility certificate. Use the right cache layout, then compare the estimate with the runtime you actually intend to use."
+    },
+    {
+      "id": "S10",
+      "start": 310,
+      "end": 345,
+      "chapter": "The workload checklist",
+      "evidence": [
+        "short",
+        "long",
+        "reduced_context",
+        "two_sequences"
+      ],
+      "layout": "workload_manifest",
+      "beats": [
+        [
+          0,
+          "Type manifest fields: model revision / quantization / backend."
+        ],
+        [
+          5,
+          "Add context limit and concurrent sequences."
+        ],
+        [
+          10,
+          "Draw budget evaluation as an amber planning gate."
+        ],
+        [
+          15,
+          "Connect to real load, warmup and target workload measurement steps."
+        ],
+        [
+          20,
+          "Split memory, latency and useful output into separate criteria."
+        ],
+        [
+          25,
+          "Keep all unperformed measurements empty."
+        ],
+        [
+          30,
+          "Bring back the first red frame, now with its inputs visible."
+        ]
+      ],
+      "narration": "For a real trial, record the model revision, weight format and backend. Set the context you need and the concurrency you expect. Budget the memory pool you plan to use. Then load the real configuration and measure its peak during your target workload. Check latency and useful output separately. If you change the context, concurrency or backend, repeat the test. That's the handoff: arithmetic first, measurement next. Neither a promising download size nor an under-budget label is the finish line."
+    },
+    {
+      "id": "S11",
+      "start": 345,
+      "end": 370,
+      "chapter": "The payoff",
+      "evidence": [
+        "short",
+        "long",
+        "reduced_context",
+        "two_sequences"
+      ],
+      "layout": "four_case_recap",
+      "beats": [
+        [
+          0,
+          "Build four rows from evidence JSON, not manually typed totals."
+        ],
+        [
+          4,
+          "Highlight 6 GiB short context."
+        ],
+        [
+          8,
+          "Highlight 9 GiB long context."
+        ],
+        [
+          12,
+          "Highlight 7 GiB reduced context."
+        ],
+        [
+          16,
+          "Highlight 9 GiB two sequences."
+        ],
+        [
+          20,
+          "Bracket constant weights versus changing workload."
+        ]
+      ],
+      "narration": "Here's the whole result. Short context: six. Long context: nine. Reduced context: seven. Two sequences at that reduced context: nine again. All calculated, all with the same assumed weights and reserve. We didn't discover a magic model. We made the hidden inputs visible. The question isn't just, does the model fit? It's, does this workload fit, and have I measured it?"
+    },
+    {
+      "id": "S12",
+      "start": 370,
+      "end": 390,
+      "chapter": "Run the calculation",
+      "evidence": [
+        "short"
+      ],
+      "layout": "source_and_end_screen",
+      "beats": [
+        [
+          0,
+          "Show executable command, source-file name and four-case output."
+        ],
+        [
+          4,
+          "Highlight the tokens field as the first edit."
+        ],
+        [
+          8,
+          "Reveal reproducible calculation CTA; only show public URL once verified."
+        ],
+        [
+          12,
+          "Animate return arrow to episode 3 verification topic; reserve YouTube end-screen area."
+        ],
+        [
+          16,
+          "End on workload > model-size question, without looping greeting or logo."
+        ]
+      ],
+      "narration": "Run the calculator and change the context input first. Watch which line moves. The reproducible version has no model download and makes no speed claims. If you want the next step, the previous episode shows how I make an agent check its evidence before accepting an answer. Same principle here: expose the assumptions before trusting the result."
+    }
+  ]
+}

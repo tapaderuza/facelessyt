@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outlier Engineering · 04 · Animatic</title>
+<style>
+body{margin:0;background:#080c12;color:#f3f6fa;font:16px system-ui}main{max-width:1200px;margin:24px auto;padding:0 20px}h1{font-size:24px}p{color:#adbac9;line-height:1.5}svg{width:100%;height:auto;background:#0b1017;border-radius:12px}button,input{font:inherit}button{background:#25374c;color:white;padding:10px 20px;border:0;border-radius:7px;cursor:pointer}input{width:60%;vertical-align:middle}text{font-family:ui-monospace,Consolas,monospace}a{color:#6db5ff}
+</style>
+<main>
+<h1>Vídeo 4 · prueba de movimiento del hook</h1>
+<p>Animatic de 30 segundos, sin locución ni mezcla de sonido. SVG generado por estado y fotograma: las barras representan el cálculo real del ejemplo, no una medición de hardware. No es el montaje final.</p>
+<svg viewBox="0 0 1920 1080" role="img" aria-label="Presupuesto ilustrativo de memoria; el contexto aumenta sin cambiar los pesos">
+ <text x="110" y="98" font-size="28" fill="#a5b5c8">OUTLIER ENGINEERING / 04</text>
+ <text x="110" y="178" font-size="62" fill="#f3f6fa" id="headline">THE MODEL FITS. THE WORKLOAD?</text>
+ <text x="110" y="237" font-size="29" fill="#ffc857">ILLUSTRATIVE BUDGET / NOT A HARDWARE BENCHMARK</text>
+ <rect x="110" y="302" width="1700" height="235" rx="18" fill="#14202d"/>
+ <text x="145" y="358" font-size="32" fill="#a5b5c8">$ python -m facelessyt.memory_budget</text>
+ <text x="145" y="422" font-size="44" fill="#6db5ff" id="tokens"></text>
+ <text x="145" y="487" font-size="42" fill="#ff5964" id="status"></text>
+ <g transform="translate(145 620)">
+  <rect width="1450" height="116" rx="10" fill="#203044"/>
+  <rect id="weights" width="580" height="116" fill="#47d18c"/>
+  <rect id="cache" x="580" width="580" height="116" fill="#6db5ff"/>
+  <rect id="reserve" x="1160" width="145" height="116" fill="#8292a6"/>
+  <rect id="overflow" x="1160" width="145" height="116" fill="#ff5964" opacity=".75"/>
+  <line x1="1160" x2="1160" y1="-35" y2="155" stroke="#f3f6fa" stroke-width="5" stroke-dasharray="12 8"/>
+  <text x="1000" y="-53" font-size="36" fill="#f3f6fa">8 GiB budget</text>
+  <text x="35" y="70" font-size="39" fill="#091520">WEIGHTS: 4</text>
+  <text x="0" y="194" font-size="38" fill="#6db5ff" id="cacheLabel"></text>
+  <text x="950" y="194" font-size="44" fill="#ff5964" id="total"></text>
+ </g>
+ <text x="110" y="960" font-size="34" fill="#f3f6fa" id="beat"></text>
+ <rect x="110" y="1010" height="5" width="0" fill="#47d18c" id="progress"/>
+</svg>
+<p><button id="play">Reproducir</button> <input id="seek" type="range" min="0" max="899" value="0" aria-label="Fotograma"> <span id="time">00:00</span></p>
+<p><a href="GUION.md">Guion completo</a> · <a href="episode.yaml">Spec de edición</a> · <a href="memory-evidence.json">Cálculo y supuestos</a></p>
+</main>
+<script id="evidence" type="application/json">{"schema_version": 1, "label": "ILLUSTRATIVE BUDGET - NOT A HARDWARE BENCHMARK", "short": {"kind": "synthetic_budget_calculation_not_runtime_measurement", "inputs": {"capacity_bytes": 8589934592, "weight_bytes": 4294967296, "reserve_bytes": 1073741824, "layers": 32, "kv_heads": 8, "head_dim": 128, "cache_bytes_per_element": 2, "tokens": 8192, "sequences": 1}, "kv_bytes_per_token_per_sequence": 131072, "cache_bytes": 1073741824, "total_budget_bytes": 6442450944, "headroom_bytes": 2147483648, "status": "under_budget_not_verified", "runtime_peak_bytes": null, "tokens_per_second": null, "assumptions": ["One shared memory pool; do not add separate RAM and VRAM", "Dense full-context KV; no sliding window, compression, offload or prefix sharing", "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured", "Under budget does not prove the runtime will load or meet latency/quality needs"]}, "long": {"kind": "synthetic_budget_calculation_not_runtime_measurement", "inputs": {"capacity_bytes": 8589934592, "weight_bytes": 4294967296, "reserve_bytes": 1073741824, "layers": 32, "kv_heads": 8, "head_dim": 128, "cache_bytes_per_element": 2, "tokens": 32768, "sequences": 1}, "kv_bytes_per_token_per_sequence": 131072, "cache_bytes": 4294967296, "total_budget_bytes": 9663676416, "headroom_bytes": -1073741824, "status": "over_budget", "runtime_peak_bytes": null, "tokens_per_second": null, "assumptions": ["One shared memory pool; do not add separate RAM and VRAM", "Dense full-context KV; no sliding window, compression, offload or prefix sharing", "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured", "Under budget does not prove the runtime will load or meet latency/quality needs"]}, "reduced_context": {"kind": "synthetic_budget_calculation_not_runtime_measurement", "inputs": {"capacity_bytes": 8589934592, "weight_bytes": 4294967296, "reserve_bytes": 1073741824, "layers": 32, "kv_heads": 8, "head_dim": 128, "cache_bytes_per_element": 2, "tokens": 16384, "sequences": 1}, "kv_bytes_per_token_per_sequence": 131072, "cache_bytes": 2147483648, "total_budget_bytes": 7516192768, "headroom_bytes": 1073741824, "status": "under_budget_not_verified", "runtime_peak_bytes": null, "tokens_per_second": null, "assumptions": ["One shared memory pool; do not add separate RAM and VRAM", "Dense full-context KV; no sliding window, compression, offload or prefix sharing", "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured", "Under budget does not prove the runtime will load or meet latency/quality needs"]}, "two_sequences": {"kind": "synthetic_budget_calculation_not_runtime_measurement", "inputs": {"capacity_bytes": 8589934592, "weight_bytes": 4294967296, "reserve_bytes": 1073741824, "layers": 32, "kv_heads": 8, "head_dim": 128, "cache_bytes_per_element": 2, "tokens": 16384, "sequences": 2}, "kv_bytes_per_token_per_sequence": 131072, "cache_bytes": 4294967296, "total_budget_bytes": 9663676416, "headroom_bytes": -1073741824, "status": "over_budget", "runtime_peak_bytes": null, "tokens_per_second": null, "assumptions": ["One shared memory pool; do not add separate RAM and VRAM", "Dense full-context KV; no sliding window, compression, offload or prefix sharing", "4 GiB resident weights and 1 GiB reserve are illustrative inputs, not measured", "Under budget does not prove the runtime will load or meet latency/quality needs"]}}</script>
+<script>
+"use strict";
+const E = JSON.parse(document.getElementById('evidence').textContent);
+const get = id => document.getElementById(id), GiB = 1024 ** 3;
+let frame = 0, playing = false, origin = 0;
+const smooth = t => {t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
+function renderFrame(f){
+ frame = Math.max(0,Math.min(899,Math.round(f))); const t=frame/30;
+ let tokens = E.long.inputs.tokens;
+ if(t>=3 && t<6) tokens=E.short.inputs.tokens;
+ if(t>=6 && t<12) tokens=Math.round(E.short.inputs.tokens+(E.long.inputs.tokens-E.short.inputs.tokens)*smooth((t-6)/6));
+ const cache=E.short.kv_bytes_per_token_per_sequence*tokens/GiB;
+ const total=E.short.inputs.weight_bytes/GiB+cache+E.short.inputs.reserve_bytes/GiB;
+ get('cache').setAttribute('width',cache*145);
+ get('reserve').setAttribute('x',(4+cache)*145);
+ get('overflow').setAttribute('width',Math.max(0,total-8)*145);
+ get('tokens').textContent=`context_tokens = ${tokens.toLocaleString('en-US')}   |   sequences = 1`;
+ get('status').textContent=total>8?'status = over_budget':'status = under_budget_not_verified';
+ get('status').setAttribute('fill',total>8?'#ff5964':'#ffc857');
+ get('cacheLabel').textContent=`CACHE: ${cache.toFixed(2)} GiB + RESERVE: 1 GiB`;
+ get('total').textContent=`TOTAL: ${total.toFixed(2)} GiB`;
+ get('total').setAttribute('fill',total>8?'#ff5964':'#ffc857');
+ get('beat').textContent=t<3?'Four of weights. Eight available. Still over budget.':t<6?'Start with a short context. Same weights.':t<12?'The context changes. The weights do not.':t<16?'9 GiB requested / 8 GiB budget.':t<20?'A calculated conflict, not a recorded hardware crash.':t<25?'WEIGHTS + CONVERSATION CACHE + RESERVE':'Does the model fit, or does the workload fit?';
+ // Semantic emphasis progresses after the cache sweep; not just cursor blinking.
+ const focus=smooth((t-16)/3);get('cache').setAttribute('stroke',t>=16?'#f3f6fa':'none');
+ get('cache').setAttribute('stroke-width',t>=16&&t<20?2+4*focus:0);
+ for(const id of ['weights','reserve']){get(id).setAttribute('stroke','none');get(id).setAttribute('stroke-width',0)}
+ if(t>=20&&t<26){const ids=['weights','cache','reserve'],index=Math.min(2,Math.floor((t-20)/2));const item=get(ids[index]);item.setAttribute('stroke','#f3f6fa');item.setAttribute('stroke-width',2+4*smooth(((t-20)%2)/2));}
+ if(t>=26){get('headline').textContent='MODEL FIT '+String.fromCharCode(8800)+' WORKLOAD FIT';get('headline').setAttribute('opacity',.35+.65*smooth((t-26)/3));}
+ else{get('headline').textContent='THE MODEL FITS. THE WORKLOAD?';get('headline').setAttribute('opacity',1);}
+ get('progress').setAttribute('width',1700*t/30);
+ get('time').textContent=`00:${String(Math.floor(t)).padStart(2,'0')}`;
+ get('seek').value=frame;
+}
+window.renderFrame=renderFrame;
+function tick(now){if(!playing)return;renderFrame((now-origin)*.03);if(frame>=899){playing=false;get('play').textContent='Repetir';return}requestAnimationFrame(tick)}
+get('play').onclick=()=>{playing=!playing;if(playing){if(frame>=899)frame=0;origin=performance.now()-frame/30*1000;requestAnimationFrame(tick)}get('play').textContent=playing?'Pausar':'Reproducir'};
+get('seek').oninput=e=>{playing=false;get('play').textContent='Reproducir';renderFrame(+e.target.value)};
+renderFrame(0);
+</script>
+</html>
