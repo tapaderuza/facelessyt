@@ -1,0 +1,7 @@
+# Reuse the existing ffmpeg/Piper/font toolchain; no API keys baked into image.
+FROM facelessyt-video
+WORKDIR /work
+ENV PYTHONPATH=/work/src FACELESSYT_ROOT=/work
+COPY src/ /work/src/
+COPY production/04-local-memory/ /work/production/04-local-memory/
+ENTRYPOINT ["python", "production/04-local-memory/render_episode.py"]

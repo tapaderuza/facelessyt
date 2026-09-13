@@ -1,0 +1,4 @@
+# Isolated local speech-recognition check; no paid transcription services.
+FROM facelessyt-episode04
+RUN pip install --no-cache-dir 'faster-whisper>=1.1,<2'
+ENTRYPOINT ["python", "production/04-local-memory/check_speech.py"]
