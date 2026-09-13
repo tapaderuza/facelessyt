@@ -79,6 +79,7 @@ def main():
     thumb=Image.open(OUT/'thumbnail.jpg')
     checks['thumbnail_1280x720_under_2mb']=thumb.size==(1280,720) and (OUT/'thumbnail.jpg').stat().st_size<2*1024*1024
     report={'technical_pass':all(checks.values()),'checks':checks,'duration_seconds':duration,
+        'audio_decoded_sha256':run(['ffmpeg','-v','error','-i',str(video),'-map','0:a:0','-f','hash','-hash','sha256','-']).strip().split('=')[-1],
         'audio_loudness_lufs':float(loud['input_i']),'audio_true_peak_dbtp':float(loud['input_tp']),
         'motion_holds':holds,'caption_alignment':'measured synthesized phrase boundaries, not word-level forced alignment',
         'video_sha256':hashlib.sha256(video.read_bytes()).hexdigest(),

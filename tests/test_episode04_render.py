@@ -70,5 +70,11 @@ class Episode04RenderTests(unittest.TestCase):
         self.assertEqual(self.renderer.scenario('S01',t)['status'],'over_budget')
         self.assertGreater(self.renderer.editorial_time(scene,entry,12.),6)
 
+    def test_hook_badge_does_not_cover_budget_ceiling_label(self):
+        hook=self.renderer.artwork(self.spec['scenes'][0],0)
+        comparison=self.renderer.artwork(self.spec['scenes'][5],12)
+        region=(1250,400,1800,470)
+        self.assertEqual(hook.crop(region).tobytes(),comparison.crop(region).tobytes())
+
 
 if __name__=='__main__':unittest.main()

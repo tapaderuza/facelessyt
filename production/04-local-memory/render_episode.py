@@ -187,7 +187,7 @@ def artwork(scene, t, subtitle='', *, evidence=None):
         result=scenario(sid,t)
         budget_view(d,result,t,idx,p)
         if sid=='S01' and t<3:
-            text(d,'OVER BUDGET',(1250,405),38,RED,bold=True,width=550)
+            text(d,'OVER BUDGET',(110,850),38,RED,bold=True,width=550)
         if sid=='S05' and t>=20:
             text(d,'peak: null   speed: null   quality: not measured',(110,858),29,AMBER,mono=True)
         if sid=='S07' and t>=20:
