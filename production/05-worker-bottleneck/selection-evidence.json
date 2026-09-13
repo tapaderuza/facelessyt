@@ -1,0 +1,137 @@
+{
+  "analysis_at": "2026-09-13T01:42:26.026995+00:00",
+  "snapshot": "data/outliers-ai-automation-2026-09-10.json",
+  "snapshot_sha256": "1aa9ee168c750ccf3745537c99f0964209e19fb942455a9f23853d7d5572e164",
+  "snapshot_at": "2026-09-10T09:21:40.223946+00:00",
+  "automatic_selection": null,
+  "selection_type": "editorial_experiment_not_demand_validated",
+  "selected_angle": "worker-tool-queue-bottleneck",
+  "direct_demand_evidence_for_selected_angle": null,
+  "adjacent_cluster": {
+    "cluster": "coding tools",
+    "topic_key": "coding-agent-fixes",
+    "faceless_fit_editorial": "Executable before/after demo",
+    "eligible": false,
+    "reasons": [
+      "Fewer than 2 distinct non-large channels"
+    ],
+    "outliers": 1,
+    "outlier_channel_counts": {
+      "channels": 1,
+      "bands": {
+        "micro": 0,
+        "small": 0,
+        "mid": 1,
+        "large": 0,
+        "unknown": 0
+      },
+      "identity_fallback": true
+    },
+    "observed_competition": {
+      "channels": 1,
+      "bands": {
+        "micro": 0,
+        "small": 0,
+        "mid": 1,
+        "large": 0,
+        "unknown": 0
+      },
+      "identity_fallback": true,
+      "sample_channel_totals": null,
+      "topic_share_within_sample_by_band": null
+    },
+    "channel_balanced_median_score": 4.01,
+    "freshest_age_days": 11.38,
+    "median_age_days": 11.38,
+    "sources": [
+      {
+        "score": 4.01,
+        "views": 60721,
+        "title": "11 Tiny Coding Agent Fixes With A Stupid Amount Of Payoff",
+        "channel_title": "Cole Medin",
+        "channel_subs": 225000,
+        "channel_baseline": 15158,
+        "age_days": 8.7,
+        "duration_min": 17.5,
+        "url": "https://www.youtube.com/watch?v=UbylWXukvR8",
+        "engagement": 1.56
+      }
+    ]
+  },
+  "catalog_sha256": "f2cf1844e9e050fbc543e240457fddc289d761f43aa4cf571177b553fb0a2d36",
+  "excluded_episode_keys": [
+    "outlier-miner",
+    "topic-temperature",
+    "proof-gate",
+    "local-memory-budget"
+  ],
+  "policy_note": "Existing Episode 4 screening is unchanged. No candidate passes it after registering Episode 4. The new angle is an explicit editorial experiment, not an automatic approval or a measured high-demand concurrency topic.",
+  "screened_candidates": [
+    {
+      "topic_key": "local-memory-budget",
+      "eligible": false,
+      "reasons": [
+        "Already produced (catalog key or alias)"
+      ]
+    },
+    {
+      "topic_key": "coding-agent-fixes",
+      "eligible": false,
+      "reasons": [
+        "Fewer than 2 distinct non-large channels"
+      ]
+    },
+    {
+      "topic_key": null,
+      "eligible": false,
+      "reasons": [
+        "Format, not a coherent topic",
+        "Fewer than 2 distinct non-large channels",
+        "No source <=30 days at analysis time"
+      ]
+    },
+    {
+      "topic_key": null,
+      "eligible": false,
+      "reasons": [
+        "Packaging pattern, not a coherent topic",
+        "No source <=30 days at analysis time"
+      ]
+    },
+    {
+      "topic_key": "proof-gate",
+      "eligible": false,
+      "reasons": [
+        "Adjacent to episode 3; excluded for episode 4",
+        "No source <=30 days at analysis time"
+      ]
+    },
+    {
+      "topic_key": "model-comparison",
+      "eligible": false,
+      "reasons": [
+        "Fewer than 2 distinct non-large channels",
+        "No source <=30 days at analysis time"
+      ]
+    },
+    {
+      "topic_key": "outlier-miner",
+      "eligible": false,
+      "reasons": [
+        "Adjacent to episodes 1 and 3; excluded for episode 4",
+        "No source <=30 days at analysis time"
+      ]
+    },
+    {
+      "topic_key": "claude-code-workflow",
+      "eligible": false,
+      "reasons": [
+        "Fewer than 2 distinct non-large channels",
+        "No source <=30 days at analysis time"
+      ]
+    }
+  ],
+  "ctr": null,
+  "retention": null,
+  "market_saturation": null
+}

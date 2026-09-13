@@ -1,0 +1,20 @@
+{
+  "approved": true,
+  "video_sha256": "c7db0a7b8e76681bf3d0a2d3a701ffed868c68e2b4110701a8f63d9303bde612",
+  "thumbnail_sha256": "3e44aad3470aaf3e75cbec9a3337b4d8f59d4ece1694de7313b565e76b2667fd",
+  "reviewer": "Codex assistant",
+  "scope": [
+    "Encoded contact sheet for all eight scenes and 3/2/1 countdown",
+    "Full-size queue and J04 frames inspected in preceding production review",
+    "Complete independent ASR transcript of exact master reviewed in preceding production review",
+    "New generated raster and encoded JPEG inspected: exact headline, physical queue, two passages, no false crash claim",
+    "Current frame-level retiming and editorial canvas tests passed"
+  ],
+  "limitations": [
+    "Not a full human audiovisual playback certification",
+    "ASR has recognition errors and is not used as voice alignment",
+    "Small auxiliary code labels may require full-screen viewing or pause",
+    "No approved visual regression baseline exists"
+  ],
+  "release_authorization": "User requested direct public upload on Outlier Engineering and subsequently approved creating this replacement thumbnail"
+}

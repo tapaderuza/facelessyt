@@ -1,0 +1,72 @@
+{
+  "status": "preproduction_structure_pass_not_final_video_qa",
+  "scenes": [
+    {
+      "scene": "S01",
+      "words": 74,
+      "target_wpm": 148.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S02",
+      "words": 85,
+      "target_wpm": 170.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S03",
+      "words": 87,
+      "target_wpm": 174.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S04",
+      "words": 92,
+      "target_wpm": 184.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S05",
+      "words": 68,
+      "target_wpm": 151.1,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S06",
+      "words": 88,
+      "target_wpm": 176.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S07",
+      "words": 83,
+      "target_wpm": 166.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    },
+    {
+      "scene": "S08",
+      "words": 92,
+      "target_wpm": 184.0,
+      "scheduled_max_beat_gap_s": 2.5,
+      "all_cues_have_visual_actions": true
+    }
+  ],
+  "total_words": 669,
+  "target_seconds": 240,
+  "scheduled_beats": 96,
+  "challenge_countdown_frames": 90,
+  "voice_during_countdown": false,
+  "actual_voice_measured": false,
+  "encoded_motion_verified": false,
+  "public_upload": false,
+  "source_sha256": "26e69438e9fc8ee74fc54993875b1fa9ebb46b54115c4ad4ed00d1b4bd317ac4",
+  "simulation_sha256": "b908c52eb4add4f9fb5eaae61217ddbaf8484c4b27ecede334a4829149701dca",
+  "renderer_sha256": "ca92a7e348adec415c19a74545f6495b9876e732866165a74a0692de90f92f1e"
+}

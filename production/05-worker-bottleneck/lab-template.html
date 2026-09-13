@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outlier Engineering 05 — Guess the Output</title>
+<style>
+body{margin:18px;background:#0b1119;color:#edf4fb;font:18px system-ui}main{max-width:1440px;margin:auto}
+h1{font-size:26px}canvas{width:100%;border:1px solid #455365}
+button,input{font:inherit;margin:6px;padding:8px}button:focus-visible,input:focus-visible{outline:3px solid #ffb54d}
+.note{color:#9facbb}#seek{width:45%}
+</style><main>
+<h1>Guess the Output · Episode 05 visual timeline</h1>
+<p class="note">Simulation, not a live AI crash. Editorial cue timing; no narration or final MP4 yet. Queue effects include mild shake and localized warning pulses.</p>
+<button id="play">Play</button><button id="reset">Restart</button><button id="challenge">Jump to challenge</button>
+<label>Frame <input id="seek" type="range" min="0" max="7199" value="0" step="1"></label>
+<label><input id="reduced" type="checkbox">Reduced motion</label>
+<label><input id="sound" type="checkbox" checked>Countdown ticks</label>
+<div><button id="guessA">A · 2x speed</button><button id="guessB">B · Traffic jam</button><span id="guess" aria-live="polite">No guess selected</span></div>
+<p id="summary"></p>
+<canvas id="canvas" width="1920" height="1080" role="img" aria-label="A trace-driven simulation of jobs stacking at a constrained tool. At the challenge, choose a prediction before the three-second countdown ends."></canvas>
+<p class="note">Jokes are labeled editorial comments. Results come from the unchanged Python simulation. Input, preparation, queue, tool and completed counts preserve every job. Playback pauses when the tab is hidden.</p>
+</main>
+<script id="evidence" type="application/json">__EVIDENCE_JSON__</script>
+<script id="spec" type="application/json">__SPEC_JSON__</script>
+<script>__RENDERER_JS__</script>
+<script>
+'use strict';
+const spec=JSON.parse(document.getElementById('spec').textContent),evidence=JSON.parse(document.getElementById('evidence').textContent);
+const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),ui=id=>document.getElementById(id);
+let frame=0,playing=false,last=null,raf=null,audio=null,guess=null,heard=new Set();
+const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+ui('reduced').checked=media.matches;
+media.addEventListener('change',e=>{ui('reduced').checked=e.matches;draw();});
+function stop(){playing=false;last=null;if(raf!==null)cancelAnimationFrame(raf);raf=null;ui('play').textContent='Play';}
+function draw(){
+  const model=Episode05Renderer.renderFrame(ctx,Math.floor(frame),spec,evidence,{reducedMotion:ui('reduced').checked});
+  ui('seek').value=Math.floor(frame);
+  ui('summary').textContent=(frame/spec.fps).toFixed(2)+'s / 240s · '+model.scene.chapter;
+  const locked=frame>=spec.challenge.reveal_start*spec.fps;
+  ui('guessA').disabled=locked;ui('guessB').disabled=locked;
+  ui('guess').textContent=model.answerVisible?(guess?'Your guess: '+guess+' · ':'')+spec.challenge.answer:(guess?'Locked in: '+guess:'No guess selected');
+  return model;
+}
+function beep(){
+  if(!audio||!ui('sound').checked)return;
+  const osc=audio.createOscillator(),gain=audio.createGain();
+  osc.frequency.value=540;gain.gain.setValueAtTime(0.025,audio.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001,audio.currentTime+0.07);
+  osc.connect(gain);gain.connect(audio.destination);osc.start();osc.stop(audio.currentTime+0.07);
+  osc.onended=()=>{osc.disconnect();gain.disconnect();};
+}
+function loop(now){
+  if(!playing)return;
+  const previous=frame;
+  if(last!==null)frame=Math.min(spec.target_seconds*spec.fps-1,frame+(now-last)*spec.fps/1000);
+  last=now;
+  for(const tick of Episode05Renderer.tickEvents(spec)){
+    if(previous<=tick.frame&&frame>=tick.frame&&!heard.has(tick.frame)){beep();heard.add(tick.frame);}
+  }
+  draw();
+  if(frame>=spec.target_seconds*spec.fps-1){stop();return;}
+  raf=requestAnimationFrame(loop);
+}
+ui('play').onclick=()=>{
+  if(playing){stop();return;}
+  if(ui('sound').checked){const Audio=window.AudioContext||window.webkitAudioContext;if(Audio){audio=audio||new Audio();audio.resume();}}
+  playing=true;last=null;ui('play').textContent='Pause';raf=requestAnimationFrame(loop);
+};
+function seek(to){stop();frame=to;heard=new Set(Episode05Renderer.tickEvents(spec).filter(e=>e.frame<to).map(e=>e.frame));draw();}
+ui('reset').onclick=()=>{guess=null;seek(0);};
+ui('challenge').onclick=()=>{guess=null;seek(spec.challenge.question_start*spec.fps);};
+ui('seek').oninput=e=>seek(Number(e.target.value));
+ui('reduced').onchange=draw;
+for(const choice of ['A','B'])ui('guess'+choice).onclick=()=>{if(frame<spec.challenge.reveal_start*spec.fps){guess=choice;draw();}};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+window.episode05={spec,evidence,renderFrame:(f,reduced=false)=>Episode05Renderer.renderFrame(ctx,f,spec,evidence,{reducedMotion:reduced})};
+const initialFrame=Number(new URLSearchParams(location.search).get('frame')||0);
+frame=Math.max(0,Math.min(spec.target_seconds*spec.fps-1,Number.isFinite(initialFrame)?initialFrame:0));draw();
+</script></html>

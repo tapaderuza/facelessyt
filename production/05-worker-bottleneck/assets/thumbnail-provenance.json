@@ -1,0 +1,12 @@
+{
+  "type": "builtin_imagegen_raster",
+  "authorization": "User explicitly approved generating a new realistic Episode 05 thumbnail and continuing publication",
+  "source_filename": "thumbnail-source.png",
+  "source_sha256": "41b884992c0ae9f3e5c865315b7a08cf955b446c4156053c66906dc3e123b631",
+  "filename": "thumbnail.jpg",
+  "sha256": "3e44aad3470aaf3e75cbec9a3337b4d8f59d4ece1694de7313b565e76b2667fd",
+  "generated_by_renderer": false,
+  "conversion": "FFmpeg JPEG encoding only; no SVG, compositing, resize or design changes",
+  "visual_review": "Inspected generated raster and encoded JPEG: correct text, queue and two passages, no real outage claim",
+  "prompt": "THUMBNAIL-PROMPT.md"
+}

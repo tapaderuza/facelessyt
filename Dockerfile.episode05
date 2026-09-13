@@ -1,0 +1,10 @@
+FROM facelessyt-video
+RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs npm && rm -rf /var/lib/apt/lists/*
+WORKDIR /opt/episode05
+COPY production/05-worker-bottleneck/package*.json ./
+RUN npm ci --omit=dev --no-audit --no-fund
+ENV NODE_PATH=/opt/episode05/node_modules PYTHONPATH=/work/src FACELESSYT_ROOT=/work
+WORKDIR /work
+COPY src/ /work/src/
+COPY production/05-worker-bottleneck/ /work/production/05-worker-bottleneck/
+ENTRYPOINT ["python", "production/05-worker-bottleneck/produce.py"]

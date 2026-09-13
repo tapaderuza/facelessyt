@@ -1,0 +1,494 @@
+episode: 5
+status: "preproduction_only"
+revision: "gamified-v2"
+title: "I Doubled the Workers. The Bottleneck Didn't Move."
+topic_key: "worker-tool-queue-bottleneck"
+language: "en"
+target_seconds: 240
+fps: 30
+resolution:
+  - 1920
+  - 1080
+disclosure: "SIMULATED TRAFFIC / NOT A LIVE AI BENCHMARK"
+scope: "Gamified script and executable canvas timeline. No voice, final MP4 or publication."
+timing:
+  status: "editorial_targets_not_measured_voice"
+  max_semantic_hold_seconds: 3
+  scheduled_beat_interval_seconds: 2.5
+  transition_seconds: 0.18
+  challenge_pause_seconds: 3
+  retiming: "Align sentence cues to measured voice. Countdown: exactly 90 frames after Lock in your guess. No narration during countdown; quiet ticks allowed. Regenerate chapters after retiming."
+challenge:
+  scene: "S05"
+  question_start: 120
+  pause_start: 132
+  reveal_start: 135
+  trace_run_video_start: 135
+  trace_run_video_end: 145
+  trace_speed: 1.25
+  answer_highlight_not_before: 145
+  question: "I just doubled the workers from 4 to 8. Does the processing speed double, or does the system choke? Lock in your guess."
+  options:
+    A: "2x SPEED?"
+    B: "TRAFFIC JAM?"
+  correct: "B"
+  answer: "JAM, NOT CRASH. Same finish: 12.5 s. Peak tool queue: 6."
+  frozen_logical_time_ms: 0
+  note: "Choke means queuing, not failed requests or deadlock. Resolve the false binary: same finish, more waiting at the tool."
+effects:
+  physics:
+    gravity_px_s2: 6000
+    restitution: 0.18
+    impact_duration_s: 0.45
+    stack_columns: 2
+    tile_width: 88
+    tile_height: 54
+    tile_pitch_y: 72
+  shake:
+    max_px: 3
+    duration_s: 0.35
+    cooldown_s: 1.5
+    target: "queue panel only; never captions, timer or results"
+  warning:
+    pulse_period_s: 2
+    max_opacity: 0.18
+    target: "local amber queue border"
+    full_screen_flash: false
+  reduced_motion: "Honor prefers-reduced-motion and explicit switch: no shake, bounce or warning pulses. Keep trace state and countdown."
+  truth_boundary: "Effects never create/drop jobs, alter metrics or report a real crash. No fake HTTP errors, flames or emergency alarms."
+easter_eggs:
+  -
+    id: "ee_queue"
+    scene: "S01"
+    at: 10
+    until: 14
+    text: "// queue.exe has entered its stacking era"
+    kind: "editorial_joke"
+  -
+    id: "ee_worker"
+    scene: "S04"
+    at: 12
+    until: 17
+    text: "// Worker 4 is questioning its existence"
+    kind: "editorial_joke"
+  -
+    id: "ee_capacity"
+    scene: "S06"
+    at: 8
+    until: 13
+    text: "// more_workers != wider_door"
+    kind: "editorial_joke"
+  -
+    id: "ee_rematch"
+    scene: "S08"
+    at: 20
+    until: 25
+    text: "// TODO: negotiate with the doorway"
+    kind: "editorial_joke"
+scenes:
+  -
+    id: "S01"
+    start: 0
+    end: 30
+    chapter: "The orange pile"
+    case: "double_workers"
+    layout: "Trace-driven playfield: orange_stack_and_two_service_lanes -> waiting_tiles_age_while_service_advances -> fifo_release_and_stack_reflow -> moving_trace_and_worker_slot_badges"
+    playback:
+      offset_ms: 500
+      speed: 1
+      replay: true
+      results: false
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 7
+        text: "Stop adding workers. Look at this pile. Eight workers are holding jobs; only two jobs are getting through."
+        visual: "orange_stack_and_two_service_lanes"
+      -
+        start: 7
+        end: 14
+        text: "Those orange blocks are waiting, not doing extra work. This is simulated traffic, not a live AI crash."
+        visual: "waiting_tiles_age_while_service_advances"
+      -
+        start: 14
+        end: 22
+        text: "Here comes another pair. The door opens, the pile drops, and the next two squeeze through. Nobody disappears."
+        visual: "fifo_release_and_stack_reflow"
+      -
+        start: 22
+        end: 30
+        text: "I'm giving you the controls next. Before we touch that worker switch, watch what this little doorway can actually clear."
+        visual: "moving_trace_and_worker_slot_badges"
+    beats:
+      - "orange_stack_and_two_service_lanes"
+      - "orange_stack_and_two_service_lanes"
+      - "orange_stack_and_two_service_lanes"
+      - "waiting_tiles_age_while_service_advances"
+      - "waiting_tiles_age_while_service_advances"
+      - "waiting_tiles_age_while_service_advances"
+      - "fifo_release_and_stack_reflow"
+      - "fifo_release_and_stack_reflow"
+      - "fifo_release_and_stack_reflow"
+      - "moving_trace_and_worker_slot_badges"
+      - "moving_trace_and_worker_slot_badges"
+      - "moving_trace_and_worker_slot_badges"
+  -
+    id: "S02"
+    start: 30
+    end: 60
+    chapter: "Beat this time"
+    case: "baseline"
+    layout: "Trace-driven playfield: baseline_state_colors_in_motion -> completed_counter_and_fifo_release -> completed_receipt_then_labeled_replay -> replay_and_locked_input_badges"
+    playback:
+      offset_ms: 0
+      speed: 1
+      replay: true
+      results: true
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 6
+        text: "Twelve jobs. Four workers. Go. The blue blocks prepare; the white lanes process; the green blocks are finished."
+        visual: "baseline_state_colors_in_motion"
+      -
+        start: 6
+        end: 13
+        text: "Follow the exits. Another pair, then another. The next pair is already waiting when a lane opens. Keep your eye on twelve."
+        visual: "completed_counter_and_fifo_release"
+      -
+        start: 13
+        end: 21
+        text: "Twelve point five simulated seconds. That's our time to beat. The orange pile never held more than two waiting jobs."
+        visual: "completed_receipt_then_labeled_replay"
+      -
+        start: 21
+        end: 30
+        text: "Same twelve jobs on the replay. Same half-second preparation and two-second tool service. I'm leaving those settings locked. Only the worker switch gets a turn."
+        visual: "replay_and_locked_input_badges"
+    beats:
+      - "baseline_state_colors_in_motion"
+      - "baseline_state_colors_in_motion"
+      - "baseline_state_colors_in_motion"
+      - "completed_counter_and_fifo_release"
+      - "completed_counter_and_fifo_release"
+      - "completed_counter_and_fifo_release"
+      - "completed_receipt_then_labeled_replay"
+      - "completed_receipt_then_labeled_replay"
+      - "completed_receipt_then_labeled_replay"
+      - "replay_and_locked_input_badges"
+      - "replay_and_locked_input_badges"
+      - "replay_and_locked_input_badges"
+  -
+    id: "S03"
+    start: 60
+    end: 90
+    chapter: "The empty doorway"
+    case: "underfed"
+    layout: "Trace-driven playfield: prep_and_idle_slots -> idle_intervals_and_final_pair -> underfed_receipt_then_baseline_replay -> baseline_preparation_overlaps_service"
+    playback:
+      offset_ms: 0
+      speed: 1
+      replay: true
+      results: true
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 7
+        text: "First, take two workers away. See that empty doorway? Both workers are preparing the next pair. Nothing passes during that gap."
+        visual: "prep_and_idle_slots"
+      -
+        start: 7
+        end: 15
+        text: "There it is again. Green blocks leave, blue blocks prepare, and the doorway waits. Watch the last pair crawl toward the finish."
+        visual: "idle_intervals_and_final_pair"
+      -
+        start: 15
+        end: 22
+        text: "Fifteen seconds. Slower. So more workers helped us before. The four-worker run filled those gaps and finished at twelve point five."
+        visual: "underfed_receipt_then_baseline_replay"
+        case_override: "baseline"
+      -
+        start: 22
+        end: 30
+        text: "Look at the doorway now: busy while the next pair gets ready. Four workers feed it. What happens when we give it eight?"
+        visual: "baseline_preparation_overlaps_service"
+    beats:
+      - "prep_and_idle_slots"
+      - "prep_and_idle_slots"
+      - "prep_and_idle_slots"
+      - "idle_intervals_and_final_pair"
+      - "idle_intervals_and_final_pair"
+      - "idle_intervals_and_final_pair"
+      - "underfed_receipt_then_baseline_replay"
+      - "underfed_receipt_then_baseline_replay"
+      - "underfed_receipt_then_baseline_replay"
+      - "baseline_preparation_overlaps_service"
+      - "baseline_preparation_overlaps_service"
+      - "baseline_preparation_overlaps_service"
+  -
+    id: "S04"
+    start: 90
+    end: 120
+    chapter: "Follow the orange block"
+    case: "baseline"
+    layout: "Trace-driven playfield: job4_preparing_then_waiting -> job4_service_and_ownership -> fifo_tiles_and_fixed_tool_wall -> locked_badges_and_moving_trace"
+    playback:
+      offset_ms: 0
+      speed: 0.5
+      replay: true
+      results: false
+      challenge: false
+      segments:
+        -
+          start: 0
+          end: 7
+          from_ms: 0
+          to_ms: 2500
+        -
+          start: 7
+          end: 14
+          from_ms: 2500
+          to_ms: 4500
+        -
+          start: 14
+          end: 22
+          from_ms: 4500
+          to_ms: 8500
+        -
+          start: 22
+          end: 30
+          from_ms: 0
+          to_ms: 4000
+          replay: true
+    cues:
+      -
+        start: 0
+        end: 7
+        text: "Follow job four. Blue, then orange. Its worker is still occupied, but the job cannot enter either white lane yet."
+        visual: "job4_preparing_then_waiting"
+      -
+        start: 7
+        end: 14
+        text: "Now a lane opens. Job four moves in; its worker stays attached. Watch that badge follow the job all the way out."
+        visual: "job4_service_and_ownership"
+      -
+        start: 14
+        end: 22
+        text: "The other orange blocks wait their turn. More occupied worker boxes would not magically carve another opening in this wall. Here comes the replay."
+        visual: "fifo_tiles_and_fixed_tool_wall"
+      -
+        start: 22
+        end: 30
+        text: "Same jobs. Same two slots. Keep that picture in your head, because you're about to bet on the next run. No changing the jobs after guessing."
+        visual: "locked_badges_and_moving_trace"
+    beats:
+      - "job4_preparing_then_waiting"
+      - "job4_preparing_then_waiting"
+      - "job4_preparing_then_waiting"
+      - "job4_service_and_ownership"
+      - "job4_service_and_ownership"
+      - "job4_service_and_ownership"
+      - "fifo_tiles_and_fixed_tool_wall"
+      - "fifo_tiles_and_fixed_tool_wall"
+      - "fifo_tiles_and_fixed_tool_wall"
+      - "locked_badges_and_moving_trace"
+      - "locked_badges_and_moving_trace"
+      - "locked_badges_and_moving_trace"
+  -
+    id: "S05"
+    start: 120
+    end: 150
+    chapter: "Lock in your guess"
+    case: "double_workers"
+    layout: "Trace-driven playfield: worker_switch_and_neutral_choices -> massive_3_2_1_countdown -> double_workers_queue_impact -> double_workers_continues_to_completion -> trace_backed_result_and_answer"
+    playback:
+      offset_ms: 0
+      speed: 1.25
+      replay: true
+      results: true
+      challenge: true
+    cues:
+      -
+        start: 0
+        end: 12
+        text: "I just doubled the workers from 4 to 8. Does the processing speed double, or does the system choke? Lock in your guess."
+        visual: "worker_switch_and_neutral_choices"
+      -
+        start: 12
+        end: 15
+        text: ""
+        visual: "massive_3_2_1_countdown"
+        countdown: true
+      -
+        start: 15
+        end: 19
+        text: "Go. There they go. Six orange blocks pile up against the same two openings."
+        visual: "double_workers_queue_impact"
+      -
+        start: 19
+        end: 25
+        text: "The door keeps draining pairs. No crash. Watch the final pair: the finish line has not moved."
+        visual: "double_workers_continues_to_completion"
+      -
+        start: 25
+        end: 30
+        text: "Twelve point five. Traffic jam wins. More waiting at the tool, not double speed."
+        visual: "trace_backed_result_and_answer"
+    beats:
+      - "worker_switch_and_neutral_choices"
+      - "worker_switch_and_neutral_choices"
+      - "worker_switch_and_neutral_choices"
+      - "worker_switch_and_neutral_choices"
+      - "worker_switch_and_neutral_choices"
+      - "massive_3_2_1_countdown"
+      - "double_workers_queue_impact"
+      - "double_workers_queue_impact"
+      - "double_workers_continues_to_completion"
+      - "double_workers_continues_to_completion"
+      - "trace_backed_result_and_answer"
+      - "trace_backed_result_and_answer"
+  -
+    id: "S06"
+    start: 150
+    end: 180
+    chapter: "The waiting room moved"
+    case: "double_workers"
+    layout: "Trace-driven playfield: input_queue_and_tool_stack -> tool_progress_and_peak_queue_receipt -> baseline_both_queues -> both_wait_counters_and_completions"
+    playback:
+      offset_ms: 500
+      speed: 1
+      replay: true
+      results: false
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 7
+        text: "Look left. The input queue emptied faster. Looks like an upgrade, right? Now look at the orange tower beside the tool."
+        visual: "input_queue_and_tool_stack"
+      -
+        start: 7
+        end: 15
+        text: "That's where the waiting went. Six piled up at the peak. The lanes keep draining it; the service clock hasn't sped up."
+        visual: "tool_progress_and_peak_queue_receipt"
+      -
+        start: 15
+        end: 23
+        text: "Replay with four workers. Smaller orange pile, more jobs waiting on the left. We didn't delete the work. We moved the waiting room again."
+        visual: "baseline_both_queues"
+        case_override: "baseline"
+      -
+        start: 23
+        end: 30
+        text: "Watch both counters as the jobs move. A prettier input queue is not the finish line. The green completed jobs are."
+        visual: "both_wait_counters_and_completions"
+    beats:
+      - "input_queue_and_tool_stack"
+      - "input_queue_and_tool_stack"
+      - "input_queue_and_tool_stack"
+      - "tool_progress_and_peak_queue_receipt"
+      - "tool_progress_and_peak_queue_receipt"
+      - "tool_progress_and_peak_queue_receipt"
+      - "baseline_both_queues"
+      - "baseline_both_queues"
+      - "baseline_both_queues"
+      - "baseline_both_queues"
+      - "both_wait_counters_and_completions"
+      - "both_wait_counters_and_completions"
+  -
+    id: "S07"
+    start: 180
+    end: 210
+    chapter: "Widen the door"
+    case: "double_capacity"
+    layout: "Trace-driven playfield: four_lane_trace_to_completion -> capacity_receipt_and_replay -> four_lane_replay_and_simulation_badge -> simulated_capacity_control_and_flow"
+    playback:
+      offset_ms: 0
+      speed: 1
+      replay: true
+      results: true
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 7
+        text: "Keep eight workers. Open two more slots. Four jobs pass together. Watch the green side fill. Last four coming through."
+        visual: "four_lane_trace_to_completion"
+      -
+        start: 7
+        end: 15
+        text: "Six point five simulated seconds. This time the finish moved. The orange pile clears in bigger waves because the doorway actually got wider."
+        visual: "capacity_receipt_and_replay"
+      -
+        start: 15
+        end: 23
+        text: "Watch again: same jobs, same service time, four slots. That capacity switch belongs to this simulator, not your provider's control panel."
+        visual: "four_lane_replay_and_simulation_badge"
+      -
+        start: 23
+        end: 30
+        text: "No magic setting appeared in a real API. We widened this simulated door. Your turn to change an input."
+        visual: "simulated_capacity_control_and_flow"
+    beats:
+      - "four_lane_trace_to_completion"
+      - "four_lane_trace_to_completion"
+      - "four_lane_trace_to_completion"
+      - "capacity_receipt_and_replay"
+      - "capacity_receipt_and_replay"
+      - "capacity_receipt_and_replay"
+      - "four_lane_replay_and_simulation_badge"
+      - "four_lane_replay_and_simulation_badge"
+      - "four_lane_replay_and_simulation_badge"
+      - "four_lane_replay_and_simulation_badge"
+      - "simulated_capacity_control_and_flow"
+      - "simulated_capacity_control_and_flow"
+  -
+    id: "S08"
+    start: 210
+    end: 240
+    chapter: "Rematch"
+    case: "longer_preparation"
+    layout: "Trace-driven playfield: long_prep_and_idle_slots -> long_prep_gap_then_service -> job_ids_and_editorial_log -> active_rematch_cut_on_event"
+    playback:
+      offset_ms: 0
+      speed: 1
+      replay: true
+      results: true
+      challenge: false
+    cues:
+      -
+        start: 0
+        end: 8
+        text: "Rematch. I'm stretching preparation from half a second to three. Watch the blue blocks hang around. Now the doorway can run out of ready jobs again."
+        visual: "long_prep_and_idle_slots"
+      -
+        start: 8
+        end: 16
+        text: "There is the gap. A different input, a different race. Run this exact simulator and change that value before you add another worker."
+        visual: "long_prep_gap_then_service"
+      -
+        start: 16
+        end: 24
+        text: "Keep the job numbers visible. Count what finishes, not how busy the screen looks. And yes, worker four's little comment was intentional."
+        visual: "job_ids_and_editorial_log"
+      -
+        start: 24
+        end: 30
+        text: "Make your next guess with the doorway in view. Then press run. The orange pile will tell you where to look."
+        visual: "active_rematch_cut_on_event"
+    beats:
+      - "long_prep_and_idle_slots"
+      - "long_prep_and_idle_slots"
+      - "long_prep_and_idle_slots"
+      - "long_prep_and_idle_slots"
+      - "long_prep_gap_then_service"
+      - "long_prep_gap_then_service"
+      - "long_prep_gap_then_service"
+      - "job_ids_and_editorial_log"
+      - "job_ids_and_editorial_log"
+      - "job_ids_and_editorial_log"
+      - "active_rematch_cut_on_event"
+      - "active_rematch_cut_on_event"

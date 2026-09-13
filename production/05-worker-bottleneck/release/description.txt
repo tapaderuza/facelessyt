@@ -1,0 +1,18 @@
+I doubled the workers from four to eight. Guess what happens before the countdown ends.
+Watch every job: preparation, waiting, tool service, and completion. Then we widen the simulated tool instead.
+
+This is a deterministic Python simulation, NOT a live AI/API benchmark. All twelve jobs arrive together. Preparation is 0.5 seconds and tool service is 2 seconds per job in the main cases. Four workers and eight workers both finish that batch in 12.5 simulated seconds with two tool slots. The peak tool queue changes from two to six. No crash, rejected connection or dropped job occurred. Gravity, warning effects and terminal jokes are editorial visualization.
+
+Code and experiment: https://github.com/tapaderuza/facelessyt/tree/main/production/05-worker-bottleneck
+Synthetic narration: local Piper, en-US Lessac. Diagram animation: original code.
+Thumbnail: AI-generated conceptual miniature, not a photographed system or a real incident.
+
+CHAPTERS
+00:00 The orange pile
+00:26 Beat this time
+00:57 The empty doorway
+01:26 Follow the orange block
+01:57 Lock in your guess
+02:22 The waiting room moved
+02:50 Widen the door
+03:21 Rematch

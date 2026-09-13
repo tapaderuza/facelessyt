@@ -1,0 +1,7 @@
+{
+  "name": "outlier-engineering-episode05-render",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Exact canvas renderer to FFmpeg, with measured Piper narration",
+  "dependencies": {"@napi-rs/canvas": "1.0.9"}
+}

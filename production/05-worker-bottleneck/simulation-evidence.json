@@ -1,0 +1,3219 @@
+{
+  "disclosure": "SIMULATED TRAFFIC / NOT A LIVE AI BENCHMARK",
+  "simulation_source_sha256": "b908c52eb4add4f9fb5eaae61217ddbaf8484c4b27ecede334a4829149701dca",
+  "cases": {
+    "underfed": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 2,
+        "tool_slots": 2,
+        "jobs": 12,
+        "prep_ms": 500,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 15000,
+        "peak_tool_queue": 0,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 3000,
+          "complete_ms": 5000,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 5000
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 3000,
+          "complete_ms": 5000,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 5000
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 5000,
+          "prep_end_ms": 5500,
+          "slot": 0,
+          "service_start_ms": 5500,
+          "complete_ms": 7500,
+          "input_wait_ms": 5000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 7500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 5000,
+          "prep_end_ms": 5500,
+          "slot": 1,
+          "service_start_ms": 5500,
+          "complete_ms": 7500,
+          "input_wait_ms": 5000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 7500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 7500,
+          "prep_end_ms": 8000,
+          "slot": 0,
+          "service_start_ms": 8000,
+          "complete_ms": 10000,
+          "input_wait_ms": 7500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 10000
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 7500,
+          "prep_end_ms": 8000,
+          "slot": 1,
+          "service_start_ms": 8000,
+          "complete_ms": 10000,
+          "input_wait_ms": 7500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 10000
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 10000,
+          "prep_end_ms": 10500,
+          "slot": 0,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 10000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 10000,
+          "prep_end_ms": 10500,
+          "slot": 1,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 10000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 0,
+          "service_start_ms": 13000,
+          "complete_ms": 15000,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 15000
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 1,
+          "service_start_ms": 13000,
+          "complete_ms": 15000,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 15000
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 2,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 3,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 3000,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 3000,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 5000,
+          "job": 4,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 5000,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 5000,
+          "job": 5,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 5500,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 5500,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 5500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 5500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 7500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 7500,
+          "job": 6,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 7500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 7500,
+          "job": 7,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 8000,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8000,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8000,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 8000,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 10000,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10000,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 10000,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10000,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 10500,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10500,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 10500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 12500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 12500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 13000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 13000,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 15000,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 15000,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "baseline": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 4,
+        "tool_slots": 2,
+        "jobs": 12,
+        "prep_ms": 500,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 12500,
+        "peak_tool_queue": 2,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 0,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 1,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 0,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 1,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 8500,
+          "prep_end_ms": 9000,
+          "slot": 0,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 8500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 8500,
+          "prep_end_ms": 9000,
+          "slot": 1,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 8500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 12500
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 4,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 5,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 3000,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 4500,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 6,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 4500,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 7,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 4500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 4500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 5000,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 6500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 6500,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 7000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 7000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8500,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 8500,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 8500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 8500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 9000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 9000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 10500,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 12500,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "double_workers": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 8,
+        "tool_slots": 2,
+        "jobs": 12,
+        "prep_ms": 500,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 12500,
+        "peak_tool_queue": 6,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 4,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 4000,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 5,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 4000,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 6,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 6000,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 7,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 6000,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 5500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 5500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 0,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 5500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 1,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 5500,
+          "end_to_end_ms": 12500
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 0,
+          "job": 4,
+          "event": "prepare",
+          "worker": 4
+        },
+        {
+          "t_ms": 0,
+          "job": 5,
+          "event": "prepare",
+          "worker": 5
+        },
+        {
+          "t_ms": 0,
+          "job": 6,
+          "event": "prepare",
+          "worker": 6
+        },
+        {
+          "t_ms": 0,
+          "job": 7,
+          "event": "prepare",
+          "worker": 7
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 3000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 4500,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 4500,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 4500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 4500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 5000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 6500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 8500,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 8500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 10500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 10500,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 12500,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "double_capacity": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 8,
+        "tool_slots": 4,
+        "jobs": 12,
+        "prep_ms": 500,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 6500,
+        "peak_tool_queue": 4,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 2,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 3,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 4,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 5,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 6,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 2,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 7,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 3,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 2,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 3,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 0,
+          "job": 4,
+          "event": "prepare",
+          "worker": 4
+        },
+        {
+          "t_ms": 0,
+          "job": 5,
+          "event": "prepare",
+          "worker": 5
+        },
+        {
+          "t_ms": 0,
+          "job": 6,
+          "event": "prepare",
+          "worker": 6
+        },
+        {
+          "t_ms": 0,
+          "job": 7,
+          "event": "prepare",
+          "worker": 7
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 2
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 3
+        },
+        {
+          "t_ms": 2500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 2500,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 2500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 2
+        },
+        {
+          "t_ms": 2500,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 3
+        },
+        {
+          "t_ms": 3000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 4500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 4500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 4500,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 2
+        },
+        {
+          "t_ms": 4500,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 3
+        },
+        {
+          "t_ms": 6500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "longer_preparation": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 4,
+        "tool_slots": 2,
+        "jobs": 12,
+        "prep_ms": 3000,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 17000,
+        "peak_tool_queue": 2,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 3000,
+          "complete_ms": 5000,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 5000
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 3000,
+          "complete_ms": 5000,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 5000
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 5000,
+          "complete_ms": 7000,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 7000
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 5000,
+          "complete_ms": 7000,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 7000
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 5000,
+          "prep_end_ms": 8000,
+          "slot": 0,
+          "service_start_ms": 8000,
+          "complete_ms": 10000,
+          "input_wait_ms": 5000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 10000
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 5000,
+          "prep_end_ms": 8000,
+          "slot": 1,
+          "service_start_ms": 8000,
+          "complete_ms": 10000,
+          "input_wait_ms": 5000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 10000
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 7000,
+          "prep_end_ms": 10000,
+          "slot": 0,
+          "service_start_ms": 10000,
+          "complete_ms": 12000,
+          "input_wait_ms": 7000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 12000
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 7000,
+          "prep_end_ms": 10000,
+          "slot": 1,
+          "service_start_ms": 10000,
+          "complete_ms": 12000,
+          "input_wait_ms": 7000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 12000
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 10000,
+          "prep_end_ms": 13000,
+          "slot": 0,
+          "service_start_ms": 13000,
+          "complete_ms": 15000,
+          "input_wait_ms": 10000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 15000
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 10000,
+          "prep_end_ms": 13000,
+          "slot": 1,
+          "service_start_ms": 13000,
+          "complete_ms": 15000,
+          "input_wait_ms": 10000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 15000
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 12000,
+          "prep_end_ms": 15000,
+          "slot": 0,
+          "service_start_ms": 15000,
+          "complete_ms": 17000,
+          "input_wait_ms": 12000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 17000
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 12000,
+          "prep_end_ms": 15000,
+          "slot": 1,
+          "service_start_ms": 15000,
+          "complete_ms": 17000,
+          "input_wait_ms": 12000,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 17000
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 3000,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 3000,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 5000,
+          "job": 4,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 5000,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 5000,
+          "job": 5,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 5000,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 7000,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 7000,
+          "job": 6,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 7000,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 7000,
+          "job": 7,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 8000,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8000,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8000,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 8000,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 10000,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10000,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 10000,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10000,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 10000,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10000,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10000,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 10000,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 12000,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12000,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 12000,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12000,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 13000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 13000,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 15000,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 15000,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 15000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 15000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 15000,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 15000,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 17000,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 17000,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "slower_tool": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 4,
+        "tool_slots": 2,
+        "jobs": 12,
+        "prep_ms": 500,
+        "service_ms": 3000
+      },
+      "metrics": {
+        "batch_ms": 18500,
+        "peak_tool_queue": 2,
+        "completed": 12
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 3500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 3500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 3500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 3500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 3500,
+          "complete_ms": 6500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 3000,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 3500,
+          "complete_ms": 6500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 3000,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 3500,
+          "prep_end_ms": 4000,
+          "slot": 0,
+          "service_start_ms": 6500,
+          "complete_ms": 9500,
+          "input_wait_ms": 3500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 9500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 3500,
+          "prep_end_ms": 4000,
+          "slot": 1,
+          "service_start_ms": 6500,
+          "complete_ms": 9500,
+          "input_wait_ms": 3500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 9500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 0,
+          "service_start_ms": 9500,
+          "complete_ms": 12500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 1,
+          "service_start_ms": 9500,
+          "complete_ms": 12500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 9500,
+          "prep_end_ms": 10000,
+          "slot": 0,
+          "service_start_ms": 12500,
+          "complete_ms": 15500,
+          "input_wait_ms": 9500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 15500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 9500,
+          "prep_end_ms": 10000,
+          "slot": 1,
+          "service_start_ms": 12500,
+          "complete_ms": 15500,
+          "input_wait_ms": 9500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 15500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 0,
+          "service_start_ms": 15500,
+          "complete_ms": 18500,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 18500
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 1,
+          "service_start_ms": 15500,
+          "complete_ms": 18500,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 2500,
+          "end_to_end_ms": 18500
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 3500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 3500,
+          "job": 4,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 3500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 3500,
+          "job": 5,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 3500,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 3500,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 4000,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 4000,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 6500,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 6,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 6500,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 7,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 6500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 7000,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 7000,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 9500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 9500,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 9500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 9500,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 9500,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 9500,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 10000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 12500,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 12500,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 12500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 12500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 13000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 15500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 15500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 15500,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 15500,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 18500,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 18500,
+          "job": 11,
+          "event": "complete"
+        }
+      ]
+    },
+    "larger_burst": {
+      "kind": "synthetic_discrete_event_simulation",
+      "inputs": {
+        "workers": 4,
+        "tool_slots": 2,
+        "jobs": 16,
+        "prep_ms": 500,
+        "service_ms": 2000
+      },
+      "metrics": {
+        "batch_ms": 16500,
+        "peak_tool_queue": 2,
+        "completed": 16
+      },
+      "jobs": [
+        {
+          "id": 0,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 1,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 500,
+          "complete_ms": 2500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 0,
+          "end_to_end_ms": 2500
+        },
+        {
+          "id": 2,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 0,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 3,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 0,
+          "prep_end_ms": 500,
+          "slot": 1,
+          "service_start_ms": 2500,
+          "complete_ms": 4500,
+          "input_wait_ms": 0,
+          "tool_wait_ms": 2000,
+          "end_to_end_ms": 4500
+        },
+        {
+          "id": 4,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 0,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 5,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 2500,
+          "prep_end_ms": 3000,
+          "slot": 1,
+          "service_start_ms": 4500,
+          "complete_ms": 6500,
+          "input_wait_ms": 2500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 6500
+        },
+        {
+          "id": 6,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 0,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 7,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 4500,
+          "prep_end_ms": 5000,
+          "slot": 1,
+          "service_start_ms": 6500,
+          "complete_ms": 8500,
+          "input_wait_ms": 4500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 8500
+        },
+        {
+          "id": 8,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 0,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 9,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 6500,
+          "prep_end_ms": 7000,
+          "slot": 1,
+          "service_start_ms": 8500,
+          "complete_ms": 10500,
+          "input_wait_ms": 6500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 10500
+        },
+        {
+          "id": 10,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 8500,
+          "prep_end_ms": 9000,
+          "slot": 0,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 8500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 11,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 8500,
+          "prep_end_ms": 9000,
+          "slot": 1,
+          "service_start_ms": 10500,
+          "complete_ms": 12500,
+          "input_wait_ms": 8500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 12500
+        },
+        {
+          "id": 12,
+          "arrival_ms": 0,
+          "worker": 0,
+          "prep_start_ms": 10500,
+          "prep_end_ms": 11000,
+          "slot": 0,
+          "service_start_ms": 12500,
+          "complete_ms": 14500,
+          "input_wait_ms": 10500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 14500
+        },
+        {
+          "id": 13,
+          "arrival_ms": 0,
+          "worker": 1,
+          "prep_start_ms": 10500,
+          "prep_end_ms": 11000,
+          "slot": 1,
+          "service_start_ms": 12500,
+          "complete_ms": 14500,
+          "input_wait_ms": 10500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 14500
+        },
+        {
+          "id": 14,
+          "arrival_ms": 0,
+          "worker": 2,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 0,
+          "service_start_ms": 14500,
+          "complete_ms": 16500,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 16500
+        },
+        {
+          "id": 15,
+          "arrival_ms": 0,
+          "worker": 3,
+          "prep_start_ms": 12500,
+          "prep_end_ms": 13000,
+          "slot": 1,
+          "service_start_ms": 14500,
+          "complete_ms": 16500,
+          "input_wait_ms": 12500,
+          "tool_wait_ms": 1500,
+          "end_to_end_ms": 16500
+        }
+      ],
+      "events": [
+        {
+          "t_ms": 0,
+          "job": 0,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 0,
+          "job": 1,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 0,
+          "job": 2,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 0,
+          "job": 3,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 2,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 3,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 500,
+          "job": 0,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 500,
+          "job": 1,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 0,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 4,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 1,
+          "event": "complete"
+        },
+        {
+          "t_ms": 2500,
+          "job": 5,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 2500,
+          "job": 2,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 2500,
+          "job": 3,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 3000,
+          "job": 4,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 3000,
+          "job": 5,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 4500,
+          "job": 2,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 6,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 4500,
+          "job": 3,
+          "event": "complete"
+        },
+        {
+          "t_ms": 4500,
+          "job": 7,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 4500,
+          "job": 4,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 4500,
+          "job": 5,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 5000,
+          "job": 6,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 5000,
+          "job": 7,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 6500,
+          "job": 4,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 8,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 5,
+          "event": "complete"
+        },
+        {
+          "t_ms": 6500,
+          "job": 9,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 6500,
+          "job": 6,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 6500,
+          "job": 7,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 7000,
+          "job": 8,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 7000,
+          "job": 9,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 8500,
+          "job": 6,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 10,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 8500,
+          "job": 7,
+          "event": "complete"
+        },
+        {
+          "t_ms": 8500,
+          "job": 11,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 8500,
+          "job": 8,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 8500,
+          "job": 9,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 9000,
+          "job": 10,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 9000,
+          "job": 11,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 10500,
+          "job": 8,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 12,
+          "event": "prepare",
+          "worker": 0
+        },
+        {
+          "t_ms": 10500,
+          "job": 9,
+          "event": "complete"
+        },
+        {
+          "t_ms": 10500,
+          "job": 13,
+          "event": "prepare",
+          "worker": 1
+        },
+        {
+          "t_ms": 10500,
+          "job": 10,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 10500,
+          "job": 11,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 11000,
+          "job": 12,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 11000,
+          "job": 13,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 12500,
+          "job": 10,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 14,
+          "event": "prepare",
+          "worker": 2
+        },
+        {
+          "t_ms": 12500,
+          "job": 11,
+          "event": "complete"
+        },
+        {
+          "t_ms": 12500,
+          "job": 15,
+          "event": "prepare",
+          "worker": 3
+        },
+        {
+          "t_ms": 12500,
+          "job": 12,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 12500,
+          "job": 13,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 13000,
+          "job": 14,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 13000,
+          "job": 15,
+          "event": "tool_ready"
+        },
+        {
+          "t_ms": 14500,
+          "job": 12,
+          "event": "complete"
+        },
+        {
+          "t_ms": 14500,
+          "job": 13,
+          "event": "complete"
+        },
+        {
+          "t_ms": 14500,
+          "job": 14,
+          "event": "tool_start",
+          "slot": 0
+        },
+        {
+          "t_ms": 14500,
+          "job": 15,
+          "event": "tool_start",
+          "slot": 1
+        },
+        {
+          "t_ms": 16500,
+          "job": 14,
+          "event": "complete"
+        },
+        {
+          "t_ms": 16500,
+          "job": 15,
+          "event": "complete"
+        }
+      ]
+    }
+  }
+}

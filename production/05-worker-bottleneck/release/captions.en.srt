@@ -1,0 +1,415 @@
+1
+00:00:00,000 --> 00:00:01,206
+Stop adding workers.
+
+2
+00:00:01,206 --> 00:00:02,246
+Look at this pile.
+
+3
+00:00:02,246 --> 00:00:06,454
+Eight workers are holding jobs; only two jobs are getting through.
+
+4
+00:00:06,467 --> 00:00:09,578
+Those orange blocks are waiting, not doing extra work.
+
+5
+00:00:09,578 --> 00:00:12,740
+This is simulated traffic, not a live AI crash.
+
+6
+00:00:12,767 --> 00:00:14,263
+Here comes another pair.
+
+7
+00:00:14,263 --> 00:00:18,266
+The door opens, the pile drops, and the next two squeeze through.
+
+8
+00:00:18,266 --> 00:00:19,616
+Nobody disappears.
+
+9
+00:00:19,633 --> 00:00:21,383
+I'm giving you the controls next.
+
+10
+00:00:21,383 --> 00:00:26,367
+Before we touch that worker switch, watch what this little doorway can actually clear.
+
+11
+00:00:26,400 --> 00:00:27,316
+Twelve jobs.
+
+12
+00:00:27,316 --> 00:00:28,250
+Four workers.
+
+13
+00:00:28,250 --> 00:00:28,781
+Go.
+
+14
+00:00:28,781 --> 00:00:33,838
+The blue blocks prepare; the white lanes process; the green blocks are finished.
+
+15
+00:00:33,867 --> 00:00:35,212
+Follow the exits.
+
+16
+00:00:35,212 --> 00:00:36,662
+Another pair, then another.
+
+17
+00:00:36,662 --> 00:00:39,722
+The next pair is already waiting when a lane opens.
+
+18
+00:00:39,722 --> 00:00:41,109
+Keep your eye on twelve.
+
+19
+00:00:41,133 --> 00:00:43,436
+Twelve point five simulated seconds.
+
+20
+00:00:43,436 --> 00:00:44,785
+That's our time to beat.
+
+21
+00:00:44,785 --> 00:00:47,773
+The orange pile never held more than two waiting jobs.
+
+22
+00:00:47,800 --> 00:00:49,696
+Same twelve jobs on the replay.
+
+23
+00:00:49,696 --> 00:00:53,190
+Same half-second preparation and two-second tool service.
+
+24
+00:00:53,190 --> 00:00:55,027
+I'm leaving those settings locked.
+
+25
+00:00:55,027 --> 00:00:57,068
+Only the worker switch gets a turn.
+
+26
+00:00:57,100 --> 00:00:59,222
+First, take two workers away.
+
+27
+00:00:59,222 --> 00:01:00,514
+See that empty doorway?
+
+28
+00:01:00,514 --> 00:01:02,973
+Both workers are preparing the next pair.
+
+29
+00:01:02,973 --> 00:01:04,810
+Nothing passes during that gap.
+
+30
+00:01:04,833 --> 00:01:05,792
+There it is again.
+
+31
+00:01:05,792 --> 00:01:09,816
+Green blocks leave, blue blocks prepare, and the doorway waits.
+
+32
+00:01:09,816 --> 00:01:12,395
+Watch the last pair crawl toward the finish.
+
+33
+00:01:12,400 --> 00:01:13,553
+Fifteen seconds.
+
+34
+00:01:13,553 --> 00:01:14,029
+Slower.
+
+35
+00:01:14,029 --> 00:01:16,070
+So more workers helped us before.
+
+36
+00:01:16,070 --> 00:01:20,061
+The four-worker run filled those gaps and finished at twelve point five.
+
+37
+00:01:20,067 --> 00:01:23,797
+Look at the doorway now: busy while the next pair gets ready.
+
+38
+00:01:23,797 --> 00:01:25,049
+Four workers feed it.
+
+39
+00:01:25,049 --> 00:01:26,828
+What happens when we give it eight?
+
+40
+00:01:26,833 --> 00:01:27,985
+Follow job four.
+
+41
+00:01:27,985 --> 00:01:29,301
+Blue, then orange.
+
+42
+00:01:29,301 --> 00:01:33,823
+Its worker is still occupied, but the job cannot enter either white lane yet.
+
+43
+00:01:33,833 --> 00:01:35,113
+Now a lane opens.
+
+44
+00:01:35,113 --> 00:01:38,264
+Job four moves in; its worker stays attached.
+
+45
+00:01:38,264 --> 00:01:40,969
+Watch that badge follow the job all the way out.
+
+46
+00:01:41,000 --> 00:01:43,256
+The other orange blocks wait their turn.
+
+47
+00:01:43,256 --> 00:01:47,825
+More occupied worker boxes would not magically carve another opening in this wall.
+
+48
+00:01:47,825 --> 00:01:49,184
+Here comes the replay.
+
+49
+00:01:49,200 --> 00:01:50,088
+Same jobs.
+
+50
+00:01:50,088 --> 00:01:51,226
+Same two slots.
+
+51
+00:01:51,226 --> 00:01:55,091
+Keep that picture in your head, because you're about to bet on the next run.
+
+52
+00:01:55,091 --> 00:01:57,294
+No changing the jobs after guessing.
+
+53
+00:01:57,300 --> 00:01:59,602
+I just doubled the workers from 4 to 8.
+
+54
+00:01:59,602 --> 00:02:02,670
+Does the processing speed double, or does the system choke?
+
+55
+00:02:02,670 --> 00:02:03,783
+Lock in your guess.
+
+56
+00:02:06,800 --> 00:02:07,331
+Go.
+
+57
+00:02:07,331 --> 00:02:08,184
+There they go.
+
+58
+00:02:08,184 --> 00:02:11,610
+Six orange blocks pile up against the same two openings.
+
+59
+00:02:11,633 --> 00:02:13,264
+The door keeps draining pairs.
+
+60
+00:02:13,264 --> 00:02:14,094
+No crash.
+
+61
+00:02:14,094 --> 00:02:17,373
+Watch the final pair: the finish line has not moved.
+
+62
+00:02:17,400 --> 00:02:18,576
+Twelve point five.
+
+63
+00:02:18,576 --> 00:02:19,906
+Traffic jam wins.
+
+64
+00:02:19,906 --> 00:02:22,467
+More waiting at the tool, not double speed.
+
+65
+00:02:22,500 --> 00:02:23,369
+Look left.
+
+66
+00:02:23,369 --> 00:02:25,294
+The input queue emptied faster.
+
+67
+00:02:25,294 --> 00:02:27,185
+Looks like an upgrade, right?
+
+68
+00:02:27,185 --> 00:02:29,725
+Now look at the orange tower beside the tool.
+
+69
+00:02:29,733 --> 00:02:31,101
+That's where the waiting went.
+
+70
+00:02:31,101 --> 00:02:32,708
+Six piled up at the peak.
+
+71
+00:02:32,708 --> 00:02:36,258
+The lanes keep draining it; the service clock hasn't sped up.
+
+72
+00:02:36,267 --> 00:02:37,954
+Replay with four workers.
+
+73
+00:02:37,954 --> 00:02:40,989
+Smaller orange pile, more jobs waiting on the left.
+
+74
+00:02:40,989 --> 00:02:42,269
+We didn't delete the work.
+
+75
+00:02:42,269 --> 00:02:43,921
+We moved the waiting room again.
+
+76
+00:02:43,933 --> 00:02:46,332
+Watch both counters as the jobs move.
+
+77
+00:02:46,332 --> 00:02:48,842
+A prettier input queue is not the finish line.
+
+78
+00:02:48,842 --> 00:02:50,458
+The green completed jobs are.
+
+79
+00:02:50,467 --> 00:02:51,636
+Keep eight workers.
+
+80
+00:02:51,636 --> 00:02:53,004
+Open two more slots.
+
+81
+00:02:53,004 --> 00:02:54,604
+Four jobs pass together.
+
+82
+00:02:54,604 --> 00:02:56,226
+Watch the green side fill.
+
+83
+00:02:56,226 --> 00:02:57,678
+Last four coming through.
+
+84
+00:02:57,700 --> 00:02:59,751
+Six point five simulated seconds.
+
+85
+00:02:59,751 --> 00:03:01,304
+This time the finish moved.
+
+86
+00:03:01,304 --> 00:03:05,757
+The orange pile clears in bigger waves because the doorway actually got wider.
+
+87
+00:03:05,767 --> 00:03:09,917
+Watch again: same jobs, same service time, four slots.
+
+88
+00:03:09,917 --> 00:03:14,879
+That capacity switch belongs to this simulator, not your provider's control panel.
+
+89
+00:03:14,900 --> 00:03:17,687
+No magic setting appeared in a real API.
+
+90
+00:03:17,687 --> 00:03:19,557
+We widened this simulated door.
+
+91
+00:03:19,557 --> 00:03:21,185
+Your turn to change an input.
+
+92
+00:03:21,200 --> 00:03:21,831
+Rematch.
+
+93
+00:03:21,831 --> 00:03:24,865
+I'm stretching preparation from half a second to three.
+
+94
+00:03:24,865 --> 00:03:26,813
+Watch the blue blocks hang around.
+
+95
+00:03:26,813 --> 00:03:29,363
+Now the doorway can run out of ready jobs again.
+
+96
+00:03:29,367 --> 00:03:30,311
+There is the gap.
+
+97
+00:03:30,311 --> 00:03:32,583
+A different input, a different race.
+
+98
+00:03:32,583 --> 00:03:37,194
+Run this exact simulator and change that value before you add another worker.
+
+99
+00:03:37,200 --> 00:03:38,890
+Keep the job numbers visible.
+
+100
+00:03:38,890 --> 00:03:41,687
+Count what finishes, not how busy the screen looks.
+
+101
+00:03:41,687 --> 00:03:45,155
+And yes, worker four's little comment was intentional.
+
+102
+00:03:45,167 --> 00:03:47,393
+Make your next guess with the doorway in view.
+
+103
+00:03:47,393 --> 00:03:48,400
+Then press run.
+
+104
+00:03:48,400 --> 00:03:50,923
+The orange pile will tell you where to look.
