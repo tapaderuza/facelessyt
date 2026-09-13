@@ -86,3 +86,33 @@ second video insertion.
 The public YouTube state must be read back: requesting public is not proof that
 YouTube accepted public visibility. API-project restrictions, if any, cannot be
 overridden by a local flag. Receipts and raw API status stay under ignored `data/`.
+
+## Completed public release: 2026-09-13
+
+- Video: https://www.youtube.com/watch?v=woBYvAkJsvs
+- Channel: Outlier Engineering (`UClTkb79KeKvDpybQWFDMWXA`).
+- Published timestamp returned by YouTube: `2026-09-13T01:23:18Z`.
+- Read-back confirmed `privacyStatus=public`, `uploadStatus=processed`,
+  `processingStatus=succeeded`, `definition=hd`, and `hasCustomThumbnail=true`.
+- Anonymous YouTube oEmbed returned the correct episode title and channel.
+- Description and all 12 chapter lines match the approved local description
+  after normalizing line endings and the final newline removed by YouTube.
+  The applied thumbnail is `IT FITS?`.
+- Local master: 359.229 seconds; YouTube reports the rounded duration `PT6M`.
+- Final video SHA-256:
+  `dc1184e75585ed9fd75bcde9066654e97c5e36aa7afb14394049b410fe5054d4`.
+- Decoded audio SHA-256:
+  `59337c5370f16184efbed5ed49ecaf9da0445e47cb749c3e185c5c06d72c2d80`.
+  This matches the full-audio ASR-reviewed master; the last badge-position fix
+  changed only visuals, so its earlier video hash differs without invalidating
+  that audio review.
+- Pre-release verification passed: 48 unittest cases, 17 legacy core tests,
+  13 animatic assertions, and all 21 final MP4 QA checks. Final measured loudness
+  was -16.01 LUFS, true peak -2.28 dBTP, with no silence longer than two seconds.
+- Production code and final hook fixes were pushed before upload (`c2b6333`,
+  `ad43003`), following the requested initial package commit (`e5961fc`).
+- Episode 4 is registered in `production/published-topics.json` so subsequent
+  topic selection excludes this already-produced idea.
+
+No other episode was inserted, deleted or modified. The captions are burned into
+the video; a separate subtitle track was not uploaded.
