@@ -109,8 +109,11 @@ recogiendo datos aunque el token OAuth haya caducado. Lo único que pasa es que
 antes de un `upload` o un `diagnose` puede tocar repetir `auth`. Molesto, no
 grave.
 
-Pasar a producción evitaría la caducidad, pero exige URL de homepage y de
-política de privacidad. Para un solo usuario no compensa.
+**Hecho el 2026-09-18:** la app está *In production* (proyecto `Utube` en Google
+Cloud, cliente "Outlier Engineering Client"). Homepage y política de privacidad
+apuntan al repo; dominio autorizado `github.com`. El refresh token ya no caduca a
+los 7 días. Si alguna vez `auth` revienta con `invalid_grant`, ahora cae solo al
+consentimiento en el navegador en vez de dejarte sin salida.
 
 ## 7. Cuando ya está autorizado
 
