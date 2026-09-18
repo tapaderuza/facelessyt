@@ -33,9 +33,10 @@ FPS = 30
 ZOOM_MAX = 1.08
 # Fundido entre escenas. Mas de 0,3 s emborrona el texto de la siguiente.
 XFADE_S = 0.25
-# Musica de fondo, si MUSIC_PATH apunta a un fichero. -26 dB respecto a la voz:
-# se nota que esta, no compite con la voz de Piper, que es poco expresiva.
-MUSIC_GAIN = 0.05
+# Musica de fondo, si MUSIC_PATH apunta a un fichero. 0.12 = -18 dB sobre el
+# loop (que ya viene a -18 dB de media): queda ~17 dB por debajo de la voz,
+# el rango habitual de una cama musical. Se nota que esta; no compite.
+MUSIC_GAIN = 0.12
 
 
 class AssembleError(RuntimeError):

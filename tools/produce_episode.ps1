@@ -50,6 +50,9 @@ $Root = Split-Path -Parent $PSScriptRoot
 $Py = Join-Path $Root ".venv\Scripts\python.exe"
 Set-Location $Root
 
+# Cama musical por defecto: la que genera tools/make_music_loop.py (sin licencias).
+if (-not $Music -and (Test-Path (Join-Path $Root "data\music\loop.mp3"))) { $Music = Join-Path $Root "data\music\loop.mp3" }
+
 function Step($name) { Write-Host "`n=== $name" -ForegroundColor Cyan }
 function Fail($msg) { Write-Host "`nPARADO: $msg" -ForegroundColor Red; exit 1 }
 
@@ -83,8 +86,16 @@ if ($LASTEXITCODE -ne 0) { Fail "el packaging no pasa los umbrales. Con CTR del 
 
 Step "4/5 Render en Docker (Piper + ffmpeg)"
 if (-not $SkipRender) {
-    docker image inspect facelessyt-video 2>$null | Out-Null
-    if ($LASTEXITCODE -ne 0) { docker build -f Dockerfile.video -t facelessyt-video . }
+    # La imagen copia src/ dentro: si algo de src/ o el Dockerfile es mas nuevo
+    # que la imagen, hay que reconstruirla o renderiza con codigo viejo.
+    $created = docker image inspect facelessyt-video --format "{{.Created}}" 2>$null
+    $newest = (Get-ChildItem (Join-Path $Root "src") -Recurse -File | Measure-Object LastWriteTimeUtc -Maximum).Maximum
+    $dockerfile = (Get-Item (Join-Path $Root "Dockerfile.video")).LastWriteTimeUtc
+    if (-not $created -or [datetime]::Parse($created).ToUniversalTime() -lt $newest -or [datetime]::Parse($created).ToUniversalTime() -lt $dockerfile) {
+        Write-Host "  imagen facelessyt-video desactualizada: reconstruyendo"
+        docker build -q -f Dockerfile.video -t facelessyt-video .
+        if ($LASTEXITCODE -ne 0) { Fail "no se pudo construir la imagen de video." }
+    }
     $mounts = @("--mount", "type=bind,source=$Root,target=/work")
     # Si hay clave de ElevenLabs en el entorno (o en .env), el contenedor la usa
     # y `render --engine auto` elige esa voz en vez de Piper.

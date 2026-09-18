@@ -117,7 +117,11 @@ def _terminal(rows: list[Line], title: str = "facelessyt") -> Image.Image:
         draw.ellipse([110 + i * 34, 92, 128 + i * 34, 110], fill=color)
     draw.text((240, 88), title, font=_font(28), fill=DIM)
     draw.rectangle([80, 130, W - 80, H - 70], fill=(13, 17, 23), outline=(48, 54, 61))
-    _draw_block(img, rows, left=120, top=170)
+    # Centrado vertical: con el bloque pegado arriba, dos tercios de la pantalla
+    # quedaban vacios y el texto se leia pequeno en el movil.
+    total = sum(_font(r.size, r.bold).getbbox("Ag")[3] + 14 for r in rows)
+    top = max(170, 130 + (H - 200 - total) // 2)
+    _draw_block(img, rows, left=120, top=top)
     return img
 
 
@@ -537,6 +541,282 @@ CONTENT = {
     ),
     "What's your highest score?": lambda: _centered_text(
         "What's the highest score you get?", size=68
+    ),
+    # ---- video 6: el harness de retencion (datos de docs/09, 2026-09-18)
+    "studio_180": lambda: _terminal(
+        [
+            Line("Channel analytics       Last 28 days", DIM, 40),
+            Line(""),
+            Line("Videos                         5", FG, 50),
+            Line("Views                        180", RED, 60, True),
+            Line("Watch time (hours)           1.3", FG, 50),
+            Line("Subscribers                   +1", FG, 50),
+        ],
+        title="YouTube Studio",
+    ),
+    "ctr_funnel": lambda: _terminal(
+        [
+            Line("  Thumbnail impressions      4,200", FG, 50),
+            Line("  Click-through rate          1.0%", RED, 60, True),
+            Line("  Average view duration       0:55", RED, 60, True),
+            Line(""),
+            Line("  Browse features   42%   Suggested   34%", DIM, 38),
+            Line("  YouTube was pushing them. Nobody clicked.", YELLOW, 40, True),
+        ],
+        title="28 days",
+    ),
+    "gate_refuses": lambda: _terminal(
+        [
+            Line("  $ facelessyt.video render --script 01-outlier-agent.yaml", DIM, 36),
+            Line("  29 error(es) de gancho/ritmo", RED, 44, True),
+            Line("  No se renderiza.", RED, 44, True),
+            Line(""),
+            Line("  $ facelessyt upload --thumbnail ep3.jpg ...", DIM, 36),
+            Line("  x imagen: 82% de pixeles casi negros", RED, 40),
+            Line("  No se sube.", RED, 44, True),
+        ],
+        title="the gate",
+    ),
+    "thresholds_table": lambda: _terminal(
+        [
+            Line("  Metric                 Threshold   If it fails, the problem is", DIM, 36),
+            Line("  " + "-" * 70, DIM, 36),
+            Line("  Click-through rate        > 4%      packaging", FG, 40),
+            Line("  Retention at 30 s        > 55%      the hook", FG, 40),
+            Line("  Average retention        > 40%      script or pacing", FG, 40),
+            Line(""),
+            Line("  Written on day 0. docs/00-estrategia.md", GREEN, 38),
+        ],
+        title="the plan",
+    ),
+    "results_table": lambda: _terminal(
+        [
+            Line("  Ep  Length   Views   Avg view   Retention", DIM, 36),
+            Line("  " + "-" * 50, DIM, 36),
+            Line("   1   20:10     101     1:07       5.6%", RED, 40),
+            Line("   2   16:14      21     0:25       2.6%", RED, 40),
+            Line("   3   11:21      23     1:21      12.0%", RED, 40),
+            Line("   4    6:00       8     0:11       3.1%", RED, 40),
+            Line("   5    3:51      27     0:52      22.6%", FG, 40),
+            Line(""),
+            Line("  CTR: 1.0%     none above any threshold", RED, 40, True),
+        ],
+        title="what happened",
+    ),
+    "results_table_highlight": lambda: _terminal(
+        [
+            Line("  Ep  Length   Views   Avg view   Retention   Motion", DIM, 36),
+            Line("  " + "-" * 60, DIM, 36),
+            Line("   1   20:10     101     1:07       5.6%      stills", DIM, 40),
+            Line("   2   16:14      21     0:25       2.6%      stills", DIM, 40),
+            Line("   3   11:21      23     1:21      12.0%      stills", DIM, 40),
+            Line("   4    6:00       8     0:11       3.1%      stills", DIM, 40),
+            Line("   5    3:51      27     0:52      22.6%      canvas", GREEN, 44, True),
+            Line(""),
+            Line("  4x the retention. The only one that moved.", GREEN, 40, True),
+        ],
+        title="the signal",
+    ),
+    "thumb_metrics_cmd": lambda: _terminal(
+        [
+            Line("  $ facelessyt research            # competitors, 26 outliers", DIM, 36),
+            Line("  luminance, saturation, near-black pixels, OCR", FG, 38),
+            Line(""),
+            Line("  $ facelessyt packaging --thumbnail mine.jpg", GREEN, 46, True),
+            Line("  same metrics. my own thumbnails.", FG, 38),
+        ],
+        title="measure, don't argue",
+    ),
+    "thumb_metrics_table": lambda: _terminal(
+        [
+            Line("                       luminance   saturation   near-black", DIM, 36),
+            Line("  " + "-" * 62, DIM, 36),
+            Line("  26 niche outliers       0.33        0.35         42%", GREEN, 40, True),
+            Line("  episode 1               0.10        0.09         86%", RED, 40),
+            Line("  episode 2               0.21        0.10         75%", RED, 40),
+            Line("  episode 3               0.14        0.26         82%", RED, 40),
+            Line("  episode 4               0.12        0.42         80%", RED, 40),
+            Line("  episode 5               0.26        0.64         51%", FG, 40),
+        ],
+        title="thumbnails, measured",
+    ),
+    "thumb_text_pronouns": lambda: _terminal(
+        [
+            Line('  "IT LIED"', RED, 56, True),
+            Line('  "IT FITS?"', RED, 56, True),
+            Line('  "I FOUND IT"', RED, 56, True),
+            Line('  "IT\'S A TRAP"', RED, 56, True),
+            Line(""),
+            Line("  What lied? What fits? Found what?", YELLOW, 40, True),
+            Line("  The thumbnail is read before the title.", DIM, 38),
+        ],
+        title="the text",
+    ),
+    "bad_hook_quote": lambda: _terminal(
+        [
+            Line("  hook-1:", DIM, 38),
+            Line('  "This channel has zero videos', RED, 48, True),
+            Line('   and zero subscribers."', RED, 48, True),
+            Line(""),
+            Line("  New viewers: 96.6%", FG, 40),
+            Line("  A reason to leave, in the first sentence.", YELLOW, 40, True),
+        ],
+        title="video 1, second 0",
+    ),
+    "lint_constants": lambda: _terminal(
+        [
+            Line("  # video/lint.py", DIM, 36),
+            Line("  HOOK_FIRST_SCENE_MAX_WORDS = 30", GREEN, 40),
+            Line("  HOOK_WINDOW_WORDS          = 95   # ~30 s", GREEN, 40),
+            Line("  HOOK_MIN_VISUAL_CHANGES    = 3", GREEN, 40),
+            Line("  SCENE_MAX_WORDS            = 55", GREEN, 40),
+            Line("  MAX_MINUTES_DEFAULT        = 8", GREEN, 40),
+            Line(""),
+            Line("  Every rule is a number with a name.", YELLOW, 40, True),
+        ],
+        title="lint.py",
+    ),
+    "lint_hook_rules": lambda: _terminal(
+        [
+            Line("  first scene:  <= 30 words", FG, 40),
+            Line("                must contain a digit, 'watch', 'look', or 'you'", FG, 40),
+            Line(""),
+            Line("  banned in scenes 1-2:", DIM, 38),
+            Line('    "this channel"  "subscriber"  "welcome"', RED, 40),
+            Line('    "last video"    "in this video"  "my name is"', RED, 40),
+        ],
+        title="hook rules",
+    ),
+    "lint_pacing_rules": lambda: _terminal(
+        [
+            Line("  any scene:     <= 55 words on one image  (~17 s)", FG, 40),
+            Line("  first 30 s:    >= 3 different visuals", FG, 40),
+            Line("  whole video:   <= 8 min", FG, 40),
+            Line(""),
+            Line("  until average retention > 40%", YELLOW, 40, True),
+        ],
+        title="pacing rules",
+    ),
+    "lint_run_video1": lambda: _terminal(
+        [
+            Line("  $ facelessyt.video check --script scripts/01-outlier-agent.yaml", DIM, 32),
+            Line("  Escenas      : 78", FG, 38),
+            Line("  Duracion est.: 21.1 min (maximo 8)", FG, 38),
+            Line(""),
+            Line("  ERROR hook-self-talk   hook-1   'this channel', 'subscriber'", RED, 36),
+            Line("  ERROR hook-payoff      hook-1   nothing concrete in scene 1", RED, 36),
+            Line("  ERROR scene-too-long   formula-4b   72 words on one image", RED, 36),
+            Line("  ERROR too-long         21.1 min estimated; max 8", RED, 36),
+            Line("  ...", DIM, 36),
+            Line("  61 aviso(s), 29 error(es)   ->   exit 1", RED, 44, True),
+        ],
+        title="video 1 vs the linter",
+    ),
+    "packaging_rules": lambda: _terminal(
+        [
+            Line("  image:   luminance  >= 0.22", FG, 40),
+            Line("           saturation >= 0.20", FG, 40),
+            Line("           near-black <= 60%", FG, 40),
+            Line(""),
+            Line("  text:    <= 4 words", FG, 40),
+            Line("           no 'it' / 'this' / 'I' as subject", FG, 40),
+            Line("           must not repeat the title", FG, 40),
+            Line(""),
+            Line("  title:   <= 60 chars, payoff in the first 40", FG, 40),
+        ],
+        title="packaging.py",
+    ),
+    "packaging_reject_ep3": lambda: _terminal(
+        [
+            Line('  $ facelessyt packaging --title "I Built an AI Agent That Has to Prove..."', DIM, 30),
+            Line('        --thumb-text "IT LIED" --thumbnail ep3.jpg', DIM, 30),
+            Line(""),
+            Line("  Miniatura: luminancia 0.14  saturacion 0.26  casi negro 82%", FG, 36),
+            Line("  x titulo: 'I Built an AI Agent...' ya se uso dos veces", RED, 36),
+            Line("  x texto: empieza por 'it': un pronombre sin referente", RED, 36),
+            Line("  x texto: ninguna palabra nombra algo concreto", RED, 36),
+            Line("  x imagen: luminancia 0.14 < 0.22", RED, 36),
+            Line("  x imagen: 82% de pixeles casi negros; maximo 60%", RED, 36),
+            Line("  exit 1", RED, 44, True),
+        ],
+        title="episode 3 vs the gate",
+    ),
+    "upload_refuses": lambda: _terminal(
+        [
+            Line("  $ facelessyt upload --video ep.mp4 --thumbnail dark.jpg ...", DIM, 36),
+            Line(""),
+            Line("  x imagen: 82% de pixeles casi negros; maximo 60%", RED, 38),
+            Line(""),
+            Line("  No se sube.", RED, 56, True),
+            Line("  Arregla el packaging o usa --skip-packaging-check.", DIM, 38),
+        ],
+        title="upload",
+    ),
+    "render_changes": lambda: _terminal(
+        [
+            Line("  every still     zoompan  1.00 -> 1.08, alternating", GREEN, 40),
+            Line("  every cut       xfade    0.25 s", GREEN, 40),
+            Line("  music bed       -17 dB under the voice, looped", GREEN, 40),
+            Line("  chapters        computed from the real cut", GREEN, 40),
+            Line(""),
+            Line("  No frame sits still. Nothing else changed.", YELLOW, 40, True),
+        ],
+        title="assemble.py",
+    ),
+    "piper_measured": lambda: _terminal(
+        [
+            Line("  38 words, en_US-lessac-medium, inside the container", DIM, 36),
+            Line(""),
+            Line("  no flags                     12.9 s   ~176 wpm", FG, 40),
+            Line("  length_scale 0.85 + 0.1 s    12.3 s   ~185 wpm", GREEN, 40, True),
+            Line("  length_scale 0.80 + 0 s      10.9 s   ~210 wpm", FG, 40),
+            Line(""),
+            Line("  Measured, not guessed.", YELLOW, 40, True),
+        ],
+        title="voice.py",
+    ),
+    "thumb_new_audit": lambda: _terminal(
+        [
+            Line("  $ facelessyt packaging --thumbnail data/video/06/thumbnail.jpg", DIM, 32),
+            Line(""),
+            Line("  luminancia 0.37   saturacion 0.57   casi negro 54%", GREEN, 40, True),
+            Line("  Packaging OK: pasa los umbrales de los outliers del nicho", GREEN, 38),
+            Line(""),
+            Line("  Built by code, to pass its own gate.", YELLOW, 40, True),
+        ],
+        title="this video's thumbnail",
+    ),
+    "success_criteria": lambda: _terminal(
+        [
+            Line("  8 videos through the gate. Then:", DIM, 38),
+            Line(""),
+            Line("  CTR                  1.0%   ->   > 3%", FG, 46),
+            Line("  Average retention   5-22%   ->   > 30%", FG, 46),
+            Line(""),
+            Line("  If those move and views don't: the niche.", YELLOW, 40, True),
+            Line("  Not a promise. A test.", DIM, 38),
+        ],
+        title="how I'll know",
+    ),
+    "your_turn_packaging": lambda: _terminal(
+        [
+            Line("  $ git clone github.com/tapaderuza/facelessyt", GREEN, 40),
+            Line("  $ facelessyt packaging --thumbnail yours.jpg", GREEN, 40),
+            Line(""),
+            Line("  Post your near-black number in the comments.", FG, 40, True),
+            Line("  Was 86% special, or is everyone doing this?", DIM, 38),
+        ],
+        title="your turn",
+    ),
+    "repo_final_06": lambda: _terminal(
+        [
+            Line(""),
+            Line("  github.com/tapaderuza/facelessyt", GREEN, 56, True),
+            Line(""),
+            Line("  Linter, gate and measurements. MIT.", FG, 40),
+            Line("  Video 7 goes through the same gate.", FG, 40),
+        ],
+        title="Outlier Engineering",
     ),
     "repo_final": lambda: _terminal(
         [
