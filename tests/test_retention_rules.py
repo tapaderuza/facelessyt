@@ -188,6 +188,47 @@ class AssembleTests(unittest.TestCase):
             self.assertEqual(out.read_text(encoding="utf-8").splitlines(), ["00:00 A", "00:20 C"])
 
 
+class PaidCacheTests(unittest.TestCase):
+    def test_paga_una_vez_y_reutiliza(self):
+        from facelessyt import paidcache
+        calls = []
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "a.mp3"
+
+            def produce():
+                calls.append(1)
+                out.write_bytes(b"audio")
+                return out
+
+            marker = Path(tmp) / "a.key.json"
+            self.assertEqual(paidcache.once(marker, "voiceA|hello", produce), out)
+            self.assertEqual(paidcache.once(marker, "voiceA|hello", produce), out)
+            self.assertEqual(len(calls), 1)
+            # Otra voz con el mismo texto: se vuelve a pagar. Ese era el fallo.
+            paidcache.once(marker, "voiceB|hello", produce)
+            self.assertEqual(len(calls), 2)
+            # Fichero borrado: se regenera aunque la clave coincida.
+            out.unlink()
+            paidcache.once(marker, "voiceB|hello", produce)
+            self.assertEqual(len(calls), 3)
+
+    def test_fingerprint_cambia_con_la_voz(self):
+        import os
+        from facelessyt.video import voice
+        before = dict(os.environ)
+        try:
+            os.environ["ELEVENLABS_API_KEY"] = "k"
+            os.environ["ELEVENLABS_VOICE_ID"] = "v1"
+            a = voice.fingerprint("auto")
+            os.environ["ELEVENLABS_VOICE_ID"] = "v2"
+            b = voice.fingerprint("auto")
+            self.assertNotEqual(a, b)
+            self.assertTrue(a.startswith("elevenlabs|v1|"))
+            self.assertTrue(voice.fingerprint("piper").startswith("piper|"))
+        finally:
+            os.environ.clear(); os.environ.update(before)
+
+
 class PublishAtTests(unittest.TestCase):
     def test_futuro_en_utc(self):
         from facelessyt import upload

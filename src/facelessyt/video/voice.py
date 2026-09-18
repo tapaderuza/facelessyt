@@ -88,10 +88,25 @@ def _elevenlabs(text: str, out_path: Path) -> Path:
     return out_path
 
 
+def resolve_engine(engine: str = "auto") -> str:
+    if engine == "auto":
+        return "elevenlabs" if os.getenv("ELEVENLABS_API_KEY", "").strip() else "piper"
+    return engine
+
+
+def fingerprint(engine: str = "auto") -> str:
+    """Todo lo que, ademas del texto, cambia el audio. Va en la clave del cache:
+    con solo el texto, cambiar de voz devolvia el audio de la voz anterior."""
+    engine = resolve_engine(engine)
+    if engine == "elevenlabs":
+        return f"elevenlabs|{os.getenv('ELEVENLABS_VOICE_ID', '').strip()}|eleven_multilingual_v2|0.45|0.75"
+    return (f"piper|{Path(os.getenv('PIPER_VOICE', '')).name}|"
+            f"ls{PIPER_LENGTH_SCALE:g}|ss{PIPER_SENTENCE_SILENCE:g}")
+
+
 def synthesise(text: str, out_path: Path, *, engine: str = "auto") -> Path:
     """Genera el audio de una escena. Devuelve la ruta del fichero."""
-    if engine == "auto":
-        engine = "elevenlabs" if os.getenv("ELEVENLABS_API_KEY", "").strip() else "piper"
+    engine = resolve_engine(engine)
 
     if engine == "piper":
         return _piper(text, out_path.with_suffix(".wav"))

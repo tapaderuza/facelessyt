@@ -25,6 +25,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from .. import paidcache
 from . import scenes, voice
 
 FPS = 30
@@ -119,17 +120,13 @@ def encode_still(png: Path, audio: Path, clip: Path, *, duration: float, hold: f
 
 
 def _cached_voice(narration: str, base: Path, *, engine: str) -> Path:
-    """Sintetiza solo si el texto cambio. Con ElevenLabs cada llamada cuesta
-    creditos; reintentar un montaje no debe volver a pagar las 24 escenas."""
-    marker = base.with_suffix(".txt")
-    existing = [p for p in (base.with_suffix(".mp3"), base.with_suffix(".wav")) if p.exists()]
-    if existing and marker.exists() and marker.read_text(encoding="utf-8") == narration:
-        return existing[0]
-    for stale in existing:
-        stale.unlink()
-    audio = voice.synthesise(narration, base, engine=engine)
-    marker.write_text(narration, encoding="utf-8")
-    return audio
+    """Sintetiza solo si texto o voz cambiaron. Con ElevenLabs cada llamada
+    cuesta creditos; reintentar un montaje no debe volver a pagar las escenas."""
+    key = voice.fingerprint(engine) + "|" + narration
+    return paidcache.once(
+        base.with_suffix(".key.json"), key,
+        lambda: voice.synthesise(narration, base, engine=engine),
+    )
 
 
 def build_scene(scene: dict, workdir: Path, *, engine: str = "auto",
