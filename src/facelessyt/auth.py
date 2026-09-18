@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -52,9 +53,20 @@ def credentials(*, interactive: bool = True) -> Credentials:
         return creds
 
     if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-        TOKEN.write_text(creds.to_json(), encoding="utf-8")
-        return creds
+        try:
+            creds.refresh(Request())
+            TOKEN.write_text(creds.to_json(), encoding="utf-8")
+            return creds
+        except RefreshError as exc:
+            # En modo Testing, Google revoca el refresh token a los 7 dias.
+            # Antes esto reventaba aqui y `auth` no llegaba a pedir el
+            # consentimiento nuevo: no habia forma de salir del bucle.
+            if not interactive:
+                raise AuthError(
+                    f"El token de YouTube ha caducado ({exc.args[0]}). "
+                    "Ejecuta: python -m facelessyt auth"
+                ) from exc
+            creds = None
 
     if not interactive:
         raise AuthError(

@@ -16,24 +16,39 @@ real task — here's what broke".
 
 ## 2. Packaging: título + miniatura (TÚ — 30 min)
 Se escribe **antes** del guion. Si no consigues un título que tú mismo clicarías, el tema muere aquí.
-- Título: ≤ 60 caracteres, promesa concreta, sin clickbait que el vídeo no pague.
-- Miniatura: 3 elementos máximo, legible a 120px de ancho.
+- Título: ≤ 60 caracteres, el resultado o el número en los primeros 40, sin repetir
+  el arranque de otro vídeo del canal.
+- Miniatura: 2-4 palabras que **nombran algo** (no "IT LIED"), un panel de color, y
+  luminancia/saturación al nivel de los outliers del nicho. Se mide, no se opina:
+
+```bash
+.venv/Scripts/python.exe -m facelessyt packaging --title "..." --thumb-text "..." --thumbnail miniatura.jpg
+```
+
+`upload` ejecuta el mismo gate y no sube si falla. Por qué: [docs/09](09-diagnostico-2026-09-18.md).
+Prompts para escribirlo: [docs/prompts/hook-packaging.md](prompts/hook-packaging.md).
 
 ## 3. Guion (asistido — 45 min)
 Estructura fija:
-- **0–15s** gancho: la promesa y la prueba de que existe. Sin intro, sin "hola a todos".
-- **15s–1min** contexto mínimo y qué va a ver.
-- **cuerpo**: el build/la demo. Pantalla, no diapositivas.
+- **0–10s** el resultado, visible. ≤ 30 palabras. Sin intro, sin "this channel", sin "last video".
+- **10–30s** la contradicción y qué va a poder hacer quien mira. Tres visuales distintos.
+- **cuerpo**: el build/la demo. Ninguna escena > 55 palabras sobre la misma imagen.
 - **cierre**: resultado + CTA único.
+
+`facelessyt.video check` aplica estas reglas y `render` no arranca si fallan
+(`--force` para saltarlo a sabiendas). Constantes en `src/facelessyt/video/lint.py`.
 
 ## 4. Voz (automatizado)
 TTS. Una única voz consistente para todo el canal — la voz es la marca.
 
-## 5. Grabación de pantalla + montaje (semi)
-Screen recording del build real. Corte de silencios automatizado, zooms manuales.
+## 5. Montaje (automatizado)
+Cada escena lleva zoom lento, las escenas se encadenan con fundido y hay música de
+fondo si `MUSIC_PATH` apunta a un loop. Un plano fijo de 15 s con voz sintética es
+lo que retuvo el 5%; ya no se genera.
 
-## 6. Publicación (automatizado — `publish`)
-Título, descripción con enlaces de afiliación, tags, miniatura, hora fija.
+## 6. Publicación (automatizado — `upload --publish-at`)
+Se sube privado con hora de publicación; YouTube lo hace público solo. Hasta esa
+hora se puede retirar. Todo el episodio en un comando: `tools/produce_episode.ps1`.
 
 ## 7. Medición (automatizado — `tracker`)
 Se registra a 24h, 7d y 30d. La decisión del día 90 sale de aquí.
@@ -41,5 +56,8 @@ Se registra a 24h, 7d y 30d. La decisión del día 90 sale de aquí.
 ---
 
 ## Frecuencia
-2 vídeos/semana, mismo día y hora. Duración objetivo **20–30 min** (dato del nicho, no intuición: ver docs/02-hallazgos). La consistencia importa más que el volumen.
+2 vídeos/semana, mismo día y hora. Duración objetivo **4–8 min** hasta que la retención
+media pase del 40%. Los outliers del nicho duran 28 min (docs/02-hallazgos), pero los
+hacen canales con cara y voz humana; con voz sintética y planos fijos, 4 min retuvo
+4x más que 20 (docs/09). La consistencia importa más que el volumen.
 Antes de subir el vídeo 1, ten 4 grabados. Sin colchón, la frecuencia se rompe en la semana 3.

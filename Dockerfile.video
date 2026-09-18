@@ -12,7 +12,7 @@ RUN apt-get update -qq && \
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir pillow piper-tts PyYAML
+RUN pip install --no-cache-dir pillow piper-tts PyYAML requests
 
 # Voz de Piper: en-US, calidad media. ~60 MB, se cachea en su propia capa.
 RUN mkdir -p /voices && \
