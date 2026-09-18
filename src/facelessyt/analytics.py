@@ -47,6 +47,8 @@ class VideoDiagnosis:
             return "guion o ritmo: aguantan el principio pero no el cuerpo"
         if all(v is None for v in (self.ctr, self.retention_30s, self.avg_view_percentage)):
             return "sin datos suficientes todavia"
+        if self.ctr is None:
+            return "retencion bien; el CTR solo se ve en Studio (Contenido > Impresiones)"
         return "las tres metricas estan bien"
 
 
@@ -103,10 +105,10 @@ def diagnose(video_ids: list[str] | None = None, *, days: int = 28,
             start=start_s,
             end=end_s,
             dimensions="video",
-            metrics=(
-                "views,impressions,impressionClickThroughRate,"
-                "averageViewPercentage,averageViewDuration,subscribersGained"
-            ),
+            # Impresiones y CTR NO existen en la Analytics API v2 (la consulta
+            # devuelve 400 "Unknown identifier (impressions)"): solo los enseña
+            # YouTube Studio. Se dejan a None y el CTR se lee a mano en Studio.
+            metrics="views,averageViewPercentage,averageViewDuration,subscribersGained",
             sort="-views",
             maxResults=50,
         )
@@ -146,11 +148,11 @@ def diagnose(video_ids: list[str] | None = None, *, days: int = 28,
                 video_id=vid,
                 title=title,
                 views=int(row[1]),
-                impressions=int(row[2]) if row[2] is not None else None,
-                ctr=round(float(row[3]), 2) if row[3] is not None else None,
-                avg_view_percentage=round(float(row[4]), 1) if row[4] is not None else None,
-                avg_view_duration_s=int(row[5]) if row[5] is not None else None,
-                subscribers_gained=int(row[6]) if row[6] is not None else None,
+                impressions=None,
+                ctr=None,
+                avg_view_percentage=round(float(row[2]), 1) if row[2] is not None else None,
+                avg_view_duration_s=int(row[3]) if row[3] is not None else None,
+                subscribers_gained=int(row[4]) if row[4] is not None else None,
                 retention_30s=retention_at(ya, vid, 30, duration, start=start_s, end=end_s),
             )
         )
