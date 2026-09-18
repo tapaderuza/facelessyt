@@ -293,8 +293,8 @@ def cmd_diagnose(args: argparse.Namespace) -> int:
             return f"[{colour}]{value}{unit}[/{colour}] [dim](minimo {threshold}{unit})[/dim]"
 
         table.add_row("Views", str(r.views))
-        table.add_row("Impresiones", str(r.impressions) if r.impressions else "[dim]-[/dim]")
-        table.add_row("CTR", mark(r.ctr, analytics.CTR_MIN))
+        table.add_row("CTR", mark(r.ctr, analytics.CTR_MIN) if r.ctr is not None
+                      else "[dim]solo en Studio (la API no lo expone)[/dim]")
         table.add_row("Retencion 30s", mark(r.retention_30s, analytics.RETENTION_30S_MIN))
         table.add_row("Retencion media", mark(r.avg_view_percentage, analytics.RETENTION_AVG_MIN))
         table.add_row("Subs ganados", str(r.subscribers_gained or 0))
