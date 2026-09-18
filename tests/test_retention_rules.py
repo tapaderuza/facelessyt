@@ -140,14 +140,25 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual((audit.width, audit.height), (1280, 720))
 
 
-    def test_audit_acepta_imagen_externa_con_banda(self):
-        """Fondo oscuro tipo DALL-E + banda de color puesta por codigo."""
+    def test_imagen_externa_con_banda(self):
+        """Fondo tipo DALL-E + banda de color puesta por codigo.
+
+        La banda sube luminancia y saturacion, pero NO salva una imagen negra:
+        si el fondo es negro puro, el gate la sigue rechazando, que es lo que
+        queremos (es exactamente lo que fallo en los episodios 1-4).
+        """
         from PIL import Image
         from facelessyt.video import thumbnail
         with tempfile.TemporaryDirectory() as tmp:
-            bg = Path(tmp) / "bg.png"
-            Image.new("RGB", (1024, 1024), (12, 14, 20)).save(bg)  # cuadrada y negra
-            out = thumbnail.render_over_image(bg, Path(tmp) / "t.jpg",
+            black = Path(tmp) / "black.png"
+            Image.new("RGB", (1024, 1024), (12, 14, 20)).save(black)
+            out = thumbnail.render_over_image(black, Path(tmp) / "t1.jpg",
+                                              headline="Same speed with 8 workers", figure="2x")
+            self.assertFalse(packaging.audit_thumbnail(out).ok)
+
+            navy = Path(tmp) / "navy.png"  # oscuro pero con algo de luz, como una foto de estudio
+            Image.new("RGB", (1024, 1024), (48, 56, 72)).save(navy)
+            out = thumbnail.render_over_image(navy, Path(tmp) / "t2.jpg",
                                               headline="Same speed with 8 workers", figure="2x")
             audit = packaging.audit_thumbnail(out)
             self.assertTrue(audit.ok, audit.problems)
