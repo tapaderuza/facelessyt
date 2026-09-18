@@ -346,7 +346,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
         return 5
 
     publish_at = None
-    if args.publish_at:
+    if args.publish_at and args.privacy == "private":
         try:
             publish_at = up.parse_publish_at(args.publish_at)
         except ValueError as exc:
@@ -354,7 +354,9 @@ def cmd_upload(args: argparse.Namespace) -> int:
             return 2
 
     console.print(f"\nSubiendo [cyan]{video.name}[/cyan] ({video.stat().st_size / 1e6:.0f} MB)")
-    if publish_at:
+    if args.privacy == "public":
+        console.print("[yellow]Se subira directamente como PUBLICO.[/yellow]\n")
+    elif publish_at:
         console.print(f"[dim]Se subira como PRIVADO y YouTube lo publicara el "
                       f"{publish_at.astimezone():%Y-%m-%d %H:%M %Z}.[/dim]\n")
     else:
@@ -374,6 +376,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
             description=description,
             tags=[t.strip() for t in (args.tags or "").split(",") if t.strip()],
             thumbnail=thumb,
+            privacy=args.privacy,
             publish_at=publish_at,
             on_progress=progress,
         )
@@ -545,6 +548,8 @@ def main(argv: list[str] | None = None) -> int:
     p_up.add_argument("--thumb-text", help="texto de la miniatura, para el gate de packaging")
     p_up.add_argument("--tags", help="separadas por comas")
     p_up.add_argument("--publish-at", help="ISO local, p.ej. 2026-09-21T14:00: YouTube lo publica solo")
+    p_up.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"],
+                      help="public = sale publicado directamente, sin ventana de revision")
     p_up.add_argument("--skip-packaging-check", action="store_true")
     p_up.set_defaults(func=cmd_upload)
 

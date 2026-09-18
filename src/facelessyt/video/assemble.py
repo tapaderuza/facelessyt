@@ -118,6 +118,20 @@ def encode_still(png: Path, audio: Path, clip: Path, *, duration: float, hold: f
     return clip
 
 
+def _cached_voice(narration: str, base: Path, *, engine: str) -> Path:
+    """Sintetiza solo si el texto cambio. Con ElevenLabs cada llamada cuesta
+    creditos; reintentar un montaje no debe volver a pagar las 24 escenas."""
+    marker = base.with_suffix(".txt")
+    existing = [p for p in (base.with_suffix(".mp3"), base.with_suffix(".wav")) if p.exists()]
+    if existing and marker.exists() and marker.read_text(encoding="utf-8") == narration:
+        return existing[0]
+    for stale in existing:
+        stale.unlink()
+    audio = voice.synthesise(narration, base, engine=engine)
+    marker.write_text(narration, encoding="utf-8")
+    return audio
+
+
 def build_scene(scene: dict, workdir: Path, *, engine: str = "auto",
                 index: int = 0, motion: bool = True) -> Clip:
     """Renderiza una escena completa: imagen + voz + clip de video."""
@@ -126,7 +140,7 @@ def build_scene(scene: dict, workdir: Path, *, engine: str = "auto",
     hold = float(scene.get("hold", 0.5))
 
     png = scenes.render(scene, workdir / "frames" / f"{scene_id}.png")
-    audio = voice.synthesise(narration, workdir / "audio" / scene_id, engine=engine)
+    audio = _cached_voice(narration, workdir / "audio" / scene_id, engine=engine)
     duration = audio_duration(audio) + hold
 
     clip = workdir / "clips" / f"{scene_id}.mp4"
@@ -150,8 +164,30 @@ def _concat_copy(clips: list[Clip], out_path: Path, workdir: Path) -> Path:
     return out_path
 
 
+# Clips por pasada de xfade. ffmpeg abre y decodifica todos los inputs a la
+# vez; con 24 clips de 1080p el contenedor se quedo sin memoria en el montaje
+# del video 6. Por bloques, el maximo abierto es este numero.
+XFADE_BATCH = 8
+
+
 def _concat_xfade(clips: list[Clip], out_path: Path) -> Path:
-    """Encadena con fundidos. Cada fundido come XFADE_S del total."""
+    """Encadena con fundidos, por bloques. Cada fundido come XFADE_S del total."""
+    if len(clips) > XFADE_BATCH:
+        partials = []
+        for i in range(0, len(clips), XFADE_BATCH):
+            chunk = clips[i:i + XFADE_BATCH]
+            part = out_path.with_name(f"{out_path.stem}.part{i // XFADE_BATCH}.mp4")
+            if len(chunk) == 1:
+                part = chunk[0].video_path
+            else:
+                _concat_xfade_once(chunk, part)
+            dur = sum(c.duration for c in chunk) - XFADE_S * (len(chunk) - 1)
+            partials.append(Clip(f"part{i}", part, dur, sum(c.words for c in chunk)))
+        return _concat_xfade(partials, out_path)
+    return _concat_xfade_once(clips, out_path)
+
+
+def _concat_xfade_once(clips: list[Clip], out_path: Path) -> Path:
     inputs = []
     for c in clips:
         inputs += ["-i", str(c.video_path)]

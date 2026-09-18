@@ -32,7 +32,8 @@
 param(
     [Parameter(Mandatory)] [string] $Script,
     [Parameter(Mandatory)] [string] $ThumbText,
-    [Parameter(Mandatory)] [string] $PublishAt,
+    [string] $PublishAt,
+    [switch] $Public,
     [string] $Thumbnail,
     [string] $Background,
     [string] $ThumbFigure,
@@ -46,6 +47,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+if (-not $Public -and -not $PublishAt) { Write-Host "Hace falta -PublishAt (programado) o -Public (directo)." -ForegroundColor Red; exit 1 }
 $Root = Split-Path -Parent $PSScriptRoot
 $Py = Join-Path $Root ".venv\Scripts\python.exe"
 Set-Location $Root
@@ -127,9 +129,10 @@ if (-not (Test-Path $Description)) {
         Out-File -Encoding utf8 $Description
 }
 
-Step "5/5 Subida privada con publicacion programada ($PublishAt)"
+if ($Public) { Step "5/5 Subida PUBLICA directa" } else { Step "5/5 Subida privada con publicacion programada ($PublishAt)" }
 if ($DryRun) { Write-Host "  (dry run: no se sube)"; exit 0 }
+if ($Public) { $visibility = @("--privacy", "public") } else { $visibility = @("--publish-at", $PublishAt) }
 & $Py -m facelessyt upload --video $Mp4 --title $Title --description $Description `
-    --thumbnail $Thumbnail --thumb-text $ThumbText --tags $Tags --publish-at $PublishAt
+    --thumbnail $Thumbnail --thumb-text $ThumbText --tags $Tags @visibility
 if ($LASTEXITCODE -ne 0) { Fail "la subida fallo o el gate la paro." }
-Write-Host "`nListo. Revisalo en YouTube Studio antes de la hora programada." -ForegroundColor Green
+if ($Public) { Write-Host "`nPublicado." -ForegroundColor Green } else { Write-Host "`nListo. Revisalo en YouTube Studio antes de la hora programada." -ForegroundColor Green }
