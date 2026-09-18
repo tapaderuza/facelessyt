@@ -140,6 +140,20 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual((audit.width, audit.height), (1280, 720))
 
 
+    def test_audit_acepta_imagen_externa_con_banda(self):
+        """Fondo oscuro tipo DALL-E + banda de color puesta por codigo."""
+        from PIL import Image
+        from facelessyt.video import thumbnail
+        with tempfile.TemporaryDirectory() as tmp:
+            bg = Path(tmp) / "bg.png"
+            Image.new("RGB", (1024, 1024), (12, 14, 20)).save(bg)  # cuadrada y negra
+            out = thumbnail.render_over_image(bg, Path(tmp) / "t.jpg",
+                                              headline="Same speed with 8 workers", figure="2x")
+            audit = packaging.audit_thumbnail(out)
+            self.assertTrue(audit.ok, audit.problems)
+            self.assertEqual((audit.width, audit.height), (1280, 720))
+
+
 class AssembleTests(unittest.TestCase):
     def test_motion_filter_alterna_direccion(self):
         f0 = assemble.motion_filter(10.0, 0)

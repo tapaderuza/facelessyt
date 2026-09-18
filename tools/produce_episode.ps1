@@ -18,6 +18,12 @@
       -ThumbText "2x same speed 8 workers" -PublishAt "2026-09-21T14:00" -Music D:\music\loop.mp3
 
 .EXAMPLE
+  # Imagen de ChatGPT/DALL-E SIN texto como fondo; el texto lo pone el codigo.
+  .	ools\produce_episode.ps1 -Script scripts-queue.yaml -Background D:	humbs-bg.png `
+      -ThumbFigure "2x" -ThumbHeadline "Same speed with 8 workers" `
+      -ThumbText "2x same speed 8 workers" -PublishAt "2026-09-21T14:00"
+
+.EXAMPLE
   # Con miniatura hecha fuera (image_gen, Canva...): se audita igual.
   .\tools\produce_episode.ps1 -Script scripts\06-queue.yaml -Thumbnail D:\thumbs\06.jpg `
       -ThumbText "2x same speed 8 workers" -PublishAt "2026-09-21T14:00"
@@ -28,6 +34,7 @@ param(
     [Parameter(Mandatory)] [string] $ThumbText,
     [Parameter(Mandatory)] [string] $PublishAt,
     [string] $Thumbnail,
+    [string] $Background,
     [string] $ThumbFigure,
     [string] $ThumbHeadline,
     [string] $ThumbSub = "",
@@ -59,9 +66,14 @@ if ($LASTEXITCODE -ne 0) { Fail "el guion no pasa el lint. Arregla los errores; 
 
 Step "2/5 Miniatura"
 if (-not $Thumbnail) {
-    if (-not $ThumbFigure -or -not $ThumbHeadline) { Fail "sin -Thumbnail hacen falta -ThumbFigure y -ThumbHeadline." }
+    if (-not $ThumbHeadline) { Fail "sin -Thumbnail hace falta -ThumbHeadline (y -ThumbFigure)." }
     $Thumbnail = Join-Path $OutDir "thumbnail.jpg"
-    & $Py -c "from pathlib import Path; from facelessyt.video import thumbnail as t; import sys; p=t.render_bold(Path(sys.argv[1]), headline=sys.argv[2], figure=sys.argv[3], sub=sys.argv[4], panel=sys.argv[5]); t.legibility_check(p); print(p)" $Thumbnail $ThumbHeadline $ThumbFigure $ThumbSub $ThumbPanel
+    if ($Background) {
+        & $Py -c "from pathlib import Path; from facelessyt.video import thumbnail as t; import sys; p=t.render_over_image(Path(sys.argv[1]), Path(sys.argv[2]), headline=sys.argv[3], figure=sys.argv[4], panel=sys.argv[5]); t.legibility_check(p); print(p)" $Background $Thumbnail $ThumbHeadline $ThumbFigure $ThumbPanel
+    } else {
+        if (-not $ThumbFigure) { Fail "sin -Background hace falta -ThumbFigure." }
+        & $Py -c "from pathlib import Path; from facelessyt.video import thumbnail as t; import sys; p=t.render_bold(Path(sys.argv[1]), headline=sys.argv[2], figure=sys.argv[3], sub=sys.argv[4], panel=sys.argv[5]); t.legibility_check(p); print(p)" $Thumbnail $ThumbHeadline $ThumbFigure $ThumbSub $ThumbPanel
+    }
     if ($LASTEXITCODE -ne 0) { Fail "no se pudo generar la miniatura." }
 }
 
@@ -74,6 +86,14 @@ if (-not $SkipRender) {
     docker image inspect facelessyt-video 2>$null | Out-Null
     if ($LASTEXITCODE -ne 0) { docker build -f Dockerfile.video -t facelessyt-video . }
     $mounts = @("--mount", "type=bind,source=$Root,target=/work")
+    # Si hay clave de ElevenLabs en el entorno (o en .env), el contenedor la usa
+    # y `render --engine auto` elige esa voz en vez de Piper.
+    foreach ($line in (Get-Content (Join-Path $Root ".env") -ErrorAction SilentlyContinue)) {
+        if ($line -match '^\s*(ELEVENLABS_API_KEY|ELEVENLABS_VOICE_ID)\s*=\s*(.+)$') {
+            Set-Item -Path "env:$($Matches[1])" -Value $Matches[2].Trim()
+        }
+    }
+    if ($env:ELEVENLABS_API_KEY) { $mounts += @("-e", "ELEVENLABS_API_KEY", "-e", "ELEVENLABS_VOICE_ID") }
     $musicArg = @()
     if ($Music) {
         $mounts += @("--mount", "type=bind,source=$Music,target=/work/music.mp3,readonly")

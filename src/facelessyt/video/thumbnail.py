@@ -234,3 +234,56 @@ def render_bold(out_path: Path, *, headline: str, figure: str, sub: str = "",
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path, quality=95)
     return out_path
+
+
+def render_over_image(background: Path, out_path: Path, *, headline: str,
+                      figure: str = "", panel: str = "amber") -> Path:
+    """Imagen generada fuera (ChatGPT, DALL-E...) + texto puesto por codigo.
+
+    Los generadores de imagen escriben texto de forma inconsistente y tienden
+    a fondos oscuros. Aqui la imagen solo pone el objeto; el titular va en una
+    banda de color solida abajo, y la cifra en un recuadro arriba a la
+    izquierda. Asi el texto siempre se lee a 120 px y la auditoria de
+    `packaging` mide una miniatura con color de verdad.
+    """
+    color = PANELS.get(panel, AMBER)
+    src = Image.open(background).convert("RGB")
+    # Recorte centrado a 16:9 y escala a 1280x720.
+    target = TW / TH
+    w, h = src.size
+    if w / h > target:
+        nw = int(h * target)
+        src = src.crop(((w - nw) // 2, 0, (w - nw) // 2 + nw, h))
+    else:
+        nh = int(w / target)
+        src = src.crop((0, (h - nh) // 2, w, (h - nh) // 2 + nh))
+    img = src.resize((TW, TH), Image.LANCZOS)
+    draw = ImageDraw.Draw(img)
+
+    # Banda inferior: 34% del alto, color solido. Es lo que sube la luminancia.
+    band_top = int(TH * 0.66)
+    draw.rectangle([0, band_top, TW, TH], fill=color)
+    max_w = TW - 100
+    for size in (120, 104, 92, 80):
+        font_h = _font(size, bold=True)
+        lines = _wrap(draw, headline.upper(), font_h, max_w)
+        if len(lines) <= 2 and all(draw.textlength(ln, font=font_h) <= max_w for ln in lines):
+            break
+    line_h = size + 6
+    y = band_top + (TH - band_top - len(lines) * line_h) / 2
+    for ln in lines:
+        draw.text((50, y), ln, font=font_h, fill=INK)
+        y += line_h
+
+    # Cifra arriba a la izquierda, sobre recuadro oscuro con borde del color.
+    if figure:
+        font_fig = _font(150, bold=True)
+        fw = draw.textlength(figure, font=font_fig)
+        fh = font_fig.getbbox("Ag")[3]
+        pad = 24
+        draw.rectangle([40, 40, 40 + fw + 2 * pad, 40 + fh + 2 * pad], fill=INK, outline=color, width=8)
+        draw.text((40 + pad, 40 + pad - 10), figure, font=font_fig, fill=color)
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path, quality=95)
+    return out_path
