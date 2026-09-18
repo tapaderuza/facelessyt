@@ -219,17 +219,22 @@ def render_bold(out_path: Path, *, headline: str, figure: str, sub: str = "",
         lines = _wrap(draw, headline.upper(), font_h, max_w)
         if len(lines) <= 3 and all(draw.textlength(ln, font=font_h) <= max_w for ln in lines):
             break
+    # La linea de contexto tambien se envuelve: la primera version la pintaba
+    # de un tiron y se salia del lienzo.
+    font_s = _font(40, bold=True)
+    sub_lines = _wrap(draw, sub, font_s, max_w) if sub else []
     line_h = size + 8
-    block_h = len(lines) * line_h + (56 if sub else 0)
+    block_h = len(lines) * line_h + len(sub_lines) * 50 + (8 if sub_lines else 0)
     y = (TH - block_h) / 2
     for ln in lines:
         # Sombra dura: separa el blanco del fondo aunque la imagen se comprima.
         draw.text((text_x + 6, y + 6), ln, font=font_h, fill=(0, 0, 0))
         draw.text((text_x, y), ln, font=font_h, fill=WHITE)
         y += line_h
-    if sub:
-        font_s = _font(40, bold=True)
-        draw.text((text_x, y + 8), sub, font=font_s, fill=color)
+    y += 8
+    for ln in sub_lines:
+        draw.text((text_x, y), ln, font=font_s, fill=color)
+        y += 50
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path, quality=95)
