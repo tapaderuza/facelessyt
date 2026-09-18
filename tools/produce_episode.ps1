@@ -1,0 +1,104 @@
+<#
+.SYNOPSIS
+  Guion YAML -> lint -> render (Docker) -> miniatura -> gate de packaging -> subida programada.
+
+.DESCRIPTION
+  Un solo comando por episodio. Se para en el primer paso que falla y no sube
+  nada que no pase el lint de gancho/ritmo ni el gate de packaging: esos son
+  los dos filtros que los cinco primeros videos no tenian.
+
+  El video se sube PRIVADO con hora de publicacion (-PublishAt). YouTube lo
+  hace publico solo a esa hora; hasta entonces se puede retirar con
+  `facelessyt publish --video-id ... --privacy private`. Eso es lo que hace
+  posible dejarlo desatendido sin renunciar a la ventana de revision.
+
+.EXAMPLE
+  .\tools\produce_episode.ps1 -Script scripts\06-queue.yaml `
+      -ThumbFigure "2x" -ThumbHeadline "Same speed with 8 workers" -ThumbSub "the queue moved" `
+      -ThumbText "2x same speed 8 workers" -PublishAt "2026-09-21T14:00" -Music D:\music\loop.mp3
+
+.EXAMPLE
+  # Con miniatura hecha fuera (image_gen, Canva...): se audita igual.
+  .\tools\produce_episode.ps1 -Script scripts\06-queue.yaml -Thumbnail D:\thumbs\06.jpg `
+      -ThumbText "2x same speed 8 workers" -PublishAt "2026-09-21T14:00"
+#>
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)] [string] $Script,
+    [Parameter(Mandatory)] [string] $ThumbText,
+    [Parameter(Mandatory)] [string] $PublishAt,
+    [string] $Thumbnail,
+    [string] $ThumbFigure,
+    [string] $ThumbHeadline,
+    [string] $ThumbSub = "",
+    [string] $ThumbPanel = "amber",
+    [string] $Music,
+    [string] $Tags = "ai automation,python,indie software",
+    [switch] $SkipRender,
+    [switch] $DryRun
+)
+
+$ErrorActionPreference = "Stop"
+$Root = Split-Path -Parent $PSScriptRoot
+$Py = Join-Path $Root ".venv\Scripts\python.exe"
+Set-Location $Root
+
+function Step($name) { Write-Host "`n=== $name" -ForegroundColor Cyan }
+function Fail($msg) { Write-Host "`nPARADO: $msg" -ForegroundColor Red; exit 1 }
+
+$spec = & $Py -c "import yaml,sys; v=yaml.safe_load(open(sys.argv[1],encoding='utf-8'))['video']; print(v['id']); print(v['title'])" $Script
+$VideoId = $spec[0]; $Title = $spec[1]
+$OutDir = Join-Path $Root "data\video\$VideoId"
+$Mp4 = Join-Path $Root "data\video\$VideoId.mp4"
+$Description = Join-Path $OutDir "description.txt"
+New-Item -ItemType Directory -Force $OutDir | Out-Null
+
+Step "1/5 Lint de gancho y ritmo"
+& $Py -m facelessyt.video check --script $Script
+if ($LASTEXITCODE -ne 0) { Fail "el guion no pasa el lint. Arregla los errores; no se renderiza." }
+
+Step "2/5 Miniatura"
+if (-not $Thumbnail) {
+    if (-not $ThumbFigure -or -not $ThumbHeadline) { Fail "sin -Thumbnail hacen falta -ThumbFigure y -ThumbHeadline." }
+    $Thumbnail = Join-Path $OutDir "thumbnail.jpg"
+    & $Py -c "from pathlib import Path; from facelessyt.video import thumbnail as t; import sys; p=t.render_bold(Path(sys.argv[1]), headline=sys.argv[2], figure=sys.argv[3], sub=sys.argv[4], panel=sys.argv[5]); t.legibility_check(p); print(p)" $Thumbnail $ThumbHeadline $ThumbFigure $ThumbSub $ThumbPanel
+    if ($LASTEXITCODE -ne 0) { Fail "no se pudo generar la miniatura." }
+}
+
+Step "3/5 Gate de packaging (titulo + texto + imagen)"
+& $Py -m facelessyt packaging --title $Title --thumb-text $ThumbText --thumbnail $Thumbnail
+if ($LASTEXITCODE -ne 0) { Fail "el packaging no pasa los umbrales. Con CTR del 1% no se sube mas de lo mismo." }
+
+Step "4/5 Render en Docker (Piper + ffmpeg)"
+if (-not $SkipRender) {
+    docker image inspect facelessyt-video 2>$null | Out-Null
+    if ($LASTEXITCODE -ne 0) { docker build -f Dockerfile.video -t facelessyt-video . }
+    $mounts = @("--mount", "type=bind,source=$Root,target=/work")
+    $musicArg = @()
+    if ($Music) {
+        $mounts += @("--mount", "type=bind,source=$Music,target=/work/music.mp3,readonly")
+        $musicArg = @("--music", "/work/music.mp3")
+    }
+    $rel = (Resolve-Path $Script).Path.Substring($Root.Length).TrimStart('\').Replace('\', '/')
+    $env:MSYS_NO_PATHCONV = "1"
+    docker run --rm @mounts -w /work facelessyt-video render `
+        --script "/work/$rel" --workdir "/work/data/video/$VideoId" --out "/work/data/video/$VideoId.mp4" @musicArg
+    if ($LASTEXITCODE -ne 0) { Fail "el render fallo." }
+} else { Write-Host "  (saltado: -SkipRender)" }
+if (-not (Test-Path $Mp4)) { Fail "no existe $Mp4" }
+
+if (-not (Test-Path $Description)) {
+    # Descripcion minima: el guion puede traer 'description' en video:; si no,
+    # titulo + capitulos reales del montaje + repo.
+    $desc = & $Py -c "import yaml,sys; print(yaml.safe_load(open(sys.argv[1],encoding='utf-8'))['video'].get('description',''))" $Script
+    $chapters = Get-Content (Join-Path $OutDir "chapters.txt") -Raw
+    @($desc, "", "Chapters:", $chapters, "", "Code (MIT): https://github.com/tapaderuza/facelessyt") -join "`n" |
+        Out-File -Encoding utf8 $Description
+}
+
+Step "5/5 Subida privada con publicacion programada ($PublishAt)"
+if ($DryRun) { Write-Host "  (dry run: no se sube)"; exit 0 }
+& $Py -m facelessyt upload --video $Mp4 --title $Title --description $Description `
+    --thumbnail $Thumbnail --thumb-text $ThumbText --tags $Tags --publish-at $PublishAt
+if ($LASTEXITCODE -ne 0) { Fail "la subida fallo o el gate la paro." }
+Write-Host "`nListo. Revisalo en YouTube Studio antes de la hora programada." -ForegroundColor Green

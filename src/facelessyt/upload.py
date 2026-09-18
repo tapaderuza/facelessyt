@@ -2,6 +2,12 @@
 
 Sube SIEMPRE como privado. Publicar es una decision humana: el tooling deja el
 video listo en el canal y tu le das al boton cuando lo has visto entero.
+
+Desde 2026-09-18 esa decision se puede tomar por adelantado: `publish_at`
+sube el video privado con una hora de publicacion, y YouTube lo hace publico
+solo a esa hora. Entre medias sigue siendo privado y se puede retirar con
+`publish --privacy private`. Asi la cadena render -> subida -> publicacion
+corre desatendida sin que nada salga publico sin una ventana de revision.
 """
 
 from __future__ import annotations
@@ -9,6 +15,7 @@ from __future__ import annotations
 import json
 import subprocess
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from googleapiclient.errors import HttpError
@@ -26,6 +33,21 @@ class Uploaded:
     url: str
     privacy: str
     thumbnail_error: str | None = None
+    publish_at: str | None = None
+
+
+def parse_publish_at(value: str) -> datetime:
+    """'2026-09-21T14:00' (hora local) o con zona explicita -> UTC consciente.
+
+    YouTube exige RFC 3339 en UTC y rechaza fechas pasadas.
+    """
+    dt = datetime.fromisoformat(value)
+    if dt.tzinfo is None:
+        dt = dt.astimezone()  # hora local de la maquina
+    dt = dt.astimezone(timezone.utc)
+    if dt <= datetime.now(timezone.utc):
+        raise ValueError(f"publish_at ya ha pasado: {value}")
+    return dt
 
 
 class PreflightError(RuntimeError):
@@ -83,6 +105,7 @@ def upload(
     tags: list[str],
     thumbnail: Path | None = None,
     privacy: str = "private",
+    publish_at: datetime | None = None,
     category_id: str = "28",  # Science & Technology
     on_progress=None,
 ) -> Uploaded:
@@ -90,6 +113,9 @@ def upload(
         raise FileNotFoundError(video_path)
     if privacy not in {"private", "unlisted", "public"}:
         raise ValueError(f"privacy invalido: {privacy}")
+    if publish_at is not None and privacy != "private":
+        # Es como funciona la API: la programacion solo aplica a videos privados.
+        raise ValueError("publish_at requiere privacy='private'")
 
     yt = auth.youtube()
     preflight(yt, video_path)
@@ -107,6 +133,10 @@ def upload(
             "selfDeclaredMadeForKids": False,
         },
     }
+    publish_at_iso = None
+    if publish_at is not None:
+        publish_at_iso = publish_at.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        body["status"]["publishAt"] = publish_at_iso
 
     media = MediaFileUpload(str(video_path), chunksize=CHUNK, resumable=True,
                             mimetype="video/mp4")
@@ -144,6 +174,7 @@ def upload(
         url=f"https://www.youtube.com/watch?v={video_id}",
         privacy=privacy,
         thumbnail_error=thumbnail_error,
+        publish_at=publish_at_iso,
     )
 
 

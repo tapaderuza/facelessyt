@@ -303,16 +303,62 @@ def cmd_diagnose(args: argparse.Namespace) -> int:
     return 0
 
 
+def _print_packaging(problems: list[str], audit) -> None:
+    if audit is not None:
+        console.print(
+            f"Miniatura: luminancia {audit.luminance:.2f}  saturacion {audit.saturation:.2f}  "
+            f"casi negro {audit.dark_share:.0%}  ({audit.width}x{audit.height})"
+        )
+    for problem in problems:
+        console.print(f"  [red]x[/red] {problem}")
+    if not problems:
+        console.print("[green]Packaging OK[/green]: pasa los umbrales de los outliers del nicho")
+
+
+def cmd_packaging(args: argparse.Namespace) -> int:
+    """Mide titulo, texto de miniatura e imagen contra lo que sabemos que no funciona."""
+    from . import packaging
+
+    thumb = Path(args.thumbnail) if args.thumbnail else None
+    problems, audit = packaging.report(args.title, args.thumb_text or "", thumb)
+    _print_packaging(problems, audit)
+    return 1 if problems else 0
+
+
 def cmd_upload(args: argparse.Namespace) -> int:
-    """Sube el video al canal, SIEMPRE como privado."""
+    """Sube el video al canal, SIEMPRE como privado (programado si --publish-at)."""
+    from . import packaging
     from . import upload as up
 
     video = Path(args.video)
     thumb = Path(args.thumbnail) if args.thumbnail else None
     description = Path(args.description).read_text(encoding="utf-8") if args.description else ""
 
-    console.print(f"Subiendo [cyan]{video.name}[/cyan] ({video.stat().st_size / 1e6:.0f} MB)")
-    console.print("[dim]Se subira como PRIVADO. Publicar es decision tuya.[/dim]\n")
+    # El gate de packaging va ANTES de gastar diez minutos de subida. Con un
+    # CTR del 1% ya sabemos que estas miniaturas no se clican; no se suben mas.
+    problems, audit = packaging.report(args.title, args.thumb_text or "", thumb)
+    if not args.thumb_text:
+        problems = [p for p in problems if not p.startswith("texto miniatura")]
+        console.print("[yellow]Sin --thumb-text: no se comprueba el texto de la miniatura.[/yellow]")
+    _print_packaging(problems, audit)
+    if problems and not args.skip_packaging_check:
+        console.print("\n[red]No se sube.[/red] Arregla el packaging o usa --skip-packaging-check.")
+        return 5
+
+    publish_at = None
+    if args.publish_at:
+        try:
+            publish_at = up.parse_publish_at(args.publish_at)
+        except ValueError as exc:
+            console.print(f"[red]--publish-at:[/red] {exc}")
+            return 2
+
+    console.print(f"\nSubiendo [cyan]{video.name}[/cyan] ({video.stat().st_size / 1e6:.0f} MB)")
+    if publish_at:
+        console.print(f"[dim]Se subira como PRIVADO y YouTube lo publicara el "
+                      f"{publish_at.astimezone():%Y-%m-%d %H:%M %Z}.[/dim]\n")
+    else:
+        console.print("[dim]Se subira como PRIVADO. Publicar es decision tuya.[/dim]\n")
 
     last = {"pct": -1}
 
@@ -328,6 +374,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
             description=description,
             tags=[t.strip() for t in (args.tags or "").split(",") if t.strip()],
             thumbnail=thumb,
+            publish_at=publish_at,
             on_progress=progress,
         )
     except up.PreflightError as exc:
@@ -335,6 +382,9 @@ def cmd_upload(args: argparse.Namespace) -> int:
         return 4
     console.print(f"\n[green]Subido[/green] como {result.privacy}")
     console.print(f"  {result.url}")
+    if result.publish_at:
+        console.print(f"  Publicacion programada: {result.publish_at} (UTC). "
+                      f"Para cancelarla: facelessyt publish --video-id {result.video_id} --privacy private")
     if result.thumbnail_error:
         console.print(f"\n[yellow]La miniatura no se puso:[/yellow] {result.thumbnail_error}")
     console.print("[dim]Revisalo entero antes de hacerlo publico.[/dim]")
@@ -481,12 +531,21 @@ def main(argv: list[str] | None = None) -> int:
     p_diag.add_argument("--days", type=int, default=28)
     p_diag.set_defaults(func=cmd_diagnose)
 
+    p_pack = sub.add_parser("packaging", help="mide titulo y miniatura antes de producir nada")
+    p_pack.add_argument("--title", required=True)
+    p_pack.add_argument("--thumb-text", help="el texto que lleva la miniatura")
+    p_pack.add_argument("--thumbnail", help="imagen a auditar (jpg/png)")
+    p_pack.set_defaults(func=cmd_packaging)
+
     p_up = sub.add_parser("upload", help="sube un video al canal, como privado")
     p_up.add_argument("--video", required=True)
     p_up.add_argument("--title", required=True)
     p_up.add_argument("--description", help="fichero con la descripcion")
     p_up.add_argument("--thumbnail")
+    p_up.add_argument("--thumb-text", help="texto de la miniatura, para el gate de packaging")
     p_up.add_argument("--tags", help="separadas por comas")
+    p_up.add_argument("--publish-at", help="ISO local, p.ej. 2026-09-21T14:00: YouTube lo publica solo")
+    p_up.add_argument("--skip-packaging-check", action="store_true")
     p_up.set_defaults(func=cmd_upload)
 
     p_thumb = sub.add_parser("thumbnail", help="pone la miniatura de un video ya subido")

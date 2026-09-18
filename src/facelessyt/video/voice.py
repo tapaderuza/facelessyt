@@ -18,6 +18,18 @@ class VoiceError(RuntimeError):
     pass
 
 
+# Ritmo de Piper (piper-tts 1.8, voz Lessac medium), medido en el contenedor
+# con un parrafo de 38 palabras el 2026-09-18:
+#   sin flags                 12,9 s  -> ~176 palabras/min
+#   length_scale 0.85 + 0.1 s 12,3 s  -> ~185 palabras/min
+#   length_scale 0.80 + 0 s   10,9 s  -> ~210 palabras/min
+# La escala no es lineal y cada sintesis varia unas decimas. 0.85 quita la
+# cadencia de "lectura"; escucha una escena antes de bajar mas. sentence_silence vale 0 por
+# defecto en esta version; 0,1 s deja respirar entre frases.
+PIPER_LENGTH_SCALE = float(os.getenv("PIPER_LENGTH_SCALE", "0.85"))
+PIPER_SENTENCE_SILENCE = float(os.getenv("PIPER_SENTENCE_SILENCE", "0.1"))
+
+
 def _normalise(text: str) -> str:
     """Limpia el texto para que el TTS no lo lea raro."""
     text = " ".join(text.split())
@@ -37,7 +49,11 @@ def _piper(text: str, out_path: Path) -> Path:
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
-        ["piper", "--model", voice, "--output_file", str(out_path)],
+        [
+            "piper", "--model", voice, "--output_file", str(out_path),
+            "--length_scale", f"{PIPER_LENGTH_SCALE:g}",
+            "--sentence_silence", f"{PIPER_SENTENCE_SILENCE:g}",
+        ],
         input=_normalise(text).encode("utf-8"),
         capture_output=True,
     )

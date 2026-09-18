@@ -70,6 +70,37 @@ Necesita `MY_CHANNEL_ID` en `.env` (existe cuando exista el canal). Evalúa:
 Cada ejecución añade una línea a `data/history.jsonl`, para ver la evolución y no solo la
 foto final. Ejecútalo una vez por semana.
 
+### `packaging` — medir título y miniatura antes de producir
+
+```bash
+.venv/Scripts/python.exe -m facelessyt packaging --title "..." --thumb-text "..." --thumbnail miniatura.jpg
+```
+
+Mide la miniatura con las mismas métricas que `research` aplica a la competencia
+(luminancia, saturación, píxeles negros) y comprueba que el texto nombra algo y el
+título cabe en un móvil. `upload` ejecuta el mismo gate y **no sube** si falla.
+Los umbrales y el porqué: [docs/09-diagnostico-2026-09-18.md](docs/09-diagnostico-2026-09-18.md).
+
+### `video check` / `video render` — lint de gancho y ritmo, y montaje
+
+```bash
+.venv/Scripts/python.exe -m facelessyt.video check --script scripts/06-xxx.yaml
+```
+
+Rechaza guiones con la primera escena larga o sin payoff, con "this channel" /
+"last video" en el gancho, con escenas de más de 55 palabras sobre una imagen, o de
+más de 8 minutos. `render` (en Docker, ver abajo) añade zoom por escena, fundidos y
+música de fondo (`--music` o `MUSIC_PATH`).
+
+### `upload --publish-at` — subida programada
+
+```bash
+.venv/Scripts/python.exe -m facelessyt upload --video data/video/06.mp4 --title "..." --thumbnail t.jpg --thumb-text "..." --publish-at 2026-09-21T14:00
+```
+
+Sube privado y YouTube lo publica a esa hora. Un episodio entero, de guion a subida
+programada: `tools/produce_episode.ps1`. Diagnóstico semanal: `tools/weekly_diagnose.ps1 -Register`.
+
 ## Docker
 
 Para ejecutarlo sin instalar Python. Necesita `.env` con la clave:
@@ -90,7 +121,7 @@ habría aparecido. Ahora hay `FACELESSYT_ROOT` y un test de regresión.
 ## Tests
 
 ```bash
-.venv/Scripts/python.exe tests/test_core.py
+.venv/Scripts/python.exe -m unittest discover -s tests
 ```
 
 Cubren la lógica pura sin tocar la red: parseo de duraciones, cálculo de baseline, exclusión
@@ -102,20 +133,21 @@ de shorts y vídeos inmaduros, y los tres casos del veredicto (pasa, plano, hits
 |---|---|
 | Selección de tema por outliers | **funciona** |
 | Métrica de corte de 90 días | **funciona** (solo views) |
-| CTR y retención (diagnóstico) | pendiente — requiere YouTube Analytics API con OAuth |
-| Generación de guion | pendiente |
-| Voz (TTS) | pendiente |
-| Render / montaje | pendiente — requiere ffmpeg (irá en el contenedor, no en tu máquina) |
-| Subida automática | pendiente — requiere OAuth |
+| CTR y retención (diagnóstico) | **funciona** (`diagnose`, OAuth) |
+| Lint de gancho/ritmo y gate de packaging | **funciona** (`video check`, `packaging`) |
+| Generación de guion | a mano, con [prompts](docs/prompts/hook-packaging.md) que pasan el lint |
+| Voz (TTS) | **funciona** — Piper en el contenedor; ElevenLabs opcional |
+| Render / montaje | **funciona** — ffmpeg en el contenedor, con movimiento y música |
+| Subida programada | **funciona** (`upload --publish-at`, `tools/produce_episode.ps1`) |
 
-Lo pendiente es deliberado: no tiene sentido automatizar la producción antes de saber si el
-nicho responde. Primero `mine`, primeros vídeos a mano, y solo entonces se automatiza lo que
-duela.
+Resultado a 28 días de los 5 primeros vídeos y lo que se cambió por ello:
+[docs/09-diagnostico-2026-09-18.md](docs/09-diagnostico-2026-09-18.md).
 
 ## Estructura
 
 ```
-docs/       estrategia, playbook y hallazgos de cada minado
+docs/       estrategia, playbook, hallazgos y diagnósticos
+tools/      producción de un episodio y diagnóstico semanal (PowerShell)
 scripts/    guiones de los vídeos
 niches/     definición de nichos (canales semilla, keywords, afiliados)
 src/        el paquete
