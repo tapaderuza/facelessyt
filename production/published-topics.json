@@ -77,6 +77,18 @@
       "video_id": "PIz9WQCrG8o",
       "published_at": "2026-09-18T15:58:41Z",
       "privacy": "public"
+    },
+    {
+      "episode": 8,
+      "title": "Claude Code Hooks: My Agent Can't Skip the Linter Anymore",
+      "topic_key": "claude-code-lint-hook",
+      "aliases": [
+        "claude-code-hooks",
+        "agent-guardrail-hook"
+      ],
+      "video_id": "oa8G8CO2PqU",
+      "published_at": "2026-09-24T12:00:00Z",
+      "privacy": "scheduled"
     }
   ]
 }
