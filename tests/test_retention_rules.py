@@ -5,6 +5,7 @@ Ejecutar:  .venv/Scripts/python.exe -m unittest tests.test_retention_rules -v
 
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -117,7 +118,25 @@ class PackagingTests(unittest.TestCase):
     def test_titulo_largo_y_repetido(self):
         self.assertTrue(packaging.lint_title("x" * 61))
         self.assertTrue(packaging.lint_title("I Built an AI Agent That Does Things"))
-        self.assertEqual(packaging.lint_title("8 Workers, Same Speed: Where the Queue Went"), [])
+        self.assertEqual(
+            packaging.lint_title("8 Workers, Same Speed: Where the Queue Actually Went"), [])
+
+    def test_titulo_demasiado_corto(self):
+        """Los outliers del nicho estan en 58 caracteres; <50 puntua 3,3x."""
+        problems = packaging.lint_title("180 Views. The Fix Was a Linter.")
+        self.assertTrue(any("caracteres" in p for p in problems), problems)
+
+    def test_herramienta_en_el_titulo(self):
+        self.assertEqual(packaging.names_tool("Claude Code Hooks: My Agent Can't Skip It"),
+                         "claude code")
+        self.assertEqual(packaging.names_tool("My Retry Loop Paid ElevenLabs Twice"), "elevenlabs")
+        self.assertIsNone(packaging.names_tool("180 Views in 28 Days. The Fix Was a Linter."))
+        # 'claudette' no es 'claude': la frontera de palabra importa.
+        self.assertIsNone(packaging.names_tool("Claudette and the gptx problem"))
+
+    def test_nota_de_busqueda(self):
+        self.assertIn("claude code", packaging.title_search_note("Claude Code Hooks in 40 Lines"))
+        self.assertIn("no nombra", packaging.title_search_note("A Linter For My Scripts"))
 
     def test_audit_rechaza_miniatura_negra(self):
         from PIL import Image
@@ -163,6 +182,105 @@ class PackagingTests(unittest.TestCase):
             audit = packaging.audit_thumbnail(out)
             self.assertTrue(audit.ok, audit.problems)
             self.assertEqual((audit.width, audit.height), (1280, 720))
+
+
+class RevealTests(unittest.TestCase):
+    def test_pasos_igual_a_lineas_con_texto(self):
+        from facelessyt.video import scenes
+        scene = {"id": "x", "visual": {"type": "terminal", "content": "rule_card"}}
+        self.assertGreater(scenes.reveal_steps(scene), 1)
+
+    def test_texto_centrado_no_se_revela(self):
+        from facelessyt.video import scenes
+        scene = {"id": "x", "visual": {"type": "text", "content": "Something"}}
+        self.assertEqual(scenes.reveal_steps(scene), 1)
+
+    def test_reveal_false_lo_desactiva(self):
+        from facelessyt.video import scenes
+        scene = {"id": "x", "visual": {"type": "terminal", "content": "rule_card"}, "reveal": False}
+        self.assertEqual(scenes.reveal_steps(scene), 1)
+
+    def test_la_geometria_no_salta_entre_pasos(self):
+        """Cada paso solo añade texto: ningun pixel dibujado se mueve."""
+        from PIL import Image, ImageChops
+        from facelessyt.video import scenes
+        scene = {"id": "x", "visual": {"type": "terminal", "content": "exit_codes"}}
+        with tempfile.TemporaryDirectory() as tmp:
+            pngs = scenes.render_reveal(scene, Path(tmp), "x")
+            self.assertGreater(len(pngs), 2)
+            full = Image.open(pngs[-1]).convert("RGB")
+            for png in pngs[:-1]:
+                step = Image.open(png).convert("RGB")
+                # Lo que el paso dibuja tiene que ser identico en la imagen final.
+                diff = ImageChops.difference(step, full)
+                lighter = ImageChops.difference(step, ImageChops.darker(step, full))
+                self.assertIsNone(lighter.getbbox(),
+                                  f"{png.name} dibuja algo que no esta en la imagen final")
+                self.assertIsNotNone(diff.getbbox(), f"{png.name} no añade nada")
+
+    def test_listing_de_concat_repite_el_ultimo(self):
+        from facelessyt.video import assemble
+        with tempfile.TemporaryDirectory() as tmp:
+            pngs = [Path(tmp) / f"{i}.png" for i in range(3)]
+            for p in pngs:
+                p.write_bytes(b"")
+            listing = assemble.reveal_listing(pngs, Path(tmp) / "seq.txt", duration=6.0, hold=0.5)
+            rows = listing.read_text(encoding="utf-8").splitlines()
+            files = [r for r in rows if r.startswith("file ")]
+            # un paso por PNG, mas el ultimo con el resto de la duracion, mas
+            # la repeticion final que el demuxer de concat necesita.
+            self.assertEqual(len(files), len(pngs) + 2)
+            self.assertEqual(files[-1], files[-2])
+            self.assertEqual(files[-1], files[len(pngs) - 1])
+            per = [float(r.split()[1]) for r in rows if r.startswith("duration")]
+            self.assertAlmostEqual(per[0], 6.0 * assemble.REVEAL_SHARE / 3, places=3)
+            # El listado dura de mas a proposito: `-t` corta en el montaje.
+            self.assertAlmostEqual(sum(per), 6.0 + 0.5 + assemble.REVEAL_TAIL_MARGIN, places=2)
+            self.assertGreater(sum(per), 6.0 + 0.5)
+
+
+class VoiceGuardTests(unittest.TestCase):
+    """Re-locutar un episodio con otro motor tiene que doler.
+
+    Regresion del 2026-09-22: un `docker run` sin las variables de ElevenLabs
+    hizo que `--engine auto` cayera a Piper y el episodio 8 se volviera a
+    locutar entero con otra voz, sin un solo aviso.
+    """
+
+    def _workdir(self, tmp: str, engine_key: str) -> Path:
+        wd = Path(tmp) / "ep"
+        (wd / "audio").mkdir(parents=True)
+        (wd / "audio" / "hook-1.key.json").write_text(
+            json.dumps({"key": f"{engine_key}|voz|texto", "path": "x.mp3"}), encoding="utf-8")
+        return wd
+
+    def test_cambio_de_motor_revienta(self):
+        from facelessyt.video import assemble
+        with tempfile.TemporaryDirectory() as tmp:
+            wd = self._workdir(tmp, "elevenlabs")
+            with self.assertRaises(assemble.VoiceChangeError) as ctx:
+                assemble.check_engine(wd, "piper")
+            self.assertIn("ELEVENLABS_API_KEY", str(ctx.exception))
+
+    def test_mismo_motor_pasa(self):
+        from facelessyt.video import assemble
+        with tempfile.TemporaryDirectory() as tmp:
+            wd = self._workdir(tmp, "piper")
+            self.assertEqual(assemble.check_engine(wd, "piper"), "piper")
+
+    def test_episodio_nuevo_pasa(self):
+        from facelessyt.video import assemble
+        with tempfile.TemporaryDirectory() as tmp:
+            wd = Path(tmp) / "nuevo"
+            wd.mkdir()
+            self.assertEqual(assemble.check_engine(wd, "piper"), "piper")
+            self.assertIsNone(assemble.cached_engine(wd))
+
+    def test_allow_change_lo_permite(self):
+        from facelessyt.video import assemble
+        with tempfile.TemporaryDirectory() as tmp:
+            wd = self._workdir(tmp, "elevenlabs")
+            self.assertEqual(assemble.check_engine(wd, "piper", allow_change=True), "piper")
 
 
 class AssembleTests(unittest.TestCase):
