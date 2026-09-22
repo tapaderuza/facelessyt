@@ -87,15 +87,24 @@ def cmd_render(args: argparse.Namespace) -> int:
 
     workdir = Path(args.workdir or f"data/video/{video_id}")
     workdir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        engine = assemble.check_engine(workdir, args.engine,
+                                       allow_change=args.allow_voice_change)
+    except assemble.VoiceChangeError as exc:
+        print(f"\nNo se renderiza: {exc}")
+        return 3
+    print(f"Voz           : {engine}")
     motion = not args.no_motion
     transitions = not args.no_transitions
+    reveal = not args.no_reveal
 
     clips, started = [], time.time()
     for i, scene in enumerate(scene_list):
         print(f"[{i + 1:2}/{len(scene_list)}] {scene['id']:24}", end=" ", flush=True)
         try:
-            clip = assemble.build_scene(scene, workdir, engine=args.engine,
-                                        index=i, motion=motion)
+            clip = assemble.build_scene(scene, workdir, engine=engine,
+                                        index=i, motion=motion, reveal=reveal)
         except (scenes.SceneError, assemble.AssembleError) as exc:
             print("FALLO")
             print(f"\n{exc}")
@@ -138,6 +147,10 @@ def main(argv: list[str] | None = None) -> int:
     p_render.add_argument("--engine", default="auto", choices=["auto", "piper", "elevenlabs"])
     p_render.add_argument("--music", help="fichero de audio para el fondo (o MUSIC_PATH)")
     p_render.add_argument("--no-motion", action="store_true", help="planos fijos, como antes")
+    p_render.add_argument("--no-reveal", action="store_true",
+                          help="el terminal aparece entero, sin revelado por lineas")
+    p_render.add_argument("--allow-voice-change", action="store_true",
+                          help="permite re-locutar el episodio con otro motor")
     p_render.add_argument("--no-transitions", action="store_true", help="corte seco entre escenas")
     p_render.add_argument("--force", action="store_true",
                           help="renderiza aunque el lint de gancho/ritmo falle")

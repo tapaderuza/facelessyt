@@ -34,6 +34,15 @@ FPS = 30
 ZOOM_MAX = 1.08
 # Fundido entre escenas. Mas de 0,3 s emborrona el texto de la siguiente.
 XFADE_S = 0.25
+# Revelado (2026-09-22): las lineas del terminal aparecen durante este tramo
+# del audio de la escena; el resto se queda la imagen completa en pantalla.
+# 0.75 deja el ultimo cuarto para que se lea el remate antes del corte.
+REVEAL_SHARE = 0.75
+# Margen que se añade al ultimo paso. El demuxer de concat redondea cada
+# duracion a la base de tiempo del stream y el error se acumula: medido sobre
+# las 18 escenas del video 8, los clips salian hasta 1,2 s cortos y el remate
+# se perdia. Con el margen, el video siempre sobra y `-t` corta exacto.
+REVEAL_TAIL_MARGIN = 1.5
 # Musica de fondo, si MUSIC_PATH apunta a un fichero. 0.12 = -18 dB sobre el
 # loop (que ya viene a -18 dB de media): queda ~17 dB por debajo de la voz,
 # el rango habitual de una cama musical. Se nota que esta; no compite.
@@ -70,7 +79,7 @@ class Clip:
 
 
 def motion_filter(duration: float, index: int, *, width: int = scenes.W,
-                  height: int = scenes.H) -> str:
+                  height: int = scenes.H, per_frame: bool = False) -> str:
     """Filtro zoompan para una imagen fija de `duration` segundos.
 
     Las escenas pares acercan, las impares alejan: dos zooms seguidos en la
@@ -83,24 +92,63 @@ def motion_filter(duration: float, index: int, *, width: int = scenes.W,
         z = f"min(1+{step:.6f}*on,{ZOOM_MAX})"
     else:
         z = f"max({ZOOM_MAX}-{step:.6f}*on,1)"
+    # d=1 cuando la entrada ya es un video (secuencia de revelado): cada
+    # fotograma de entrada produce uno de salida y `on` avanza con el reloj.
+    hold_frames = 1 if per_frame else frames
     return (
         f"scale={width * 2}:{height * 2},"
-        f"zoompan=z='{z}':d={frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
+        f"zoompan=z='{z}':d={hold_frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
         f":s={width}x{height}:fps={FPS},format=yuv420p"
     )
 
 
-def encode_still(png: Path, audio: Path, clip: Path, *, duration: float, hold: float,
-                 index: int = 0, motion: bool = True) -> Path:
-    """Imagen + audio -> clip. Separado de build_scene para poder probarlo sin TTS."""
-    if motion:
-        video_in = ["-i", str(png)]
+def reveal_listing(pngs: list[Path], listing: Path, *, duration: float, hold: float) -> Path:
+    """Fichero de concat con una duracion por paso del revelado.
+
+    El ultimo PNG se repite al final porque el demuxer de concat ignora la
+    `duration` de la ultima entrada y corta ahi: sin la repeticion, el remate
+    de la escena se ve un fotograma. La duracion total del listado supera a
+    `duration + hold` a proposito (REVEAL_TAIL_MARGIN); quien corta es `-t`.
+    """
+    steps = len(pngs)
+    per = duration * REVEAL_SHARE / steps
+    rest = duration * (1 - REVEAL_SHARE) + hold + REVEAL_TAIL_MARGIN
+    rows = []
+    for png in pngs:
+        rows.append(f"file '{png.resolve().as_posix()}'")
+        rows.append(f"duration {per:.3f}")
+    rows.append(f"file '{pngs[-1].resolve().as_posix()}'")
+    rows.append(f"duration {rest:.3f}")
+    rows.append(f"file '{pngs[-1].resolve().as_posix()}'")
+    listing.parent.mkdir(parents=True, exist_ok=True)
+    listing.write_text("\n".join(rows), encoding="utf-8")
+    return listing
+
+
+def encode_still(png: Path | list[Path], audio: Path, clip: Path, *, duration: float,
+                 hold: float, index: int = 0, motion: bool = True) -> Path:
+    """Imagen (o secuencia de revelado) + audio -> clip.
+
+    Separado de build_scene para poder probarlo sin TTS.
+    """
+    pngs = [png] if isinstance(png, Path) else list(png)
+    clip.parent.mkdir(parents=True, exist_ok=True)
+
+    if len(pngs) > 1:
+        listing = reveal_listing(pngs, clip.with_suffix(".seq.txt"),
+                                 duration=duration - hold, hold=hold)
+        video_in = ["-f", "concat", "-safe", "0", "-i", str(listing)]
+        # fps=30 antes del zoom: el demuxer de concat entrega frames a ritmo
+        # variable y zoompan cuenta fotogramas de salida, no segundos.
+        zoom = motion_filter(duration, index, per_frame=True)
+        vfilter = f"[0:v]fps={FPS},{zoom}[v]" if motion else f"[0:v]fps={FPS},format=yuv420p[v]"
+    elif motion:
+        video_in = ["-i", str(pngs[0])]
         vfilter = f"[0:v]{motion_filter(duration, index)}[v]"
     else:
-        video_in = ["-loop", "1", "-i", str(png)]
+        video_in = ["-loop", "1", "-i", str(pngs[0])]
         vfilter = "[0:v]format=yuv420p[v]"
 
-    clip.parent.mkdir(parents=True, exist_ok=True)
     _run([
         "ffmpeg", "-y", "-loglevel", "error",
         *video_in,
@@ -119,6 +167,48 @@ def encode_still(png: Path, audio: Path, clip: Path, *, duration: float, hold: f
     return clip
 
 
+def cached_engine(workdir: Path) -> str | None:
+    """Motor con el que se locuto este episodio, segun los marcadores del cache.
+
+    Devuelve None si aun no hay audio. Si hay marcadores de varios motores,
+    devuelve el del primero que aparezca: basta para detectar el cambio.
+    """
+    for marker in sorted((workdir / "audio").glob("*.key.json")):
+        try:
+            key = json.loads(marker.read_text(encoding="utf-8")).get("key", "")
+        except (json.JSONDecodeError, OSError):
+            continue
+        if key:
+            return key.split("|", 1)[0]
+    return None
+
+
+class VoiceChangeError(AssembleError):
+    """Re-locutar un episodio ya renderizado con otro motor de voz.
+
+    Paso de verdad el 2026-09-22: un `docker run` sin las variables de
+    ElevenLabs hizo que `--engine auto` cayera a Piper y el episodio 8 se
+    volviera a locutar entero con otra voz, sin un solo aviso. El video ya
+    estaba subido con la voz buena. Cambiar de voz es legitimo; hacerlo sin
+    querer, no.
+    """
+
+
+def check_engine(workdir: Path, engine: str, *, allow_change: bool = False) -> str:
+    """Motor que se va a usar. Revienta si cambia el de un episodio ya locutado."""
+    resolved = voice.resolve_engine(engine)
+    previous = cached_engine(workdir)
+    if previous and previous != resolved and not allow_change:
+        raise VoiceChangeError(
+            f"Este episodio esta locutado con '{previous}' y ahora se usaria "
+            f"'{resolved}'.\n"
+            + ("Falta ELEVENLABS_API_KEY en el entorno del render.\n"
+               if resolved == "piper" else "")
+            + "Si el cambio de voz es intencionado, usa --allow-voice-change."
+        )
+    return resolved
+
+
 def _cached_voice(narration: str, base: Path, *, engine: str) -> Path:
     """Sintetiza solo si texto o voz cambiaron. Con ElevenLabs cada llamada
     cuesta creditos; reintentar un montaje no debe volver a pagar las escenas."""
@@ -130,18 +220,19 @@ def _cached_voice(narration: str, base: Path, *, engine: str) -> Path:
 
 
 def build_scene(scene: dict, workdir: Path, *, engine: str = "auto",
-                index: int = 0, motion: bool = True) -> Clip:
+                index: int = 0, motion: bool = True, reveal: bool = True) -> Clip:
     """Renderiza una escena completa: imagen + voz + clip de video."""
     scene_id = scene["id"]
     narration = scene.get("narration", "").strip()
     hold = float(scene.get("hold", 0.5))
 
-    png = scenes.render(scene, workdir / "frames" / f"{scene_id}.png")
+    frames = (scenes.render_reveal(scene, workdir / "frames", scene_id) if reveal
+              else [scenes.render(scene, workdir / "frames" / f"{scene_id}.png")])
     audio = _cached_voice(narration, workdir / "audio" / scene_id, engine=engine)
     duration = audio_duration(audio) + hold
 
     clip = workdir / "clips" / f"{scene_id}.mp4"
-    encode_still(png, audio, clip, duration=duration, hold=hold, index=index, motion=motion)
+    encode_still(frames, audio, clip, duration=duration, hold=hold, index=index, motion=motion)
     return Clip(scene_id, clip, duration, len(narration.split()))
 
 

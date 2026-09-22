@@ -25,9 +25,32 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 # --- Titulo ----------------------------------------------------------------
+# Medido sobre 33 outliers del nicho (snapshots 2026-09-10 y 2026-09-22):
+#   longitud   min 38   p25 52   mediana 58   p75 68   max 95
+#   <= 50 caracteres  ->  score mediano 3,31x
+#    > 50 caracteres  ->  score mediano 5,08x
+# Asi que el limite superior se queda donde estaba (mas de 60 se corta en el
+# feed), pero se avisa por abajo: un titulo de 40 caracteres no es "limpio",
+# es un titulo que no ha dicho de que va.
 TITLE_MAX_CHARS = 60
+TITLE_MIN_CHARS = 45
 # En el movil se ven ~40 caracteres antes del "...". Lo importante va delante.
 TITLE_MOBILE_CHARS = 40
+
+# Herramientas y productos que la gente busca por su nombre. En la misma
+# muestra: titulo con herramienta nombrada -> score mediano 5,17x; sin ella,
+# 3,72x (n=18 vs 15). Es correlacion, no causa: el tema y la herramienta van
+# juntos. Pero es la unica palanca de descubrimiento que controla un canal sin
+# audiencia, porque la busqueda no depende del algoritmo de recomendacion.
+# El video 7 recibio el 25% de su trafico por la busqueda "elevenlabs".
+KNOWN_TOOLS = (
+    "claude", "claude code", "chatgpt", "gpt", "codex", "gemini", "anthropic",
+    "openai", "cursor", "copilot", "n8n", "zapier", "make.com", "langchain",
+    "llamaindex", "ollama", "llama", "mistral", "deepseek", "qwen", "grok",
+    "mlx", "gemma", "whisper", "elevenlabs", "piper", "ffmpeg", "docker",
+    "supabase", "replit", "windsurf", "notion", "obsidian", "archon",
+    "playwright", "puppeteer", "pytest", "postgres", "redis", "kubernetes",
+)
 
 # --- Texto de la miniatura -------------------------------------------------
 THUMB_MAX_WORDS = 4
@@ -57,10 +80,26 @@ def _content_words(text: str) -> list[str]:
     return [w for w in _WORD.findall(text.lower()) if w not in CONTENTLESS_WORDS]
 
 
+def names_tool(title: str) -> str | None:
+    """La herramienta nombrada en el titulo, si la hay. Mas larga primero, para
+    que 'claude code' gane a 'claude'."""
+    low = title.lower()
+    for tool in sorted(KNOWN_TOOLS, key=len, reverse=True):
+        if re.search(rf"(?<![a-z0-9]){re.escape(tool)}(?![a-z0-9])", low):
+            return tool
+    return None
+
+
 def lint_title(title: str) -> list[str]:
     problems = []
     if len(title) > TITLE_MAX_CHARS:
         problems.append(f"{len(title)} caracteres; maximo {TITLE_MAX_CHARS}.")
+    elif len(title) < TITLE_MIN_CHARS:
+        problems.append(
+            f"solo {len(title)} caracteres. Los outliers del nicho estan en 58 de "
+            f"mediana, y los de menos de 50 puntuan 3,3x frente a 5,1x. "
+            "Corto no es limpio: te has dejado fuera la promesa o el resultado."
+        )
     head = title[:TITLE_MOBILE_CHARS]
     if not re.search(r"\d", head) and not _content_words(head):
         problems.append(
@@ -73,6 +112,16 @@ def lint_title(title: str) -> list[str]:
             "videos del canal parecen el mismo."
         )
     return problems
+
+
+def title_search_note(title: str) -> str:
+    """Aviso, no error: el titulo no nombra ninguna herramienta buscable."""
+    tool = names_tool(title)
+    if tool:
+        return f"nombra '{tool}': esa palabra se busca, y la busqueda no depende del feed."
+    return ("no nombra ninguna herramienta conocida. Con un canal sin audiencia, "
+            "la busqueda es el unico trafico que no depende del algoritmo "
+            "(los outliers con herramienta puntuan 5,2x frente a 3,7x).")
 
 
 def lint_thumb_text(text: str, title: str = "") -> list[str]:

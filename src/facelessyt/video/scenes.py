@@ -52,25 +52,63 @@ class Line:
     bold: bool = False
 
 
+# Revelado progresivo (2026-09-22). El zoom lento quito la sensacion de
+# diapositiva, pero la pantalla seguia entregando toda la informacion en el
+# primer fotograma: nada que esperar. Con esto, las lineas aparecen segun se
+# narran, como un terminal imprimiendo.
+#
+# La maquetacion se calcula SIEMPRE con todas las lineas y solo se omite el
+# dibujado de las que aun no toca: si se truncara la lista, el bloque se
+# recentraria en cada paso y el texto saltaria.
+_REVEAL: int | None = None
+# Lineas con texto que dibujo el ultimo render. Lo rellenan _draw_block y
+# _draw_lines, y es como `reveal_steps` sabe cuantos pasos tiene una escena
+# sin conocer el contenido: se dibuja una vez entera y se pregunta.
+_LAST_VISIBLE = 0
+
+
+def visible_lines(lines: list[Line]) -> int:
+    """Lineas con texto (las vacias son separadores, no pasos del revelado)."""
+    return sum(1 for ln in lines if ln.text.strip())
+
+
+def _drawable(index: int, lines: list[Line]) -> bool:
+    if _REVEAL is None:
+        return True
+    shown = 0
+    for i, ln in enumerate(lines):
+        if ln.text.strip():
+            shown += 1
+        if i == index:
+            return shown <= _REVEAL
+    return True
+
+
 def _draw_lines(img: Image.Image, lines: list[Line], *, top: int | None = None) -> None:
+    global _LAST_VISIBLE
+    _LAST_VISIBLE = max(_LAST_VISIBLE, visible_lines(lines))
     draw = ImageDraw.Draw(img)
     rendered = [(ln, _font(ln.size, ln.bold)) for ln in lines]
     total = sum(f.getbbox("Ag")[3] + 16 for _, f in rendered)
     y = top if top is not None else (H - total) // 2
 
-    for line, font in rendered:
-        width = draw.textlength(line.text, font=font)
-        draw.text(((W - width) / 2, y), line.text, font=font, fill=line.color)
+    for i, (line, font) in enumerate(rendered):
+        if _drawable(i, lines):
+            width = draw.textlength(line.text, font=font)
+            draw.text(((W - width) / 2, y), line.text, font=font, fill=line.color)
         y += font.getbbox("Ag")[3] + 16
 
 
 def _draw_block(img: Image.Image, lines: list[Line], *, left: int = 140, top: int = 160) -> None:
     """Texto alineado a la izquierda: para terminal y codigo."""
+    global _LAST_VISIBLE
+    _LAST_VISIBLE = max(_LAST_VISIBLE, visible_lines(lines))
     draw = ImageDraw.Draw(img)
     y = top
-    for line in lines:
+    for i, line in enumerate(lines):
         font = _font(line.size, line.bold)
-        draw.text((left, y), line.text, font=font, fill=line.color)
+        if _drawable(i, lines):
+            draw.text((left, y), line.text, font=font, fill=line.color)
         y += font.getbbox("Ag")[3] + 14
 
 
@@ -1313,21 +1351,59 @@ class SceneError(RuntimeError):
     pass
 
 
-def render(scene: dict, out_path: Path) -> Path:
-    """Renderiza una escena del guion a PNG."""
+def reveal_steps(scene: dict) -> int:
+    """Cuantos pasos tiene el revelado de esta escena. 1 = imagen fija.
+
+    Solo se revelan los terminales: el texto centrado son dos o tres palabras
+    grandes y aparecer letra a letra solo distrae.
+    """
+    visual = scene.get("visual", {}) or {}
+    if visual.get("type") != "terminal" or visual.get("content") not in CONTENT:
+        return 1
+    if scene.get("reveal") is False:
+        return 1
+    global _REVEAL, _LAST_VISIBLE
+    previous, _REVEAL = _REVEAL, None
+    _LAST_VISIBLE = 0
+    try:
+        CONTENT[visual["content"]]()
+    finally:
+        _REVEAL = previous
+    return max(1, _LAST_VISIBLE)
+
+
+def render(scene: dict, out_path: Path, *, reveal: int | None = None) -> Path:
+    """Renderiza una escena del guion a PNG.
+
+    `reveal` = cuantas lineas con texto se dibujan (None = todas).
+    """
     visual = scene.get("visual", {})
     key = visual.get("content", "")
 
-    if key in CONTENT:
-        img = CONTENT[key]()
-    elif visual.get("type") == "text":
-        img = _centered_text(key)
-    else:
-        raise SceneError(
-            f"Escena '{scene.get('id')}': no se sabe dibujar '{key}'. "
-            f"Añadelo a CONTENT en scenes.py o usa visual.type=text."
-        )
+    global _REVEAL
+    previous, _REVEAL = _REVEAL, reveal
+    try:
+        if key in CONTENT:
+            img = CONTENT[key]()
+        elif visual.get("type") == "text":
+            img = _centered_text(key)
+        else:
+            raise SceneError(
+                f"Escena '{scene.get('id')}': no se sabe dibujar '{key}'. "
+                f"Añadelo a CONTENT en scenes.py o usa visual.type=text."
+            )
+    finally:
+        _REVEAL = previous
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path)
     return out_path
+
+
+def render_reveal(scene: dict, outdir: Path, stem: str) -> list[Path]:
+    """Un PNG por paso del revelado. Devuelve [fijo] si la escena no se revela."""
+    steps = reveal_steps(scene)
+    if steps <= 1:
+        return [render(scene, outdir / f"{stem}.png")]
+    return [render(scene, outdir / f"{stem}.{i:02d}.png", reveal=i)
+            for i in range(1, steps + 1)]
